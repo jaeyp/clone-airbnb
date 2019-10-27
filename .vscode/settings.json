@@ -1,0 +1,19 @@
+{
+    "python.pythonPath": "C:\\Users\\jpins\\.virtualenvs\\airbnb-pGomaz_2\\Scripts\\python.exe",
+    // support linting
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=100"
+    ],
+    "python.linting.flake8Path": "C:/Users/jpins/.virtualenvs/airbnb-pGomaz_2/Scripts/flake8",
+    // support formatting
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "100"
+    ],
+    "python.formatting.blackPath": "C:/Users/jpins/.virtualenvs/airbnb-pGomaz_2/Scripts/black",
+}

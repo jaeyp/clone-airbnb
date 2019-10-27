@@ -1,0 +1,194 @@
+[Development Environment with pipenv on Windows 10]
+1. Setup WSL(Windows subsystem for Linux) in order to use powershell
+1-1. windows features turn on/off > enable Windows subsystem for Linux
+1-2. For developers > enable Developer model
+1.3. install WSL Ubuntu in Microsoft store
+2. Install python from offitial website and don't forget to check "add PATH" when you install
+3. Install pipenv on powershell
+~$ pip install --user pipenv # use pipenv instead of pip to avoid global installation
+4. Resolve pipenv execution issues (if it happens)
+https://stackoverflow.com/questions/46041719/windows-reports-error-when-trying-to-install-package-using-pipenv
+4.1. Add pipenv path on Environment Variables (with error message of "the term 'pipenv' is not recognized as the name of a cmdlet...")
+C:\Users\jpins\AppData\Roaming\Python\Python37\Scripts
+4.2. Conflicting installations of virtualenv (with error mesage of "the term 'pipenv' is not recognized as an internal or external command...")
+First, remove your current version of virtualenv: pip uninstall virtualenv
+Then, remove your current version of pipenv: pip uninstall pipenv
+When you are asked Proceed (y/n)? just enter y. This will give you a clean slate.
+Finally, you can once again install pipenv and its dependencies: pip install pipenv
+5. Initialize a Python 3 virtual environment
+~$ create project-directory
+~$ cd project-directory
+~$ pipenv --three # initialize a Python 3 virtual environment
+~$ code . # open vs code
+6. Install django on virtual environment # do this on vs code terminal
+~$ pipenv install Django==2.2.5 # use pipenv not pip
+7. Test Django installation
+~$ pipenv shell
+~$ django-admin
+--------------------------------------
+[Install other packages]
+1. Install Pillow for django.db.models.ImageField
+~$ pipenv install Pillow
+
+Tips. Create python shell
+Command Pallete (Ctrl+Shift+P) -> Python: Create Terminal
+
+=========================================================
+[Git]
+~$ git init
+~$ git remote add origin https://github.com/jaeyp/airbnb
+~$ git pull origin master --allow-unrelated-histories
+create README.md
+create .gitignore (default python gitignore: https://github.com/github/gitignore/blob/master/Python.gitignore)
+~$ git add .
+~$ git commit -m 'initial commit'
+~$ git push origin master
+
+[Start Django Project]
+~$ django-admin startproject config #in pipenv shell
+rename 'config' directory to 'tmp' or whatever
+move manage.py and 'config' directory in 'tmp' to the top level
+delete empty 'tmp' directory
+
+[Linter]
+- Install python linter flake8
+~$ pipenv install flake8 --dev
+Command Pallete (Ctrl+Shift+P) -> Python: Select Linter -> Choose flake8 -> install from popup bottom-right
+- Check flake8 linter set in .vscode/settings.json
+- Check flake8 dependency of [dev-packages] in pipfile
+- Set path: "python.linting.flake8Path": "C:/Users/jpins/.virtualenvs/projectdirectory-hash#/Scripts/flake8"
+
+[Formatter]
+- Install black
+~$ pipenv install black --dev --pre #in pipenv shell
+- Check '"python.formatting.provider": "black"' from .vscode/settings.json, if there isn't, add it.
+- Enable 'format on save' from vscode settings or add '"editor.formatOnSave": true' in .vscode/settings.json
+- Set path: "python.formatting.blackPath": "C:/Users/jpins/.virtualenvs/projectdirectory-hash#/Scripts/black"
+- How to reformat: just Ctrl + S
+x - How to reformat
+x ~$ black <source> #in pipenv shell
+x or
+x Shift+Alt+F (>Format Document)
+
+[Interpreter]
+Command Pallete (Ctrl+Shift+P) -> Python: Select Interpreter
+
+[Extensions]
+Python
+Remote - WSL
+Django Snippets
+Git History: Control Pannel (Ctrl+Shift+P) > Git: View History (git log)
+
+=========================================================
+[Run Django server for the first time]
+~$ python manage.py runserver #in pipenv shell
+-Apply default migrations (admin, auth, contenttypes, sessions)
+~$ python manage.py migrate #in pipenv shell
+
+[Create Django superuser]
+~$ python manage.py createsuperuser #in pipenv shell
+
+[Update modified models] - Django ORM
+- Create migrations from model
+~$ python manage.py makemigrations
+- Apply migrations (This create database SQL(db.sqlite3) from model)
+~$ python manage.py migrate
+
+Tips. Django ORM (Object Relational Mapping)
+Django ORM translates python codes (models.py) into SQL instructions (db.sqlite3)
+
+[Create Django Applications]
+Django makes you plan your project before you start working.
+In Django, project is a collection of applications, and application is a group of functions.
+- Room Application
+~$ cd project-root #in pipenv shell
+~$ django-admin startapp rooms
+- User Application
+~$ django-admin startapp users
+- Review Application
+~$ django-admin startapp reviews
+- Message Application
+~$ django-admin startapp conversations # django already has messages application
+- List Application
+~$ django-admin startapp lists
+- Reservation Application
+~$ django-admin startapp reservations
+
+[Customizing authentication in Django with User Application]
+- Substituting a custom User model # https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#substituting-a-custom-user-model
+
+[Create Django core Application in order to implement a reusable common methods]
+~$ django-admin startapp core
+
+[Install Django contries plugin]
+1. Install django-countries
+~$ pipenv install django-countries
+2. Add django_countries to INSTALLED_APPS in config/settings.py
+
+[Communicate with Django configurations and models]
+1. Start python shell
+~$ pipenv shell # go into virtual environment first
+~$ python manage.py shell # Use this way in pipenv shell instead of just calling python in pipenv shell
+2. Getting User Object from database
+~$ from users.models import User
+~$ vars(User) # return the __dict__ attribute for a module, class, instance, or any other object.
+~$ dir(User) # return a list of valid attributes for the object argument.
+3. Using Managers # https://docs.djangoproject.com/en/2.2/topics/db/managers/
+~$ User.objects
+<django.contrib.auth.models.UserManager object at 0x03A91CF0>
+~$ User.objects.all()
+<QuerySet [<User: jaey>, <User: ben_powers>]>
+4. Retrieving specific objects
+4-1 ForeignKey object (one to many relation object)
+# Making queries: https://docs.djangoproject.com/en/2.2/topics/db/queries/
+# QuerySet: https://docs.djangoproject.com/en/2.2/ref/models/querysets/
+# QuerySet methods: all, filter, count, order_by, distinct...
+~$ all_user = User.objects.all()
+~$ all_user.filter(superhost=True)
+~$ User.objects.filter(username__startswith="ja")
+~$ jaey = User.objects.get(username="jaey")
+~$ print(jaey)
+~$ var(jaey)
+{'_state': <django.db.models.base.ModelState object at 0x03DDE330>, 'id': 1, 'password': 'pbkdf2_sha256$150000$lLqy3kjgkl2P$dZ2XK5NEMtf8BcPCz/9vlM0jOTQ2uycKoXolt04aJ38=', 'last_login': datetime.datetime(2019, 10, 18, 19, 34, 24, 637511, tzinfo=<UTC>), 'is_superuser': True, 'username': 'jaey', 'first_name': '', 'last_name': '', 'email': '', 'is_staff': True, 'is_active': True, 'date_joined': datetime.datetime(2019, 10, 18, 19, 34, 7, 356367, tzinfo=<UTC>), 'avatar': '', 'gender': None, 'bio': '', 'birthdate': None, 'language': None, 'currency': None, 'superhost': False}
+~$ dir(jaey) # check room_set
+['CURRENCY_CAD', 'CURRENCY_CHOICES', 'CURRENCY_KRW', 'CURRENCY_USD', 'DoesNotExist', 'EMAIL_FIELD', 'GENDER_CHOICES', 'GENDER_FEMALE', 'GENDER_MALE', 'GENDER_OTHER', 'LANGUAGE_CHOICES', 'LANGUAGE_ENGLISH', 'LANGUAGE_KOREAN', 'Meta', 'MultipleObjectsReturned', 'REQUIRED_FIELDS', 'USERNAME_FIELD', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__',
+'__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__setstate__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_check_column_name_clashes', '_check_constraints', '_check_field_name_clashes', '_check_fields', '_check_id_field', '_check_index_together', '_check_indexes', '_check_local_fields', '_check_long_column_names', '_check_m2m_through_same_relationship', '_check_managers', '_check_model', '_check_model_name_db_lookup_clashes', '_check_ordering', '_check_property_name_related_field_accessor_clashes', '_check_single_primary_key', '_check_swappable', '_check_unique_together', '_do_insert', '_do_update', '_get_FIELD_display', '_get_next_or_previous_by_FIELD', '_get_next_or_previous_in_order', '_get_pk_val', '_get_unique_checks', '_meta', '_password', '_perform_date_checks', '_perform_unique_checks', '_save_parents', '_save_table', '_set_pk_val', '_state', 'avatar', 'bio', 'birthdate', 'check', 'check_password', 'clean', 'clean_fields', 'conversation_set', 'currency', 'date_error_message', 'date_joined', 'delete', 'email', 'email_user', 'first_name', 'from_db', 'full_clean', 'gender', 'get_all_permissions', 'get_currency_display', 'get_deferred_fields', 'get_email_field_name', 'get_full_name', 'get_gender_display', 'get_group_permissions', 'get_language_display', 'get_next_by_date_joined', 'get_previous_by_date_joined', 'get_session_auth_hash', 'get_short_name', 'get_username', 'groups', 'has_module_perms', 'has_perm', 'has_perms', 'has_usable_password', 'id', 'is_active', 'is_anonymous', 'is_authenticated', 'is_staff', 'is_superuser', 'language', 'last_login', 'last_name', 'list_set', 'logentry_set', 'message_set', 'natural_key', 'normalize_username', 'objects', 'password', 'pk', 'prepare_database_save', 'refresh_from_db', 'reservation_set', 'review_set', 'room_set', 'save', 'save_base', 'serializable_value', 'set_password', 'set_unusable_password', 'superhost', 'unique_error_message', 'user_permissions', 'username', 'username_validator', 'validate_unique']
+~$ jaey.room_set.all() # format: 'name of object' + '_' + 'set' unless we don't set 'related_name' for the forein key
+cf. QuerySet 을 사용해 우리는 특정 오브젝트를 foreign key로 참조하는 모든 오브젝트 셋에 접근할 수 있다.
+- User object doesn't have a Room as a memeber variable
+- Many Rooms refers to a specific User as a foreign key
+- Using QuerySet, we can access all the Rooms that has the User as its foreign key
+4-2 ManyToManyField object
+~$ from rooms.models import Room
+~$ room = Room.objects.get(id=1) # or pk=1
+~$ room
+~$ room.amenities
+~$ room.amenities.all()
+~$ room.review_set.all()
+4-3 list rooms that has a specific amenity
+~$ from rooms.models import Amenity
+~$ Amenity.objects.all()
+~$ a = Amenity.objects.get(id=1)
+~$ a.room_set.all()
+
+
+=========================================================
+ Re-Initialize db after updating model
+=========================================================
+[Remove existing migration files and db file]
+- remove 00xx_xxxx.py in migrations directory of each application
+- remove db.sqlite3 from root directory
+
+[Update modified models] - Django ORM
+- Create migrations from model
+~$ python manage.py makemigrations
+- Apply migrations (This create database SQL(db.sqlite3) from model)
+~$ python manage.py migrate
+
+[Create Django superuser]
+~$ python manage.py createsuperuser #in pipenv shell
+
+[Run Django server]
+~$ python manage.py runserver #in pipenv shell
+
+
