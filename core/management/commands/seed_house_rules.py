@@ -14,7 +14,7 @@ class Command(BaseCommand):
         for r in house_rules:
             HouseRule.objects.create(name=r)
 
-        self.stdout.write(self.style.SUCCESS("Amenities created!"))
+        self.stdout.write(self.style.SUCCESS(f"{len(house_rules)} house_rules created!"))
 
     def handle(self, *args, **options):
 

@@ -14,7 +14,7 @@ class Command(BaseCommand):
         for f in facilities:
             Facility.objects.create(name=f)
 
-        self.stdout.write(self.style.SUCCESS("Facilities created!"))
+        self.stdout.write(self.style.SUCCESS(f"{len(facilities)} facilities created!"))
 
     def handle(self, *args, **options):
 

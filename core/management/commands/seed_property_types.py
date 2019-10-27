@@ -31,7 +31,7 @@ class Command(BaseCommand):
         for t in property_types:
             PropertyType.objects.create(name=t)
 
-        self.stdout.write(self.style.SUCCESS("Amenities created!"))
+        self.stdout.write(self.style.SUCCESS(f"{len(property_types)} property_types created!"))
 
     def handle(self, *args, **options):
 
