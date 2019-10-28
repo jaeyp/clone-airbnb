@@ -9,16 +9,16 @@ class Command(BaseCommand):
     help = "This command generates facility options"
 
     def add_arguments(self, parser):
+
+        pass
+
+    def handle(self, *args, **options):
         facilities = ["Free parking on premises", "Gym", "Hot tub", "Pool"]
 
         for f in facilities:
             Facility.objects.create(name=f)
 
         self.stdout.write(self.style.SUCCESS(f"{len(facilities)} facilities created!"))
-
-    def handle(self, *args, **options):
-
-        pass
 
 
 """         def add_arguments(self, parser):

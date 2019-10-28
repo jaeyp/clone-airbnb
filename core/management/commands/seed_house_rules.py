@@ -9,16 +9,16 @@ class Command(BaseCommand):
     help = "This command generates house rule options"
 
     def add_arguments(self, parser):
+
+        pass
+
+    def handle(self, *args, **options):
         house_rules = ["Suitable for events", "Pets allowed", "Smoking allowed"]
 
         for r in house_rules:
             HouseRule.objects.create(name=r)
 
         self.stdout.write(self.style.SUCCESS(f"{len(house_rules)} house_rules created!"))
-
-    def handle(self, *args, **options):
-
-        pass
 
 
 """         def add_arguments(self, parser):

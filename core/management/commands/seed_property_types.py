@@ -9,6 +9,10 @@ class Command(BaseCommand):
     help = "This command generates property type options"
 
     def add_arguments(self, parser):
+
+        pass
+
+    def handle(self, *args, **options):
         property_types = [
             "House",
             "Apartment",
@@ -32,10 +36,6 @@ class Command(BaseCommand):
             PropertyType.objects.create(name=t)
 
         self.stdout.write(self.style.SUCCESS(f"{len(property_types)} property_types created!"))
-
-    def handle(self, *args, **options):
-
-        pass
 
 
 """         def add_arguments(self, parser):

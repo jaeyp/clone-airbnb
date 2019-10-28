@@ -9,6 +9,10 @@ class Command(BaseCommand):
     help = "This command generates amenity options"
 
     def add_arguments(self, parser):
+
+        pass
+
+    def handle(self, *args, **options):
         amenities = [
             "Kitchen",
             "Shampoo",
@@ -36,10 +40,6 @@ class Command(BaseCommand):
             Amenity.objects.create(name=a)
 
         self.stdout.write(self.style.SUCCESS(f"{len(amenities)} amenities created!"))
-
-    def handle(self, *args, **options):
-
-        pass
 
 
 """         def add_arguments(self, parser):
