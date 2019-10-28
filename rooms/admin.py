@@ -46,7 +46,7 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
     fieldsets = (
         ("Basic info", {"fields": ("name", "description", "country", "city", "address", "price")}),
         ("Times", {"fields": ("check_in", "check_out", "instance_book")}),
-        ("Spaces", {"fields": ("guest", "beds", "bedrooms", "baths")}),
+        ("Spaces", {"fields": ("guests", "beds", "bedrooms", "bathrooms")}),
         (
             "More About the Space",
             {"classes": ("collapse",), "fields": ("amenities", "facilities", "house_rules")},
@@ -59,10 +59,10 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
         "country",
         "city",
         "price",
-        "guest",
+        "guests",
         "beds",
         "bedrooms",
-        "baths",
+        "bathrooms",
         "check_in",
         "check_out",
         "instance_book",
@@ -71,7 +71,7 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
         "total_rating",
     )
 
-    ordering = ("price", "guest", "beds", "bedrooms", "baths")
+    ordering = ("price", "guests", "beds", "bedrooms", "bathrooms")
 
     list_filter = (
         "instance_book",
