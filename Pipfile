@@ -11,6 +11,7 @@ black = "*"
 django-countries = "*"
 django = "==2.2.5"
 pillow = "*"
+django-seed = "*"
 
 [requires]
 python_version = "3.7"
