@@ -30,8 +30,35 @@ Finally, you can once again install pipenv and its dependencies: pip install pip
 1. Install Pillow for django.db.models.ImageField
 ~$ pipenv install Pillow
 
+2. Install django-countries
+~$ pipenv install django-countries
+Add "django_countries" to INSTALLED_APPS in config/settings.py
+
+3. Install django_seed  # it uses the faker library (django_faker) to generate test data for your Django models
+~$ pipenv install django_seed
+Add "django_seed" to INSTALLED_APPS in config/settings.py
+
+--------------------------------------
 Tips. Create python shell
 Command Pallete (Ctrl+Shift+P) -> Python: Create Terminal
+
+    Errors.
+    PS C:\Users\jpins\Dev\django\clone-airbnb> & C:/Users/jpins/.virtualenvs/clone-airbnb-BbR5YNON/Scripts/activate.ps1
+    & : File C:\Users\jpins\.virtualenvs\clone-airbnb-BbR5YNON\Scripts\activate.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at 
+    https:/go.microsoft.com/fwlink/?LinkID=135170.
+    This error comes when the PowerShell execution policy doesn’t allow us to run scripts.
+
+    Solution.
+    The PowerShell execution policy is default set to Restricted. You can change the PowerShell execution policies with Set-ExecutionPolicy cmdlet.
+        Restricted – No scripts can be run.
+        AllSigned – Only scripts signed by a trusted publisher can be run.
+        RemoteSigned – Downloaded scripts must be signed by a trusted publisher.
+        Unrestricted – All Windows PowerShell scripts can be run.
+    ~$ Get-ExecutionPolicy
+    Restricted (default)
+    ~$ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+--------------------------------------
 
 =========================================================
 [Git]
