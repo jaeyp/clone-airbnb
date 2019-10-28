@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
 
 """         def add_arguments(self, parser):
-            parser.add_arguments(
+            parser.add_argument(
                 "--times", help="How many times do you want me to tell you that I love you"
             ) """
 
