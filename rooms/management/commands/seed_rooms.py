@@ -6,13 +6,16 @@ from rooms import models as room_models
 from users import models as user_models
 
 
+NAME = "rooms"
+
+
 class Command(BaseCommand):
 
-    help = "This command generates many rooms"
+    help = "This command generates many {NAME}"
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--number", default=1, type=int, help="How many rooms do you want to create"
+            "--number", default=1, type=int, help="How many {NAME} do you want to create"
         )
 
     def handle(self, *args, **options):
@@ -64,4 +67,4 @@ class Command(BaseCommand):
                 if draw % 2 == 0:
                     room.house_rules.add(r)
 
-        self.stdout.write(self.style.SUCCESS(f"{number} rooms created!"))
+        self.stdout.write(self.style.SUCCESS(f"{number} {NAME} created!"))
