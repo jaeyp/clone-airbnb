@@ -1,5 +1,6 @@
 {
-    "python.pythonPath": "C:\\Users\\jpins\\.virtualenvs\\clone-airbnb-BbR5YNON\\Scripts\\python.exe",
+    // "python.pythonPath": "C:\\Users\\jpins\\.virtualenvs\\clone-airbnb-BbR5YNON\\Scripts\\python.exe",
+    "python.pythonPath": "C:\\Users\\jpins\\.virtualenvs\\clone-airbnb-tMKliROm\\Scripts\\python.exe",
     // support linting
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,

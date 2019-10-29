@@ -26,6 +26,11 @@ Finally, you can once again install pipenv and its dependencies: pip install pip
 ~$ pipenv shell
 ~$ django-admin
 --------------------------------------
+[change project directory]
+~$ pipenv shell
+Edit a virtual environment path from .vscode/settings.json
+~$ pipenv install Django==2.2.5
+--------------------------------------
 [Install other packages]
 1. Install Pillow for django.db.models.ImageField
 ~$ pipenv install Pillow
