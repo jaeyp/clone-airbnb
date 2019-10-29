@@ -45,6 +45,6 @@ class Command(BaseCommand):
                     wishlist.rooms.add(r)
 
             if len(wishlist.rooms.all()) == 0:
-                wishlist.rooms.add(all_rooms[random.randint(0, len(all_rooms) - 1)])
+                wishlist.rooms.add(all_rooms[random.randint(0, len(all_rooms))])
 
         self.stdout.write(self.style.SUCCESS(f"{number} {NAME} created!"))

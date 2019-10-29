@@ -4,13 +4,13 @@ from core.models import AbsctractTimeStampedModel
 # Create your models here.
 
 
-class List(AbsctractTimeStampedModel):
+class WishList(AbsctractTimeStampedModel):
 
-    """ List Model Definition """
+    """ WishList Model Definition """
 
     name = models.CharField(max_length=80)
-    user = models.ForeignKey("users.User", related_name="lists", on_delete=models.CASCADE)
-    rooms = models.ManyToManyField("rooms.Room", related_name="lists", blank=True)
+    user = models.ForeignKey("users.User", related_name="wishlists", on_delete=models.CASCADE)
+    rooms = models.ManyToManyField("rooms.Room", related_name="wishlists", blank=True)
 
     def __str__(self):
         return self.name

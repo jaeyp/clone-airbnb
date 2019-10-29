@@ -4,10 +4,10 @@ from . import models
 # Register your models here.
 
 
-@admin.register(models.List)
-class ListAdmin(admin.ModelAdmin):
+@admin.register(models.WishList)
+class WishListAdmin(admin.ModelAdmin):
 
-    """ List Admin Definition """
+    """ WishList Admin Definition """
 
     list_display = ("name", "user", "count_rooms")
 
