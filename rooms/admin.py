@@ -86,8 +86,10 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
 
     # InlineModelAdmin.raw_id_fields
     """
-        By default, Django’s admin uses a select-box interface (<select>) for fields that are ForeignKey.
-        raw_id_fields is a list of fields you would like to change into an Input widget for either a ForeignKey or ManyToManyField:
+        By default, Django’s admin uses a select-box interface (<select>)
+            for fields that are ForeignKey.
+        raw_id_fields is a list of fields you would like to change into an Input widget
+            for either a ForeignKey or ManyToManyField:
     """
     raw_id_fields = ("host",)
 
@@ -109,7 +111,8 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
 
     # Overriding ModelAdmin.save_model()
     """
-        When overriding ModelAdmin.save_model() and ModelAdmin.delete_model(), your code must save/delete the object. 
+        When overriding ModelAdmin.save_model() and ModelAdmin.delete_model(),
+            your code must save/delete the object.
         They aren’t meant for veto purposes, rather they allow you to perform extra operations.
     """
 
