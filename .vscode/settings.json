@@ -6,7 +6,7 @@
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "python.linting.flake8Args": [
-        "--max-line-length=100"
+        "--max-line-length=120" // 120 characters for Chrome on the screen of 1920px (width)
     ],
     // "python.linting.flake8Path": "C:\\Users\\jpins\\.virtualenvs\\clone-airbnb-BbR5YNON\\Scripts\\flake8",
     // support formatting
@@ -14,7 +14,7 @@
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": [
         "--line-length",
-        "100"
+        "120"
     ],
     // "python.formatting.blackPath": "C:\\Users\\jpins\\.virtualenvs\\clone-airbnb-BbR5YNON\\Scripts\\black",
 }
