@@ -14,14 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings  # you shouldn't do this in Django: from . import settings
 
 # static.static(): Helper function to return a URL pattern for serving files in debug mode
 from django.conf.urls.static import static
 
 # You shouldn't change this variable name 'urlpatterns'
-urlpatterns = [path("admin/", admin.site.urls)]
+# urlpatterns = [path("admin/", admin.site.urls)]
+urlpatterns = [
+    path("", include("core.urls", namespace="core")),
+    path("admin/", admin.site.urls),
+]
+
 
 # Serving files uploaded by a user during development
 """
