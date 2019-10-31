@@ -77,6 +77,7 @@ class Room(AbsctractTimeStampedModel):
     check_in = models.TimeField()
     check_out = models.TimeField()
     instance_book = models.BooleanField(default=False)
+    # plus = models.BooleanField(default=False)  # verified room by Airbnb for quality and design
 
     # Sets ForeignKey having many to one relationship with User
     """ on_delete=models.CASCADE
@@ -86,12 +87,8 @@ class Room(AbsctractTimeStampedModel):
     """
     # related_name: set alias for QuerySet 'room_set'.
     # Don't forget related_name is for target object_set (e.g. rooms for this class)
-    host = models.ForeignKey(
-        User, related_name="rooms", on_delete=models.CASCADE
-    )  # connecting Room to User
-    property_type = models.ForeignKey(
-        PropertyType, related_name="rooms", on_delete=models.SET_NULL, null=True
-    )
+    host = models.ForeignKey(User, related_name="rooms", on_delete=models.CASCADE)  # connecting Room to User
+    property_type = models.ForeignKey(PropertyType, related_name="rooms", on_delete=models.SET_NULL, null=True)
 
     # Sets many to many relationship between Room and Amenities
     amenities = models.ManyToManyField(Amenity, related_name="rooms", blank=True)
