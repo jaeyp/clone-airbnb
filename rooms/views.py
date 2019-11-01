@@ -1,13 +1,39 @@
+# Function Based Views in manual way
 # from math import ceil
+
+# Function Based Views with Paginator
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
+
+# Class Based Views
+from django.views.generic import ListView
 from . import models
 
 # Create your views here.
 
 
+class HomeView(ListView):
+
+    """ HomeView Definition
+        Class Based View
+    """
+
+    # 1. Set HomeView.model or HomeView.queryset
+    model = models.Room
+
+    # 2. Set Attributes: check ccbv.co.uk
+    paginate_by = 5
+    paginate_orphans = 2
+    ordering = "price"
+    page_kwarg = "page"  # page keyward argument - default: "page"
+
+    # Use page_obj in order to access a page instance in template
+
+
 def all_rooms(request):
-    """ Rendering home.html page by using Paginator
+    """ all_rooms
+        Function Based View
+        it renders home.html page by using Paginator
         https://docs.djangoproject.com/en/2.2/topics/pagination/
     """
     # 1. Get the value of key "page" from GET request
@@ -21,7 +47,7 @@ def all_rooms(request):
     # print(vars(rooms))  # object_list of rooms in the page, number, paginator instance
     # print(vars(rooms.paginator))  # object_list of all room, per_page, orphans, allow_empty_first_page, count, num_pages
 
-    # 4. Create a Page object using get_page()
+    # 4-1. Create a Page object using get_page()
     """ get_page()
         it returns the first page if the page number is negative,
         or
@@ -29,11 +55,11 @@ def all_rooms(request):
     """
     # rooms = paginator.get_page(page)  # rooms is a Page object: Paginator.page()
 
-    # 4. Create a Page object using page()
+    # 4-2. Create a Page object using page()
     """ page()
         it raises InvalidPage if the given page number doesn’t exist.
     """
-    # 4-1. returns the first page if no objects exist on that page.
+    # 4-2-1. returns the first page if no objects exist on that page.
     """
     try:
         rooms = paginator.page(int(page))
@@ -43,7 +69,7 @@ def all_rooms(request):
     return render(request, "rooms/home.html", {"use_paginator": True, "page": rooms})
     """
 
-    # 4-2. redirect to home page if no objects exist on that page.
+    # 4-2-2. redirect to home page if no objects exist on that page.
     try:
         rooms = paginator.page(int(page))
         return render(request, "rooms/home.html", {"use_paginator": True, "page": rooms})
