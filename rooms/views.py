@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 # Function Based Views in manual way
 # from math import ceil
 
@@ -7,6 +9,7 @@ from django.core.paginator import Paginator, EmptyPage
 
 # Class Based Views
 from django.views.generic import ListView
+
 from . import models
 
 # Create your views here.
@@ -26,6 +29,13 @@ class HomeView(ListView):
     paginate_orphans = 2
     ordering = "price"
     page_kwarg = "page"  # page keyward argument - default: "page"
+    # context_object_name = "rooms"  # change object_list to rooms
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = timezone.now()
+        context["now"] = now
+        return context
 
     # Use page_obj in order to access a page instance in template
 
