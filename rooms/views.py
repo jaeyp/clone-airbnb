@@ -24,12 +24,17 @@ class HomeView(ListView):
     # 1. Set HomeView.model or HomeView.queryset
     model = models.Room
 
-    # 2. Set Attributes: check ccbv.co.uk
+    # 2. Set Attributes: refers to ccbv.co.uk
     paginate_by = 5
     paginate_orphans = 2
     ordering = "price"
-    page_kwarg = "page"  # page keyward argument - default: "page"
+    # page_kwarg = "page"  # page keyward argument - default: "page"
     # context_object_name = "rooms"  # change object_list to rooms
+
+    """ if you don't want to use the given template name from CBV,
+        set template_name as an argument of as_view(), or inside HomeView class
+    """
+    # template_name = "rooms/home4cbv.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -38,6 +43,11 @@ class HomeView(ListView):
         return context
 
     # Use page_obj in order to access a page instance in template
+
+
+def room_detail(request, id):
+    print(id)
+    return render(request, "rooms/detail.html")
 
 
 def all_rooms(request):
@@ -55,7 +65,7 @@ def all_rooms(request):
     # 3. Create a Paginator instance
     paginator = Paginator(all_rooms, 5, orphans=2)
     # print(vars(rooms))  # object_list of rooms in the page, number, paginator instance
-    # print(vars(rooms.paginator))  # object_list of all room, per_page, orphans, allow_empty_first_page, count, num_pages
+    # print(vars(rooms.paginator))  # object_list of all room, per_page, orphans, allow_empty_first_page, count...
 
     # 4-1. Create a Page object using get_page()
     """ get_page()

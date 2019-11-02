@@ -2,7 +2,7 @@
 
 <!-- Page Name -->
 {% block page_name %}
-Room List
+Home for CBV
 {% endblock page_name %}
 
 <!-- Page Content -->
@@ -12,7 +12,20 @@ Room List
 
 <!-- Room List -->
 {% for room in object_list %}
-<h1>{{room.name}} / ${{room.price}}</h1>
+<h1>
+
+    {% comment %}
+    <a href="/rooms/{{room.id}}">
+        {{room.name}} / ${{room.price}}
+    </a>
+    This is bad since we need to remember url path. instead, use URL tag as below.
+    URL tag: {% url 'url_path:url_name' arg1 arg2 .. %}
+    {% endcomment %}
+
+    <a href='{% url "rooms:detail" room.id %}'>
+        {{room.name}} / ${{room.price}}
+    </a>
+</h1>
 {% endfor %}
 
 <!-- Page Navigator -->

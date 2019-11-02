@@ -23,7 +23,10 @@ from django.conf.urls.static import static
 # You shouldn't change this variable name 'urlpatterns'
 # urlpatterns = [path("admin/", admin.site.urls)]
 urlpatterns = [
-    path("", include("core.urls", namespace="core")),
+    # path("", include("core.urls", namespace="core")),
+    # path("rooms/", include("rooms.urls", namespace="rooms")),
+    path("", include("core.urls")),
+    path("rooms/", include("rooms.urls")),
     path("admin/", admin.site.urls),
 ]
 
