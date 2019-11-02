@@ -2,6 +2,7 @@
 # e.g. import os
 # 2. import django packages
 from django.db import models
+from django.urls import reverse
 
 # 3. import third-party packages
 from django_countries.fields import CountryField
@@ -126,6 +127,18 @@ class Room(AbsctractTimeStampedModel):
         # super(ModelName, self).save(*args, **kwargs)  # Call the real save() method
 
         # do something else
+
+    def get_absolute_url(self):
+
+        """ reverse()
+            you can convert URL_pattern_name to absolute_url
+            e.g.
+            if you have 'detail' url pattern in rooms/urls.py like this,
+                urlpatterns = [path("<int:id>", views.room_detail, name="detail")]
+            you can invoke reverse() like this,
+                reverse("rooms:detail", kwargs={"id": self.id})
+        """
+        return reverse("rooms:detail", kwargs={"id": self.id})
 
     def total_rating(self):
         all_reviews = self.reviews.all()
