@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 
 # Class Based Views
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from . import models
 
@@ -20,7 +20,10 @@ from . import models
 class HomeView(ListView):
 
     """ HomeView Definition
-        Class Based View
+        Class Based Home View
+
+        [Generic ListView]
+        http://ccbv.co.uk/projects/Django/2.2/django.views.generic.list/ListView/
     """
 
     # 1. Set HomeView.model or HomeView.queryset
@@ -47,34 +50,9 @@ class HomeView(ListView):
     # Use page_obj in order to access a page instance in template
 
 
-def room_detail(request, id):
-    support_404 = False
-    try:
-        room = models.Room.objects.get(id=id)
-        return render(request, "rooms/detail.html", context={"room": room})
-    except models.Room.DoesNotExist:
-        """ DoesNotExist is different from PageNotFound error of HTTP
-            So, if we doesn't catch this error type,
-            it will raise server error (500).
-        """
-        if support_404:
-            """ Raise 404 error
-                if you raise Http404(), django try to find & render 404.html from templates directory
-            """
-            raise Http404()
-        else:
-            # return redirect("")
-            # return redirect("/")
-            """ Tips.
-                Always try to use reverse() instead of url as much as you can!
-                It will help you a lot!
-            """
-            return redirect(reverse("core:home"))
-
-
 def all_rooms(request):
     """ all_rooms
-        Function Based View
+        Function Based Home View
         it renders home.html page by using Paginator
         https://docs.djangoproject.com/en/2.2/topics/pagination/
     """
@@ -143,3 +121,52 @@ def all_rooms(request):
         context={"rooms": all_rooms, "page": page, "total_page": total_page, "page_range": range(1, total_page + 1)},
     )
 """
+
+
+class RoomDetailView(DetailView):
+    """ RoomDetailView definition
+        Class Based Room Detail Viwe
+
+        [Generic DetailView]
+        With DetailView, Django looks 'pk' url argument by default.
+        http://ccbv.co.uk/projects/Django/2.2/django.views.generic.detail/DetailView/
+    """
+
+    model = models.Room
+    pk_url_kwarg = "id"
+
+
+def room_detail(request, id):
+    """ room_detail
+        Function Based Room Detail View
+    """
+    support_404 = True
+    """ Custom 404 page
+        In order to enable custom 404 page,
+        you should change DEBUG setting from config/settings.py
+
+        e.g.
+        DEBUG = False
+        ALLOWED_HOSTS = "*"
+    """
+    try:
+        room = models.Room.objects.get(id=id)
+        return render(request, "rooms/detail.html", context={"room": room})
+    except models.Room.DoesNotExist:
+        """ DoesNotExist is different from PageNotFound error of HTTP
+            So, if we doesn't catch this error type,
+            it will raise server error (500).
+        """
+        if support_404:
+            """ Raise 404 error
+                if you raise Http404(), django try to find & render 404.html from templates directory
+            """
+            raise Http404()
+        else:
+            # return redirect("")
+            # return redirect("/")
+            """ Tips.
+                Always try to use reverse() instead of url as much as you can!
+                It will help you a lot!
+            """
+            return redirect(reverse("core:home"))
