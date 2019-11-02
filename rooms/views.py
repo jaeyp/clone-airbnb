@@ -1,4 +1,6 @@
 from django.utils import timezone
+from django.urls import reverse
+from django.http import Http404
 
 # Function Based Views in manual way
 # from math import ceil
@@ -46,8 +48,28 @@ class HomeView(ListView):
 
 
 def room_detail(request, id):
-    print(id)
-    return render(request, "rooms/detail.html")
+    support_404 = False
+    try:
+        room = models.Room.objects.get(id=id)
+        return render(request, "rooms/detail.html", context={"room": room})
+    except models.Room.DoesNotExist:
+        """ DoesNotExist is different from PageNotFound error of HTTP
+            So, if we doesn't catch this error type,
+            it will raise server error (500).
+        """
+        if support_404:
+            """ Raise 404 error
+                if you raise Http404(), django try to find & render 404.html from templates directory
+            """
+            raise Http404()
+        else:
+            # return redirect("")
+            # return redirect("/")
+            """ Tips.
+                Always try to use reverse() instead of url as much as you can!
+                It will help you a lot!
+            """
+            return redirect(reverse("core:home"))
 
 
 def all_rooms(request):
