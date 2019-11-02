@@ -96,11 +96,13 @@ class Room(AbsctractTimeStampedModel):
     facilities = models.ManyToManyField(Facility, related_name="rooms", blank=True)
     house_rules = models.ManyToManyField(HouseRule, related_name="rooms", blank=True)
 
-    # Overriding __str__ method
+    # ======================================
+    # OVERRIDING PREDEFINED MODEL METHODS
+    # ======================================
+
     def __str__(self):
         return self.name
 
-    # Overriding predefined model methods
     """
         In particular you’ll often want to change the way save() and delete() work.
 
@@ -115,20 +117,20 @@ class Room(AbsctractTimeStampedModel):
 
     def save(self, *args, **kwargs):
 
-        """
-            args: arguments
-            kwargs: keyword arguments
-        """
+        """ Overriding save method """
 
-        # do something
+        # Do something required before saving
         self.city = str.capitalize(self.city)
 
-        super().save(*args, **kwargs)  # Call the real save() method
-        # super(ModelName, self).save(*args, **kwargs)  # Call the real save() method
+        # then, save it
+        super().save(*args, **kwargs)  # Call the actual save() method
+        # super(ModelName, self).save(*args, **kwargs)
 
-        # do something else
+        # Do something required after saving here.
 
     def get_absolute_url(self):
+
+        """ Overriding get_absolute_url method """
 
         """ reverse()
             you can convert URL_pattern_name to absolute_url
@@ -139,6 +141,10 @@ class Room(AbsctractTimeStampedModel):
                 reverse("rooms:detail", kwargs={"id": self.id})
         """
         return reverse("rooms:detail", kwargs={"id": self.id})
+
+    # ======================================
+    # CUSTOM METHODS
+    # ======================================
 
     def total_rating(self):
         all_reviews = self.reviews.all()
