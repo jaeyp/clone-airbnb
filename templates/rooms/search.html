@@ -39,6 +39,63 @@ Search
 
         </select>
     </div>
+    <div>
+        <label for="price">Price</label>
+        <input value="{{req_price}}" type="number" id="price" name="price" placeholder="Price" />
+    </div>
+    <div>
+        <label for="guests">Guests</label>
+        <input value="{{req_guests}}" type="number" id="guests" name="guests" placeholder="Guests" />
+    </div>
+    <div>
+        <label for="bedrooms">Bedrooms</label>
+        <input value="{{req_bedrooms}}" type="number" id="bedrooms" name="bedrooms" placeholder="Bedrooms" />
+    </div>
+    <div>
+        <label for="beds">Beds</label>
+        <input value="{{req_beds}}" type="number" id="beds" name="beds" placeholder="Beds" />
+    </div>
+    <div>
+        <label for="baths">Baths</label>
+        <input value="{{req_baths}}" type="number" id="baths" name="baths" placeholder="Baths" />
+    </div>
+    <div>
+        <label for="instant">Instant Book Only?</label>
+        <input type="checkbox" id="instant" name="instant" {% if req_instant %} checked {% endif %} />
+    </div>
+    <div>
+        <label for="superhost">By Superhost Only?</label>
+        <input type="checkbox" id="superhost" name="superhost" {% if req_superhost %} checked {% endif %} />
+    </div>
+    <div>
+        <h3>Amenities</h3>
+        <ul>
+
+            {% for amenity in opt_amenities %}
+            <li>
+                <label for="a_{{amenity.name}}">{{amenity.name}}</label>
+                <!-- piping pk through slugify-->
+                <input value="{{amenity.pk}}" type="checkbox" id="a_{{amenity.pk}}" name="amenities"
+                    {% if amenity.pk|slugify in req_amenities  %} checked {% endif %} />
+            </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+    <div>
+        <h3>Facilities</h3>
+        <ul>
+
+            {% for facility in opt_facilities %}
+            <li>
+                <label for="f_{{facility.name}}">{{facility.name}}</label>
+                <input value="{{facility.pk}}" type="checkbox" id="f_{{facility.pk}}" name="facilities"
+                    {% if facility.pk|slugify in req_facilities %} checked {% endif %} />
+            </li>
+            {% endfor %}
+
+        </ul>
+    </div>
     <button>Search</button>
 </form>
 {% endblock content %}
