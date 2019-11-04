@@ -11,7 +11,17 @@
 </head>
 
 <body>
-    {% include 'partials/header.html' %}
+    <header>
+        {% include 'partials/nav.html' %}
+        <!-- Search form for /rooms/search/?city=xxx -->
+
+        {% block search-bar %}
+        <form method="get" action="{% url 'rooms:search' %}">
+            <input type="text" name="city" placeholder="Search by City" />
+        </form>
+        {% endblock search-bar %}
+
+    </header>
 
     {% block content %}{% endblock content %}
 
