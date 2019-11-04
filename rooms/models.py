@@ -77,7 +77,7 @@ class Room(AbsctractTimeStampedModel):
     bathrooms = models.IntegerField()
     check_in = models.TimeField()
     check_out = models.TimeField()
-    instance_book = models.BooleanField(default=False)
+    instant_book = models.BooleanField(default=False)
     # plus = models.BooleanField(default=False)  # verified room by Airbnb for quality and design
 
     # Sets ForeignKey having many to one relationship with User
