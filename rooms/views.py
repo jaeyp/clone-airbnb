@@ -12,6 +12,9 @@ from django.core.paginator import Paginator, EmptyPage
 # Class Based Views
 from django.views.generic import ListView, DetailView
 
+# third-party packages
+from django_countries import countries
+
 from . import models
 
 # Create your views here.
@@ -170,3 +173,54 @@ def room_detail(request, id):
                 It will help you a lot!
             """
             return redirect(reverse("core:home"))
+
+
+def search(request):
+    # requests
+    city = request.GET.get("city", "Anywhere")  # if no city key, set city = Anywhere
+    city = str.capitalize(city or "Anywhere")  # if city is empty, set city = Anywhere
+    country = request.GET.get("country", "")
+    property_type = request.GET.get("property_type", 0)
+    property_type = int(property_type or 0)
+    price = int(request.GET.get("price", 0) or 0)
+    guests = int(request.GET.get("guests", 0) or 0)
+    bedrooms = int(request.GET.get("bedrooms", 0) or 0)
+    beds = int(request.GET.get("beds", 0) or 0)
+    baths = int(request.GET.get("baths", 0) or 0)
+    instant_book = request.GET.get("instant_book", False)
+    superhost = request.GET.get("superhost", False)
+    # requests with multi selection
+    amenities = request.GET.getlist("amenities")
+    facilities = request.GET.getlist("facilities")
+    print(amenities)
+    print(facilities)
+
+    # options
+    property_types = models.PropertyType.objects.all()
+    amenity_types = models.Amenity.objects.all()
+    facility_types = models.Facility.objects.all()
+
+    # dictionaries for requests & options
+    req = {
+        "req_city": city,
+        "req_country": country,
+        "req_property_type": property_type,
+        "req_price": price,
+        "req_guests": guests,
+        "req_bedrooms": bedrooms,
+        "req_beds": beds,
+        "req_baths": baths,
+        "req_instant_book": instant_book,
+        "req_superhost": superhost,
+        "req_amenities": amenities,
+        "req_facilities": facilities,
+    }
+    opt = {
+        "opt_countries": countries,
+        "opt_property_types": property_types,
+        "opt_amenities": amenity_types,
+        "opt_facilities": facility_types,
+    }
+
+    # set context by unpacking dictionary
+    return render(request, "rooms/search.html", {**req, **opt})
