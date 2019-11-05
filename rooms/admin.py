@@ -11,6 +11,7 @@ class ItemAdmin(admin.ModelAdmin):
 
     """ Item Admin Definition """
 
+    # list_display = ("name", "used_by", "pk")
     list_display = ("name", "used_by")
 
     def used_by(self, obj):
@@ -56,6 +57,7 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
         "country",
         "city",
         "price",
+        "property_type",
         "guests",
         "beds",
         "bedrooms",

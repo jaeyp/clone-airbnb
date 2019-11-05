@@ -176,6 +176,7 @@ def room_detail(request, id):
 
 
 def search(request):
+    # =========================================
     # requests
     city = request.GET.get("city", "Anywhere")  # if no city key, set city = Anywhere
     city = str.capitalize(city or "Anywhere")  # if city is empty, set city = Anywhere
@@ -187,19 +188,22 @@ def search(request):
     bedrooms = int(request.GET.get("bedrooms", 0) or 0)
     beds = int(request.GET.get("beds", 0) or 0)
     baths = int(request.GET.get("baths", 0) or 0)
-    instant_book = request.GET.get("instant_book", False)
-    superhost = request.GET.get("superhost", False)
+    instant_book = bool(request.GET.get("instant_book", False))  # on -> True by using bool()
+    superhost = bool(request.GET.get("superhost", False))
+
     # requests with multi selection
     amenities = request.GET.getlist("amenities")
     facilities = request.GET.getlist("facilities")
-    print(amenities)
-    print(facilities)
+    print(f"Selected Amenities: {amenities}")
+    print(f"Selected Facilities: {facilities}")
 
+    # =========================================
     # options
     property_types = models.PropertyType.objects.all()
     amenity_types = models.Amenity.objects.all()
     facility_types = models.Facility.objects.all()
 
+    # =========================================
     # dictionaries for requests & options
     req = {
         "req_city": city,
@@ -222,5 +226,63 @@ def search(request):
         "opt_facilities": facility_types,
     }
 
-    # set context by unpacking dictionary
-    return render(request, "rooms/search.html", {**req, **opt})
+    # =========================================
+    # QuerySets Filtering
+    """ Reference
+        https://docs.djangoproject.com/en/2.2/ref/models/querysets/
+        search "Field lookups"
+    """
+    filter_args = {}
+
+    if city != "Anywhere":
+        filter_args["city__startswith"] = city
+
+    filter_args["country"] = country
+
+    # property_types is a foreign key, so we can filter it by pk
+    if property_type != 0:  # if not Any kind
+        filter_args["property_type__pk"] = property_type
+
+    if price != 0:
+        filter_args["price__lte"] = price
+
+    if guests != 0:
+        filter_args["guests__gte"] = guests
+
+    if bedrooms != 0:
+        filter_args["bedrooms__gte"] = bedrooms
+
+    if beds != 0:
+        filter_args["beds__gte"] = beds
+
+    if baths != 0:
+        filter_args["baths__gte"] = baths
+
+    if instant_book is True:
+        filter_args["instant_book"] = True
+
+    if superhost is True:
+        filter_args["host__superhost"] = True
+
+    # filtering multi selections (many to many field)
+    if len(amenities) > 0:
+        for a in amenities:
+            # amenities is a foreign key, so we can filter it by pk
+            filter_args["amenities__pk"] = int(a)
+
+    if len(facilities) > 0:
+        for f in facilities:
+            filter_args["facilities__pk"] = int(f)
+
+    print(f"Filtering Result: {filter_args}")
+
+    qs_rooms = models.Room.objects.filter(**filter_args)
+
+    # =========================================
+    # Rendering
+    return render(
+        request,
+        "rooms/search.html",
+        # set context by unpacking dictionary
+        {**req, **opt, "rooms": qs_rooms},
+    )
