@@ -53,7 +53,9 @@ PROJECT_APPS = [
     "conversations.apps.ConversationsConfig",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
+CUSTOM_TAGS = ["rooms.templatetags.room_extras"]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS + CUSTOM_TAGS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

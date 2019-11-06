@@ -15,5 +15,6 @@ app_name = "rooms"
 # With pk_url_kwarg = "id"
 urlpatterns = [
     path("<int:id>", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
-    path("search/", views.search, name="search"),
+    path("search/", views.SearchView.as_view(), name="search"),
+    # path("search/", views.search, name="search"),
 ]

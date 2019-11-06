@@ -10,12 +10,13 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 
 # Class Based Views
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, View
 
 # third-party packages
 from django_countries import countries
 
-from . import models
+# Custom packages
+from . import models, forms
 
 # Create your views here.
 
@@ -128,7 +129,7 @@ def all_rooms(request):
 
 class RoomDetailView(DetailView):
     """ RoomDetailView definition
-        Class Based Room Detail Viwe
+        Class Based Room Detail View
 
         [Generic DetailView]
         With DetailView, Django looks 'pk' url argument by default.
@@ -175,7 +176,115 @@ def room_detail(request, id):
             return redirect(reverse("core:home"))
 
 
+class SearchView(View):
+    """ SearchView definition
+        Class Based Room Search View
+        """
+
+    def get(self, request):
+        country = request.GET.get("country")
+        if country:
+            # How to pass request data into form:
+            # Just By passing request.GET, we can store user requests!
+            form = forms.SearchForm(request.GET)  # Bounded form
+            # print(f"REQUEST: {request.META['QUERY_STRING']}")
+
+            # validation
+            if form.is_valid():
+                # print(form.cleaned_data)
+
+                city = form.cleaned_data.get("city")
+                country = form.cleaned_data.get("country")
+                price = form.cleaned_data.get("price")
+                property_type = form.cleaned_data.get("property_type")
+                price = form.cleaned_data.get("price")
+                guests = form.cleaned_data.get("guests")
+                bedrooms = form.cleaned_data.get("bedrooms")
+                beds = form.cleaned_data.get("beds")
+                bathrooms = form.cleaned_data.get("bathrooms")
+                instant_book = form.cleaned_data.get("instant_book")
+                superhost = form.cleaned_data.get("superhost")
+                amenities = form.cleaned_data.get("amenities")
+                facilities = form.cleaned_data.get("facilities")
+
+                # =========================================
+                # QuerySets Filtering
+                # 1. https://docs.djangoproject.com/en/2.2/ref/models/querysets/
+                # 2. search "Field lookups"
+                filter_args = {}
+
+                if city != "Anywhere":
+                    filter_args["city__startswith"] = city
+
+                filter_args["country"] = country
+
+                # Even though property_types is a foreign key,
+                # in case that we get the property_types from form.cleaned_data,
+                # we don't have to use __pk
+                if property_type is not None:  # if not Any kind
+                    filter_args["property_type"] = property_type  # no __pk
+
+                if price is not None:
+                    filter_args["price__lte"] = price
+
+                if guests is not None:
+                    filter_args["guests__gte"] = guests
+
+                if bedrooms is not None:
+                    filter_args["bedrooms__gte"] = bedrooms
+
+                if beds is not None:
+                    filter_args["beds__gte"] = beds
+
+                if bathrooms is not None:
+                    filter_args["bathrooms__gte"] = bathrooms
+
+                if instant_book is True:
+                    filter_args["instant_book"] = True
+
+                if superhost is True:
+                    filter_args["host__superhost"] = True
+
+                for a in amenities:
+                    filter_args["amenities"] = a  # no __pk
+
+                for f in facilities:
+                    filter_args["facilities"] = f  # no __pk
+
+                # print(f"Filtering Result: {filter_args}")
+
+                qs_rooms = models.Room.objects.filter(**filter_args).order_by(
+                    "name"
+                )  # added order_by() to fix 'UnorderedObjectListWarning'
+
+                paginator = Paginator(qs_rooms, 5, orphans=2)
+                page = request.GET.get("page", 1)
+                rooms = paginator.get_page(page)
+
+                # return render(request, "rooms/search.html", {"form": form, "rooms": qs_rooms})
+                return render(
+                    # request, "rooms/search.html", {"form": form, "page": rooms, "query": request.META["QUERY_STRING"]}
+                    request,
+                    "rooms/search.html",
+                    {"form": form, "page": rooms, "query": request.GET.urlencode},
+                )
+
+        else:  # if no country, then just pass an initial form without validation!
+            form = forms.SearchForm()  # Unbounded form
+
+        # =========================================
+        # Rendering
+        return render(request, "rooms/search.html", {"form": form})
+
+
 def search(request):
+    """ search
+        Function Based Room Search View
+        """
+    # =========================================
+    # Search View in a manual way
+    # =========================================
+    """
     # =========================================
     # requests
     city = request.GET.get("city", "Anywhere")  # if no city key, set city = Anywhere
@@ -187,7 +296,7 @@ def search(request):
     guests = int(request.GET.get("guests", 0) or 0)
     bedrooms = int(request.GET.get("bedrooms", 0) or 0)
     beds = int(request.GET.get("beds", 0) or 0)
-    baths = int(request.GET.get("baths", 0) or 0)
+    bathrooms = int(request.GET.get("bathrooms", 0) or 0)
     instant_book = bool(request.GET.get("instant_book", False))  # on -> True by using bool()
     superhost = bool(request.GET.get("superhost", False))
 
@@ -213,7 +322,7 @@ def search(request):
         "req_guests": guests,
         "req_bedrooms": bedrooms,
         "req_beds": beds,
-        "req_baths": baths,
+        "req_bathrooms": bathrooms,
         "req_instant_book": instant_book,
         "req_superhost": superhost,
         "req_amenities": amenities,
@@ -228,10 +337,8 @@ def search(request):
 
     # =========================================
     # QuerySets Filtering
-    """ Reference
-        https://docs.djangoproject.com/en/2.2/ref/models/querysets/
-        search "Field lookups"
-    """
+    # 1. https://docs.djangoproject.com/en/2.2/ref/models/querysets/
+    # 2. search "Field lookups"
     filter_args = {}
 
     if city != "Anywhere":
@@ -255,8 +362,8 @@ def search(request):
     if beds != 0:
         filter_args["beds__gte"] = beds
 
-    if baths != 0:
-        filter_args["baths__gte"] = baths
+    if bathrooms != 0:
+        filter_args["bathrooms__gte"] = bathrooms
 
     if instant_book is True:
         filter_args["instant_book"] = True
@@ -286,3 +393,92 @@ def search(request):
         # set context by unpacking dictionary
         {**req, **opt, "rooms": qs_rooms},
     )
+    """
+
+    # =========================================
+    # Search View with Django Forms
+    # =========================================
+    """
+        Django Forms: https://docs.djangoproject.com/en/2.2/ref/forms/
+    """
+    qs_rooms = {}
+
+    country = request.GET.get("country")
+    if country:
+        # How to pass request data into form:
+        # Just By passing request.GET, we can store user requests!
+        form = forms.SearchForm(request.GET)  # Bounded form
+
+        # validation
+        if form.is_valid():
+            # if form is valid, print cleaned data
+            print(form.cleaned_data)
+
+            city = form.cleaned_data.get("city")
+            country = form.cleaned_data.get("country")
+            price = form.cleaned_data.get("price")
+            property_type = form.cleaned_data.get("property_type")
+            price = form.cleaned_data.get("price")
+            guests = form.cleaned_data.get("guests")
+            bedrooms = form.cleaned_data.get("bedrooms")
+            beds = form.cleaned_data.get("beds")
+            bathrooms = form.cleaned_data.get("bathrooms")
+            instant_book = form.cleaned_data.get("instant_book")
+            superhost = form.cleaned_data.get("superhost")
+            amenities = form.cleaned_data.get("amenities")
+            facilities = form.cleaned_data.get("facilities")
+
+            # =========================================
+            # QuerySets Filtering
+            # 1. https://docs.djangoproject.com/en/2.2/ref/models/querysets/
+            # 2. search "Field lookups"
+            filter_args = {}
+
+            if city != "Anywhere":
+                filter_args["city__startswith"] = city
+
+            filter_args["country"] = country
+
+            # Even though property_types is a foreign key,
+            # in case that we get the property_types from form.cleaned_data,
+            # we don't have to use __pk
+            if property_type is not None:  # if not Any kind
+                filter_args["property_type"] = property_type  # no __pk
+
+            if price is not None:
+                filter_args["price__lte"] = price
+
+            if guests is not None:
+                filter_args["guests__gte"] = guests
+
+            if bedrooms is not None:
+                filter_args["bedrooms__gte"] = bedrooms
+
+            if beds is not None:
+                filter_args["beds__gte"] = beds
+
+            if bathrooms is not None:
+                filter_args["bathrooms__gte"] = bathrooms
+
+            if instant_book is True:
+                filter_args["instant_book"] = True
+
+            if superhost is True:
+                filter_args["host__superhost"] = True
+
+            for a in amenities:
+                filter_args["amenities"] = a  # no __pk
+
+            for f in facilities:
+                filter_args["facilities"] = f  # no __pk
+
+            print(f"Filtering Result: {filter_args}")
+
+            qs_rooms = models.Room.objects.filter(**filter_args)
+
+    else:  # if no country, then just pass an initial form without validation!
+        form = forms.SearchForm()  # Unbounded form
+
+    # =========================================
+    # Rendering
+    return render(request, "rooms/search.html", {"form": form, "rooms": qs_rooms})

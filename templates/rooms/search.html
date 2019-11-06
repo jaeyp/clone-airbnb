@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+<!-- custom template tags: rooms/templatetags/room_extras.py -->
+{% load room_extras %}
 
 {% block page_title %}
 Search
@@ -13,6 +15,8 @@ Search
 <h2>Search!</h2>
 
 <form method="get" action="{% url 'rooms:search' %}">
+    <!-- Search in a manual way
+    {% comment %}
     <div>
         <label for="city">City</label>
         <input value={{req_city}} id="city" name="city" placeholder="Search by City" />
@@ -56,8 +60,8 @@ Search
         <input value="{{req_beds}}" type="number" id="beds" name="beds" placeholder="Beds" />
     </div>
     <div>
-        <label for="baths">Baths</label>
-        <input value="{{req_baths}}" type="number" id="baths" name="baths" placeholder="Baths" />
+        <label for="bathrooms">Bathrooms</label>
+        <input value="{{req_bathrooms}}" type="number" id="bathrooms" name="bathrooms" placeholder="Bathrooms" />
     </div>
     <div>
         <label for="instant_book">Instant Book Only?</label>
@@ -74,7 +78,7 @@ Search
             {% for amenity in opt_amenities %}
             <li>
                 <label for="a_{{amenity.name}}">{{amenity.name}}</label>
-                <!-- piping pk through slugify-->
+                {# piping pk through slugify #}
                 <input value="{{amenity.pk}}" type="checkbox" id="a_{{amenity.pk}}" name="amenities"
                     {% if amenity.pk|slugify in req_amenities  %} checked {% endif %} />
             </li>
@@ -96,14 +100,54 @@ Search
 
         </ul>
     </div>
+    {% endcomment %} 
+    Search in a manual way -->
+
+    <!-- Search with Django Forms -->
+    {# Django Forms: https://docs.djangoproject.com/en/2.2/ref/forms/ #}
+    {{form.as_p}}
     <button>Search</button>
 </form>
 
 <!-- filtering results (field lookups) -->
 <h3>Results</h3>
 
+<!--
 {% for room in rooms %}
 <h3>{{room.name}}</h3>
 {% endfor %}
+-->
 
+<!-- Room List -->
+{% for room in page.object_list %}
+<h1>{{room.name}} / ${{room.price}}</h1>
+{% endfor %}
+
+<!-- Page Navigator -->
+<h5>
+    {% if page.has_previous %}
+    <a href="?{{query|clear_page}}&page=1">&lt;&lt;</a>
+    <!--<a href="?{{query}}&page={{page.number|add:-1}}">&lt;</a>-->
+    <a href="?{{query|prev_page}}">&lt;</a>
+    {% else %}
+    &lt;&lt;
+    &lt;
+    {% endif %}
+
+    Page {{page.number}} of {{page.paginator.num_pages}}
+    |
+    {% for page in page.paginator.page_range %}
+    <!--<a href="?{{query}}&page={{page}}">{{page}}</a>-->
+    <a href="?{{query|clear_page}}&page={{page}}">{{page}}</a>
+    {% endfor %}
+
+    {% if page.has_next %}
+    <!--<a href="?{{query}}&page={{page.number|add:1}}">&gt;</a>-->
+    <a href="?{{query|next_page}}">&gt;</a>
+    <a href="?{{query|clear_page}}&page={{page.paginator.num_pages}}">&gt;&gt;</a>
+    {% else %}
+    &gt;
+    &gt;&gt;
+    {% endif %}
+</h5>
 {% endblock content %}
