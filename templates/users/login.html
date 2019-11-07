@@ -1,0 +1,38 @@
+<!-- base template having header & footer -->
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+Login
+{% endblock page_title %}
+
+<!-- Tips. You can hide search-bar with empty block like this. -->
+{% block search-bar %}
+{% endblock search-bar %}
+
+<!-- Page Content -->
+{% block content %}
+
+<!-- Ref. CSRF attack -->
+{% comment %}
+[CSRF verification failed]
+
+- What is Cross-site Request Forgery? (CSRF)
+It's an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. 
+e.g. 
+1. Embed this CSRF attack code to the document or email to change admin's password, and sent it.
+<img src="http://auction.com/changeUserAcoount?id=admin&password=admin" width="0" height="0">
+2. If admin user open the document on the browser in which they're currently authenticated with a cookie,
+admin's password is changed.
+
+- How to prevent it in Django
+Add {% csrf_token %} in your POST form
+This token verifies that post request comes from this website
+{% endcomment %}
+    
+<form method="POST" action="{% url 'users:login' %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Login</button>
+</form>
+{% endblock content %}
