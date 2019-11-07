@@ -1,4 +1,26 @@
 <a href="{% url 'core:home' %}">Nbnb</a>
 <ul>
-    <li><a href="{% url 'users:login' %}">Login</a></li>
+    <!-- Q. How can we access `user` (user.is_authenticated) here?
+        `context_processors` are function that add model information to templates.
+        A `context processor` has a very simple interface: 
+            It’s a Python function that takes one argument, an HttpRequest object, 
+            and returns a dictionary that gets added to the template context.
+        So you can access model instances from anywhere on templates.
+        The default template engine contains the following context processors:
+        [
+            'django.template.context_processors.debug',
+            'django.template.context_processors.request',
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+        ]
+
+        Check this for more information:
+        Using RequestContext Section from https://docs.djangoproject.com/en/2.2/ref/templates/api/
+    -->
+    {% if user.is_authenticated %}
+    <li><a href="{% url 'users:logout' %}">Log out</a></li>
+    {% else %}
+    <li><a href="{% url 'users:login' %}">Log in</a></li>
+    {% endif %}
+
 </ul>

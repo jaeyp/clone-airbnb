@@ -25,8 +25,9 @@ class LoginForm(forms.Form):
         # validate password here
         try:
             # this time, we use email as username
-            # user = models.User.objects.get(username=email)
-            user = models.User.objects.get(email=email)
+            user = models.User.objects.get(username=email)
+
+            # check_password()
             # Returns True if the given raw string is the correct password for the user.
             # (This takes care of the password hashing in making the comparison.))
             if user.check_password(password):
