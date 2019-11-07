@@ -3,7 +3,7 @@
 
 <!-- Page Name -->
 {% block page_title %}
-Login
+Log In
 {% endblock page_title %}
 
 <!-- Tips. You can hide search-bar with empty block like this. -->
@@ -33,6 +33,6 @@ This token verifies that post request comes from this website
 <form method="POST" action="{% url 'users:login' %}">
     {% csrf_token %}
     {{form.as_p}}
-    <button>Login</button>
+    <button>Log In</button>
 </form>
 {% endblock content %}
