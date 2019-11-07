@@ -1,0 +1,21 @@
+<!-- base template having header & footer -->
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+Sign Up
+{% endblock page_title %}
+
+<!-- Tips. You can hide search-bar with empty block like this. -->
+{% block search-bar %}
+{% endblock search-bar %}
+
+<!-- Page Content -->
+{% block content %}
+    
+<form method="POST" action="{% url 'users:signup' %}">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>Sign Up</button>
+</form>
+{% endblock content %}

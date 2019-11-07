@@ -32,9 +32,15 @@ class LoginView(LoginView):
 
 
 class LoginView(FormView):
+    # FormView inherits TemplateResponseMixin so template_name can be used here.
     template_name = "users/login.html"
+    # form_class: The form class to instantiate.
     form_class = forms.LoginForm
+    # success_url: The URL to redirect to when the form is successfully processed.
+    # reverse_lazy(): A lazily evaluated version of reverse().
+    # It is useful for when you need to use a URL reversal before your project’s URLConf is loaded.
     success_url = reverse_lazy("core:home")  # reverse("core:home")
+    # initial: A dictionary containing initial data for the form.
     initial = {"email": "jp.inseoul@gmail.com"}
 
     def form_valid(self, form):
@@ -43,12 +49,35 @@ class LoginView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
-        return super().form_valid(form)  # it goes to success_rul
+
+        # The default form_valid() simply redirects to the success_url.
+        return super().form_valid(form)
 
 
 def log_out(request):
     logout(request)
     return redirect(reverse("core:home"))
+
+
+class SignUpView(FormView):
+    template_name = "users/signup.html"
+    form_class = forms.SignUpForm
+    success_url = reverse_lazy("core:home")
+    initial = {"first_name": "Jaey", "last_name": "Park", "email": "jp.inseoul@gmail.com"}
+
+    # form is valid
+    def form_valid(self, form):
+        # create account
+        form.save()
+
+        # login immediately
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+
+        return super().form_valid(form)  # redirects to the success_url.
 
 
 # 4. Very manual way by defining get and post methods
