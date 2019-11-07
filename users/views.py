@@ -53,7 +53,7 @@ def log_out(request):
 
 # 4. Very manual way by defining get and post methods
 
-""" Examplea
+""" Example
 class LoginView(View):
     def get(self, request):
         form = forms.LoginForm(initial={"email": "test@email.com"})
