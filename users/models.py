@@ -39,3 +39,4 @@ class User(AbstractUser):
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, null=True, blank=True, default=LANGUAGE_ENGLISH)
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD)
     superhost = models.BooleanField(default=False)  # certified host user by Airbnb
+    email_confirmed = models.BooleanField(default=False)
