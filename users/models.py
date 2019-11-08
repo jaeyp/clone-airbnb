@@ -1,5 +1,11 @@
+import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+# support sending email
+from django.conf import settings  # To access environment variables from config/settings.py
+from django.core.mail import send_mail
+
 
 # Create your models here.
 
@@ -39,10 +45,23 @@ class User(AbstractUser):
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, null=True, blank=True, default=LANGUAGE_ENGLISH)
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD)
     superhost = models.BooleanField(default=False)  # certified host user by Airbnb
-    email_confirmed = models.BooleanField(default=False)
+    email_verified = models.BooleanField(default=False)
     email_random_code = models.CharField(
         max_length=120, default="", blank=True
     )  # random secret code for email varification
 
-    def verify_email():
-        pass
+    def verify_email(self):
+        if self.email_verified is False:
+            # generate random number
+            verification_code = uuid.uuid4().hex[:6]
+            self.email_random_code = verification_code
+            # send mail
+            print(f"SEND EMAIL for VERIFICATION with {verification_code} from {settings.EMAIL_FROM} to {self.email}")
+            send_mail(
+                "Verify Airbnb Account",
+                f"Verify account, this is your verification code: {verification_code}",
+                settings.EMAIL_FROM,
+                [self.email],
+                fail_silently=False,
+            )
+        return

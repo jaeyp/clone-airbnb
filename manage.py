@@ -22,5 +22,5 @@ def main():
 
 
 if __name__ == "__main__":
-    dotenv.read_dotenv()  # get environment variables from .env file
+    dotenv.read_dotenv(override=True)  # get environment variables from .env file
     main()
