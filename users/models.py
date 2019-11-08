@@ -40,3 +40,9 @@ class User(AbstractUser):
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD)
     superhost = models.BooleanField(default=False)  # certified host user by Airbnb
     email_confirmed = models.BooleanField(default=False)
+    email_random_code = models.CharField(
+        max_length=120, default="", blank=True
+    )  # random secret code for email varification
+
+    def verify_email():
+        pass
