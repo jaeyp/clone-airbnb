@@ -147,3 +147,6 @@ EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 EMAIL_USE_TLS = True
 # with this given domain by mailgun, mail would go to the spam folder
 EMAIL_FROM = "noreply@sandbox6e7e5be91a774358b8dc111d98d2e4f1.mailgun.org"
+
+# User Verification url
+VERIFICATION_URL = os.environ.get("VERIFICATION_URL")

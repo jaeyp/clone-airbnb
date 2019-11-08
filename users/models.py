@@ -60,8 +60,14 @@ class User(AbstractUser):
 
             # send mail
             print(f"SEND EMAIL for VERIFICATION with {verification_code} from {settings.EMAIL_FROM} to {self.email}")
-            html_message = render_to_string("emails/verify_email.html", {"verification_code": verification_code})
-            # html_message = 'To verify your email click <a href="127.0.0.1:8000/users/verify/{verification_code}">here</a>'
+            html_message = render_to_string(
+                "emails/verify_email.html",
+                {"verification_url": settings.VERIFICATION_URL, "verification_code": verification_code},
+            )
+            # html_message = (
+            #     "To verify your email, click "
+            #     + "<a href='{http://127.0.0.1:8000/users/verify/}{verification_code}'>here</a>"
+            # )
             send_mail(
                 "Verify Airbnb Account",
                 strip_tags(html_message),  # it removes all the html tags except for plain text.
