@@ -129,6 +129,3 @@ dmypy.json
 
 # media files
 uploads/
-
-# django-dotenv
-.env
