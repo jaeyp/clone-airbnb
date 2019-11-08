@@ -71,7 +71,7 @@ class SignUpForm(forms.Form):
     last_name = forms.CharField(max_length=80)
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    password_confirmed = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -81,10 +81,10 @@ class SignUpForm(forms.Form):
         except models.User.DoesNotExist:
             return email
 
-    def clean_password_confirm(self):
+    def clean_password_confirmed(self):
         password = self.cleaned_data.get("password")
-        password_confirm = self.cleaned_data.get("password_confirm")
-        if password != password_confirm:
+        password_confirmed = self.cleaned_data.get("password_confirmed")
+        if password != password_confirmed:
             raise forms.ValidationError("Password confirmation does not match")
         else:
             return password
@@ -114,12 +114,12 @@ class SignUpForm(forms.Form):
 
     # we keep these password variables since User's password is an encrypted one
     password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    password_confirmed = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
-    def clean_password_confirm(self):
+    def clean_password_confirmed(self):
         password = self.cleaned_data.get("password")
-        password_confirm = self.cleaned_data.get("password_confirm")
-        if password != password_confirm:
+        password_confirmed = self.cleaned_data.get("password_confirmed")
+        if password != password_confirmed:
             raise forms.ValidationError("Password confirmation does not match")
         else:
             return password
