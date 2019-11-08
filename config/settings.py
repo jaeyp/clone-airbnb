@@ -136,3 +136,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 
 # slash at first (root path) and last (required: It must end in a slash if set to a non-empty value)
 MEDIA_URL = "/media/"
+
+
+# Email Configuration
+# https://app.mailgun.com/app/sending/domains/sandbox6e7e5be91a774358b8dc111d98d2e4f1.mailgun.org/credentials
+EMAIL_HOST = "smtp.mailgun.org"
+EMAIL_POST = "465"
+EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
