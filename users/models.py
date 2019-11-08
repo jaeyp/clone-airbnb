@@ -5,6 +5,8 @@ from django.db import models
 # support sending email
 from django.conf import settings  # To access environment variables from config/settings.py
 from django.core.mail import send_mail
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 
 
 # Create your models here.
@@ -46,7 +48,7 @@ class User(AbstractUser):
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD)
     superhost = models.BooleanField(default=False)  # certified host user by Airbnb
     email_verified = models.BooleanField(default=False)
-    email_random_code = models.CharField(
+    verification_code = models.CharField(
         max_length=120, default="", blank=True
     )  # random secret code for email varification
 
@@ -54,14 +56,20 @@ class User(AbstractUser):
         if self.email_verified is False:
             # generate random number
             verification_code = uuid.uuid4().hex[:6]
-            self.email_random_code = verification_code
+            self.verification_code = verification_code
+
             # send mail
             print(f"SEND EMAIL for VERIFICATION with {verification_code} from {settings.EMAIL_FROM} to {self.email}")
+            html_message = render_to_string("emails/verify_email.html", {"verification_code": verification_code})
+            # html_message = 'To verify your email click <a href="127.0.0.1:8000/users/verify/{verification_code}">here</a>'
             send_mail(
                 "Verify Airbnb Account",
-                f"Verify account, this is your verification code: {verification_code}",
+                strip_tags(html_message),  # it removes all the html tags except for plain text.
+                # f"Verify account, this is your verification code: {verification_code}",
                 settings.EMAIL_FROM,
                 [self.email],
                 fail_silently=False,
+                html_message=html_message,
             )
+            self.save()
         return

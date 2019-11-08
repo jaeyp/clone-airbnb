@@ -3,7 +3,7 @@ from django.views.generic import FormView
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout  # , LoginView
-from . import forms
+from . import forms, models
 
 """ Implementation of LoginView """
 
@@ -80,6 +80,20 @@ class SignUpView(FormView):
         # email verification
         user.verify_email()
         return super().form_valid(form)  # redirects to the success_url.
+
+
+def complete_verification(request, key):
+    try:
+        user = models.User.objects.get(verification_code=key)
+        user.email_verified = True
+        user.verification_code = ""  # clear code
+        user.save()
+        # to do: add success message
+        # Django Messages Framework: https://docs.djangoproject.com/en/2.2/ref/contrib/messages/
+    except models.User.DoesNotExist:
+        # to do: add error message
+        pass
+    return redirect(reverse("core:home"))
 
 
 # 4. Very manual way by defining get and post methods
