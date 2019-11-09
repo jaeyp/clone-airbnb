@@ -46,6 +46,10 @@ Add "django_seed" to INSTALLED_APPS in config/settings.py
 4. Install django-dotenv in order to get mailgun username & password from .env file
 ~$ pipenv install django-dotenv
 
+5. Install pipenv install django-import-export
+~$ pipenv install django-import-export
+Add "import_export" to INSTALLED_APPS in config/settings.py
+
 --------------------------------------
 Tips. Create python shell
 Command Pallete (Ctrl+Shift+P) -> Python: Create Terminal

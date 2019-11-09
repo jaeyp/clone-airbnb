@@ -13,6 +13,7 @@ django = "==2.2.5"
 django-seed = "*"
 pillow = "*"
 django-dotenv = "*"
+django-import-export = "*"
 
 [requires]
 python_version = "3.7"
