@@ -67,6 +67,7 @@ class SignUpView(FormView):
     success_url = reverse_lazy("core:home")
     initial = {"first_name": "Jaey", "last_name": "Park", "email": "jp.inseoul@gmail.com"}
 
+    # TODO: email verification scenario has been improved
     # form is valid
     def form_valid(self, form):
         # create account
@@ -163,6 +164,7 @@ def github_callback(request):
             raise GithubException()
 
     except Exception:
+        # TODO: error messages
         return redirect(reverse("users:login"))
 
 

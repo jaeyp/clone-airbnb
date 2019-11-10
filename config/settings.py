@@ -141,10 +141,10 @@ MEDIA_URL = "/media/"
 # Email Configuration
 # https://app.mailgun.com/app/sending/domains/sandbox6e7e5be91a774358b8dc111d98d2e4f1.mailgun.org/credentials
 EMAIL_HOST = "smtp.mailgun.org"
-EMAIL_PORT = "587"
+EMAIL_PORT = "587"  # 587: TLS, 465: SSL, 25: SMTP
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
 EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
-EMAIL_USE_TLS = True
 # with this given domain by mailgun, mail would go to the spam folder
 EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
 
