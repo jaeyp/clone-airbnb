@@ -50,11 +50,15 @@ class CustomUserAdmin(UserAdmin):
         "is_superuser",
         "email_verified",
         "verification_code",
+        "login_method",
     )
     # adds custom filters to base filters
     list_filter = UserAdmin.list_filter + ("language", "currency", "superhost")
     fieldsets = UserAdmin.fieldsets + (
-        ("Custom Profile", {"fields": ("avatar", "gender", "bio", "birthdate", "language", "currency", "superhost",)},),
+        (
+            "Custom Profile",
+            {"fields": ("avatar", "gender", "bio", "birthdate", "language", "currency", "superhost", "login_method",)},
+        ),
     )
 
 

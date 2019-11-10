@@ -38,6 +38,18 @@ class User(AbstractUser):
 
     CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_CAD, "CAD"), (CURRENCY_KRW, "KRW"))
 
+    LOGIN_EMAIL = "email"
+    LOGIN_GITHUB = "github"
+    LOGIN_FACEBOOK = "facebook"
+    LOGIN_GOOGLE = "google"
+
+    LOGIN_CHOICES = (
+        (LOGIN_EMAIL, "Email"),
+        (LOGIN_GITHUB, "Github"),
+        (LOGIN_FACEBOOK, "Facebook"),
+        (LOGIN_GOOGLE, "Google"),
+    )
+
     # [null vs blank]
     # null is purely database-related (for DB), whereas blank is validation-related (for Form)
     avatar = models.ImageField(upload_to="avatars", null=True, blank=True)
@@ -51,6 +63,7 @@ class User(AbstractUser):
     verification_code = models.CharField(
         max_length=120, default="", blank=True
     )  # random secret code for email varification
+    login_method = models.CharField(choices=LOGIN_CHOICES, max_length=20, null=True, blank=True, default=LOGIN_EMAIL)
 
     def verify_email(self):
         if self.email_verified is False:
@@ -59,6 +72,7 @@ class User(AbstractUser):
             self.verification_code = verification_code
 
             # send mail
+            print(f"EMAIL_HOST_USER:{settings.EMAIL_HOST_USER}")
             print(f"SEND EMAIL for VERIFICATION with {verification_code} from {settings.EMAIL_FROM} to {self.email}")
             html_message = render_to_string(
                 "emails/verify_email.html",

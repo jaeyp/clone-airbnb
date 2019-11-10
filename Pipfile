@@ -14,6 +14,7 @@ django-seed = "*"
 pillow = "*"
 django-dotenv = "*"
 django-import-export = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"
