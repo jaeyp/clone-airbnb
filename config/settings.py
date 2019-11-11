@@ -155,6 +155,8 @@ VERIFICATION_CALLBACK_URL = "http://127.0.0.1:8000/users/verify"
 GITHUB_ID = os.environ.get("GITHUB_ID")
 GITHUB_SECRET = os.environ.get("GITHUB_SECRET")
 GITHUB_CALLBACK_URL = "http://localhost:8000/users/auth/github"
+# Ref. Authorizing OAuth Apps
+# https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
 GITHUB_AUTHORIZATION_ENDPOINT = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
 GITHUB_USERINFO_ENDPOINT = "https://api.github.com/user"
@@ -163,12 +165,29 @@ GITHUB_USERINFO_ENDPOINT = "https://api.github.com/user"
 GOOGLE_ID = os.environ.get("GOOGLE_ID")
 GOOGLE_SECRET = os.environ.get("GOOGLE_SECRET")
 GOOGLE_CALLBACK_URL = "http://localhost:8000/users/auth/google"
-# Ref. https://developers.google.com/identity/protocols/OpenIDConnect#discovery
+# Ref. OpenID Connect
+# https://developers.google.com/identity/protocols/OpenIDConnect
+# Ref. Endpoints for OpenID Connect
+# https://developers.google.com/identity/protocols/OpenIDConnect#discovery
+# GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/auth?"
 GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
+# GOOGLE_TOKEN_ENDPOINT = "https://accounts.google.com/o/oauth2/token"
 GOOGLE_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+# GOOGLE_USERINFO_ENDPOINT = "https://www.googleapis.com/oauth2/v2/userinfo"
 GOOGLE_USERINFO_ENDPOINT = "https://openidconnect.googleapis.com/v1/userinfo"
 
 # Social Login - Facebook
 FACEBOOK_ID = os.environ.get("FACEBOOK_ID")
 FACEBOOK_SECRET = os.environ.get("FACEBOOK_SECRET")
 FACEBOOK_CALLBACK_URL = "http://localhost:8000/users/auth/facebook"
+# Ref. Manually Build a Login Flow
+# https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
+FACEBOOK_AUTHORIZATION_ENDPOINT = "https://www.facebook.com/v5.0/dialog/oauth"
+# Ref. Access Tokens
+# https://developers.facebook.com/docs/facebook-login/access-tokens/
+FACEBOOK_TOKEN_ENDPOINT = "https://graph.facebook.com/v5.0/oauth/access_token"
+# Ref. Retrieve User Profile via the Graph API
+# https://developers.facebook.com/docs/php/howto/example_retrieve_user_profile/
+# Ref. Graph API - User
+# https://developers.facebook.com/docs/graph-api/reference/user/
+FACEBOOK_USERINFO_ENDPOINT = "https://graph.facebook.com/me"
