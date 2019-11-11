@@ -148,8 +148,8 @@ EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 # with this given domain by mailgun, mail would go to the spam folder
 EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
 
-# User Verification url
-VERIFICATION_URL = "http://127.0.0.1:8000/users/verify/"
+# User Verification Callback URL
+VERIFICATION_CALLBACK_URL = "http://127.0.0.1:8000/users/verify"
 
 # Social Login - Github
 GITHUB_ID = os.environ.get("GITHUB_ID")

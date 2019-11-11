@@ -76,7 +76,10 @@ class User(AbstractUser):
             print(f"SEND EMAIL for VERIFICATION with {verification_code} from {settings.EMAIL_FROM} to {self.email}")
             html_message = render_to_string(
                 "emails/verify_email.html",
-                {"verification_url": settings.VERIFICATION_URL, "verification_code": verification_code},
+                {
+                    "verification_callback_url": settings.VERIFICATION_CALLBACK_URL,
+                    "verification_code": verification_code,
+                },
             )
             # html_message = (
             #     "To verify your email, click "
