@@ -148,7 +148,9 @@ def github_callback(request):
                     try:
                         user = models.User.objects.get(email=email)
                         if user.login_method != models.User.LOGIN_GITHUB:
-                            raise GithubException()
+                            # raise GithubException()
+                            user.login_method = models.User.LOGIN_GITHUB
+                            user.save()
                     except models.User.DoesNotExist:
                         user = models.User.object.create(
                             username=email, first_name=name, bio=bio, email=email, login_method=models.User.LOGIN_GITHUB
@@ -166,6 +168,98 @@ def github_callback(request):
     except Exception:
         # TODO: error messages
         return redirect(reverse("users:login"))
+
+
+def google_login(request):
+    # 1. Send an authentication request to Google
+    client_id = settings.GOOGLE_ID
+    redirect_uri = settings.GOOGLE_CALLBACK_URL
+    return redirect(
+        # f"https://accounts.google.com/o/oauth2/auth?"
+        f"https://accounts.google.com/o/oauth2/v2/auth?"
+        + f"client_id={client_id}&response_type=code&redirect_uri={redirect_uri}&scope=openid email profile"
+    )
+
+
+class GoogleException(Exception):
+    pass
+
+
+def google_callback(request):
+    try:
+        client_id = settings.GOOGLE_ID
+        client_secret = settings.GOOGLE_SECRET
+        redirect_uri = settings.GOOGLE_CALLBACK_URL
+        # 2. Exchange code for access token and ID token
+        code = request.GET.get("code", None)
+        if code is not None:
+            response = requests.post(
+                # "https://accounts.google.com/o/oauth2/token",
+                "https://oauth2.googleapis.com/token",
+                data={
+                    "client_id": client_id,
+                    "client_secret": client_secret,
+                    "code": code,
+                    "redirect_uri": redirect_uri,
+                    "grant_type": "authorization_code",
+                },
+                headers={"Accept": "application/json"},
+            )
+            json_response = response.json()
+            error = json_response.get("error", None)
+            if error is not None:
+                raise GoogleException()
+            else:
+                access_token = json_response.get("access_token")
+                # 3. Obtain user information from the ID token
+                response = requests.get(
+                    # f"https://www.googleapis.com/oauth2/v2/userinfo?access_token={access_token}&alt=json",
+                    f"https://openidconnect.googleapis.com/v1/userinfo?access_token={access_token}&alt=json",
+                )
+                json_response = response.json()
+                # id = json_response.get("id", None)
+                sub = json_response.get("sub", None)
+
+                # if id is not None:
+                if sub is not None:
+                    first_name = json_response.get("given_name")
+                    last_name = json_response.get("family_name")
+                    email = json_response.get("email")
+                    try:
+                        user = models.User.objects.get(email=email)
+                        if user.login_method != models.User.LOGIN_GOOGLE:
+                            # raise GoogleException()
+                            user.login_method = models.User.LOGIN_GOOGLE
+                            user.save()
+                    except models.User.DoesNotExist:
+                        user = models.User.object.create(
+                            username=email,
+                            first_name=first_name,
+                            last_name=last_name,
+                            email=email,
+                            login_method=models.User.LOGIN_GOOGLE,
+                        )
+                        user.set_unusable_password()  # Marks the user as having no password set.
+                        user.save()
+
+                    login(request, user)
+                    return redirect(reverse("core:home"))
+                else:
+                    raise GoogleException()
+        else:
+            raise GoogleException()
+
+    except Exception:
+        # TODO: error messages
+        return redirect(reverse("users:login"))
+
+
+def facebook_login(request):
+    pass
+
+
+def facebook_callback(request):
+    pass
 
 
 # 4. Very manual way by defining get and post methods

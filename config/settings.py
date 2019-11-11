@@ -149,9 +149,26 @@ EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
 
 # User Verification url
-VERIFICATION_URL = os.environ.get("VERIFICATION_URL")
+VERIFICATION_URL = "http://127.0.0.1:8000/users/verify/"
 
-# Social Login
+# Social Login - Github
 GITHUB_ID = os.environ.get("GITHUB_ID")
 GITHUB_SECRET = os.environ.get("GITHUB_SECRET")
-GITHUB_CALLBACK_URL = os.environ.get("GITHUB_CALLBACK_URL")
+GITHUB_CALLBACK_URL = "http://localhost:8000/users/auth/github"
+GITHUB_AUTHORIZATION_ENDPOINT = "https://github.com/login/oauth/authorize"
+GITHUB_TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token"
+GITHUB_USERINFO_ENDPOINT = "https://api.github.com/user"
+
+# Social Login - Google
+GOOGLE_ID = os.environ.get("GOOGLE_ID")
+GOOGLE_SECRET = os.environ.get("GOOGLE_SECRET")
+GOOGLE_CALLBACK_URL = "http://localhost:8000/users/auth/google"
+# Ref. https://developers.google.com/identity/protocols/OpenIDConnect#discovery
+GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
+GOOGLE_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+GOOGLE_USERINFO_ENDPOINT = "https://openidconnect.googleapis.com/v1/userinfo"
+
+# Social Login - Facebook
+FACEBOOK_ID = os.environ.get("FACEBOOK_ID")
+FACEBOOK_SECRET = os.environ.get("FACEBOOK_SECRET")
+FACEBOOK_CALLBACK_URL = "http://localhost:8000/users/auth/facebook"
