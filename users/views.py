@@ -61,9 +61,11 @@ def log_out(request):
     return redirect(reverse("core:home"))
 
 
+# Custom SignUp Form View
 class SignUpView(FormView):
     template_name = "users/signup.html"
-    form_class = forms.SignUpForm
+    # form_class = forms.DerivedSignUpForm  # using built-in form
+    form_class = forms.SignUpForm  # using cutom form
     success_url = reverse_lazy("core:home")
     initial = {"first_name": "Jaey", "last_name": "Park", "email": "jp.inseoul@gmail.com"}
 

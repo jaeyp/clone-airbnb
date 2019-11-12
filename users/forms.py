@@ -1,4 +1,9 @@
 from django import forms
+
+# built-in authentication form
+# Refs. https://docs.djangoproject.com/en/2.2/topics/auth/default/#module-django.contrib.auth.forms
+from django.contrib.auth.forms import UserCreationForm
+
 from . import models
 
 
@@ -65,6 +70,23 @@ class LoginForm(forms.Form):
             pass """
 
 
+# SignUp Form derived and extended from Built-in UserCreationForm
+class DerivedSignUpForm(UserCreationForm):
+    # add email field
+    username = forms.EmailField(label="Email")
+
+    class Meta:
+        model = models.User
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+        )
+
+
+# Custom SignUp Form (preferred. - more customizable)
+# In order to add more features, check source codes of built-in forms
+# from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, PasswordResetForm, ...
 class SignUpForm(forms.Form):
 
     first_name = forms.CharField(max_length=80)
@@ -73,6 +95,8 @@ class SignUpForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
     password_confirmed = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
+    # Custom Form field validator/formatter
+    # clean_<fieldname>() method
     def clean_email(self):
         email = self.cleaned_data.get("email")
         try:
