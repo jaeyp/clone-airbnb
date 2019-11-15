@@ -8,6 +8,8 @@ urlpatterns = [
     path("logout/", views.log_out, name="logout"),
     path("signup/", views.SignUpView.as_view(), name="signup"),
     path("verify/<str:key>", views.complete_verification, name="complete-verification"),
+    # TODO: integrate three social logins (github, google, facebook)
+    # path("login/social/<str:key>", views.social_login, name="social-login"),
     path("login/github", views.github_login, name="github-login"),
     path("auth/github", views.github_callback, name="github-callback"),
     path("login/google", views.google_login, name="google-login"),

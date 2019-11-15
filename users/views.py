@@ -101,6 +101,11 @@ def complete_verification(request, key):
     return redirect(reverse("core:home"))
 
 
+# TODO: integrate three social logins (github, google, facebook)
+# def social_login(request, key):
+#     pass
+
+
 # OAuth: https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
 def github_login(request):
     # 1. Request a user's GitHub identity
