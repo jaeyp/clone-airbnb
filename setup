@@ -74,7 +74,7 @@ https://requests.kennethreitz.org/en/master/
 1-2. add 'node_modules/' to .gitignore
 
 2. install Gulp & Gulp plugins
-~$ npm i gulp gulp-postcss gulp-csso node-sass gulp-sass autoprefixer -D
+~$ npm i gulp gulp-postcss gulp-csso node-sass gulp-sass autoprefixer gulp-image del -D
 
 3. install Tailwind
 ~$ npm i tailwindcss -D
@@ -91,6 +91,11 @@ gulpfile.js
 7. set static file directory to config/settings.py
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 7-1. add 'static/' to .gitignore
+
+8 convert scss file into css file at static directory using Gulp
+~$ npm run css
+or
+~$ gulp
 
 
 
