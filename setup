@@ -15,16 +15,30 @@ First, remove your current version of virtualenv: pip uninstall virtualenv
 Then, remove your current version of pipenv: pip uninstall pipenv
 When you are asked Proceed (y/n)? just enter y. This will give you a clean slate.
 Finally, you can once again install pipenv and its dependencies: pip install pipenv
+
 5. Initialize a Python 3 virtual environment
 ~$ create project-directory
 ~$ cd project-directory
-~$ pipenv --three # initialize a Python 3 virtual environment
-~$ code . # open vs code
-6. Install django on virtual environment # do this on vs code terminal
+~$ code . # open vscode and open terminal with Ctrl+` (powershell) 
+Ignore 5-1. it's not tested
+X 5-1 Set virtualenv path for pipenv
+X Create .venv file on root and edit file with project-name.
+X the project-name will be your virtualenv directory name. e.g. C:/Users/jpins/.virtualenvs/project-name
+5-2 Initialize a Python 3 virtual environment
+~$ pipenv --three 
+
+6. Install django on virtual environment
 ~$ pipenv install Django==2.2.5 # use pipenv not pip
+
 7. Test Django installation
-~$ pipenv shell
+~$ pipenv shell # Spawns a shell within the virtualenv
 ~$ django-admin
+--------------------------------------
+[pipenv]
+pipenv --help
+pipenv --venv # check current virtualenv
+pipenv --rm # remove project virtualenvs
+pipenv install # without arguments, it installs all packages from Pipfile
 --------------------------------------
 [change project directory]
 ~$ pipenv shell
@@ -53,6 +67,32 @@ Add "import_export" to INSTALLED_APPS in config/settings.py
 6. Install requests
 ~$ pipenv install requests
 https://requests.kennethreitz.org/en/master/
+
+[Support TailwindCSS]
+1. npm init
+1-1. remove 'main', 'scripts', 'author', 'license', 'bugs' _check_fields
+1-2. add 'node_modules/' to .gitignore
+
+2. install Gulp & Gulp plugins
+~$ npm i gulp gulp-postcss gulp-csso node-sass gulp-sass autoprefixer -D
+
+3. install Tailwind
+~$ npm i tailwindcss -D
+
+4. create Tailwind config file
+~$ npx tailwind init
+
+5. create gulpfile.js at root directory
+
+6. scarfolding
+assets/scss/style.scss
+gulpfile.js
+
+7. set static file directory to config/settings.py
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+7-1. add 'static/' to .gitignore
+
+
 
 
 --------------------------------------

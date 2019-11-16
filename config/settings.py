@@ -122,8 +122,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/static/"  # jaey. this 'static' is a url path
 
+# jaey. set static file directory
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]  # jaey. this 'static' is a project directory name for static files
 
 # [Substituting a custom User model]
 # It’s highly recommended to set up a custom user model, even if the default User model is
