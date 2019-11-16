@@ -1,4 +1,7 @@
-<a href="{% url 'core:home' %}">Nbnb</a>
+{% load static %}
+<a href="{% url 'core:home' %}">
+    <img class="w-8" src="{% static 'img/logo.svg' %}" alt=""/>
+</a>
 <ul>
     <!-- Q. How can we access `user` (user.is_authenticated) here?
         `context_processors` are function that add model information to templates.
