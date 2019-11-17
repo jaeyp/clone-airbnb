@@ -182,8 +182,17 @@ class SearchView(View):
         """
 
     def get(self, request):
+        print(f"request: {request.GET}")  # get request with city - input name "city" from nav.html
+        # TODO: - Rebuild Search Algorithm -
+        # TODO: change input parameter name to "keyword" or "region" for accepting other types of search keyword
+        #       e.g. city, country, more small area, Stays, Restaurants...
+        # TODO: deduce a country code from input city
+        # TODO: auto completion with city (e.g. "Seoul, South Korea" when tpye just "Seoul")
+        # TODO: auto completion list while it's typing
+        # TODO: search by Stays, Experiences, Restaurants
         country = request.GET.get("country")
         if country:
+            print(f"there's a country: {country}")
             # How to pass request data into form:
             # Just By passing request.GET, we can store user requests!
             form = forms.SearchForm(request.GET)  # Bounded form
@@ -191,7 +200,7 @@ class SearchView(View):
 
             # validation
             if form.is_valid():
-                # print(form.cleaned_data)
+                print(form.cleaned_data)
 
                 city = form.cleaned_data.get("city")
                 country = form.cleaned_data.get("country")
@@ -268,8 +277,11 @@ class SearchView(View):
                     "rooms/search.html",
                     {"form": form, "page": rooms, "query": request.GET.urlencode},
                 )
+            else:
+                print("form is invalid")
 
         else:  # if no country, then just pass an initial form without validation!
+            print("we need a country for searching!")
             form = forms.SearchForm()  # Unbounded form
 
         # =========================================
@@ -412,7 +424,7 @@ def search(request):
         # validation
         if form.is_valid():
             # if form is valid, print cleaned data
-            print(form.cleaned_data)
+            print(f"search(): ${form.cleaned_data}")
 
             city = form.cleaned_data.get("city")
             country = form.cleaned_data.get("country")
