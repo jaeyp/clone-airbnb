@@ -1,12 +1,56 @@
 {% load static %}
-<div class="flex items-center w-1/3">
+<div class="flex items-center w-2/5">
     <a href="{% url 'core:home' %}" class="mr-6">
         <img class="w-8" src="{% static 'img/logo.svg' %}" alt=""/>
     </a>
+    <!-- TODO: Set min-width in TailwindCSS way
+        e.g. .class {min-width: 550px; width: 75%;}
+    -->
     {% block search-bar %}
+        <!-- Only Search Bar -->
         <form method="get" action="{% url 'rooms:search' %}" class="w-1/2 sm:w-full md:w-3/4">
             <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-md font-bold hover:shadow-lg focus:outline-none placeholder-gray-600" type="text" name="city" placeholder='Try "London"' />
         </form>
+        <!-- Dates, Guests, and Search Button -->
+        <!-- TODO: Hide button element according to screen size by using media-query
+                e.g. @media screen and (min-width: 1800px) { #outer_btn_right { display: none; } } 
+                Also, check the way to set media-query in TailwindCSS. -->
+        <!-- <div class="search-box inset-0 flex border rounded-lg shadow-md w-full px-5 py-2 hover:shadow-lg focus:outline-none">
+            <div class="w-2/3">
+                <div >
+                    <form method="get" action="{% url 'rooms:search' %}" >
+                        <input class="text-md font-bold placeholder-gray-600 focus:outline-none" type="text" name="city" placeholder='Try "London"' />
+                    </form>
+                </div>
+            </div>
+            <div class="text-gray-400">|</div>
+            <div class="flex w-1/3 items-center">
+                <div class="flex-auto px-3">
+                    <div class="flex items-center">
+                        <div class="px-1">
+                            <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height:1em;width:1em;display:block;fill:currentColor"><path d="m20 19.3843286v-9.61307502-2.09826243-1.49051329c0-.34065641-.2846034-.61680314-.6345257-.61680314h-1.7752721c-.1796268 0-.3254277-.14146861-.3254277-.31575794v-1.2686905c0-.54210771-.4525661-.98122628-1.0112753-.98122628s-1.0124417.43911857-1.0124417.98122628v1.2686905c0 .17428933-.1458009.31575794-.3254276.31575794h-4.94206847c-.17962675 0-.32542768-.14146861-.32542768-.31575794v-1.2686905c0-.54210771-.4525661-.98122628-1.01127527-.98122628-.55870918 0-1.01244168.43911857-1.01244168.98122628v1.2686905c0 .17428933-.14580094.31575794-.32542769.31575794h-1.66329704c-.35108865 0-.63569207.27614673-.63569207.61680314v1.49051329 2.16616736 9.54517009c0 .3395247.28460342.6156714.63569207.6156714h13.72978223c.3499223 0 .6345257-.2761467.6345257-.6156714zm-2.6979005-2.7908927c0 .0135809-.0034992.0192397-.0034992.0350842 0 .734505-.0034992.752613-.6065319.7537447h-8.38646964c-.60303266-.0011317-.60769829-.0192397-.60769829-.7537447v-4.628853c0-.7492177 0-.7537447.6415241-.7537447h.38608087.74416797 6.06065319.744168.3825816c.6415241 0 .6415241.004527.6415241.7537447 0 .0158445.0034992.0215033.0034992.0350842z"></path></svg>
+                        </div>
+                        <button class="items-center text-md font-normal focus:outline-none text-gray-600">Dates</button>
+                    </div>
+                </div>
+                <div class="text-gray-400">|</div>
+                <div class="flex-auto px-2">
+                    <div class="flex items-center">
+                        <div class="px-1">
+                            <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height:1em;width:1em;display:block;fill:currentColor"><path d="m11.4266625 14.15625v5.3125c0 .29325-.238.53125-.53125.53125h-6.215625c-.26775 0-.4919375-.19975-.5259375-.465375-.31025-2.4766875-.133875-6.0084375.36975-7.006125.329375-.65025 1.090125-1.383375 2.5085625-2.4001875.1859375-.1328125.1816875-.129625.248625-.187.0711875-.0605625.153-.13175.1731875-.1880625.019125-.053125-.0138125-.133875-.0541875-.1944375-.0286875-.0435625-.0626875-.085-.167875-.20825-.733125-.8638125-1.11775-1.9858125-1.11775-3.4286875 0-1.6819375 1.277125-2.921875 2.921875-2.921875 1.6065 0 2.921875 1.2909375 2.921875 2.921875 0 1.4566875-.3835625 2.5956875-1.1613125 3.4425-.1646875.1795625-.2220625.291125-.2050625.3538125.0159375.0648125.0393125.0924375.1561875.167875.0648125.0425.10625.0648125.24225.133875.112625.0584375.2709375.1413125.482375.2560625.0945625.0499375.4536875.2263125.847875.465375.14025.085.23375.231625.2518125.393125.019125.163625-.03825.3261875-.155125.439875-.588625.5790625-.99025 1.3759375-.99025 2.581875zm9.5542125.1120938c.0053125.8744375.0085 1.54275.0085 2.1505v.4473125c0 .439875-.002125.867-.00425 1.340875-.0010625.2029375-.0010625.2029375-.002125.401625-.0010625.32725-.002125.5833125-.002125.860625 0 .29325-.238.53125-.53125.53125h-7.429c-.2943125 0-.53125-.238-.53125-.53125v-5.3125c0-1.0274375.3325625-1.6405 1.060375-2.148375l.8585-.4834375c.08925-.0425.08925-.0425.1753125-.082875.1328125-.0626875.2156875-.1030625.2985625-.1445.1455625-.074375.187-.1179375.189125-.1243125-.0053125-.142375-.017-.16575-.1328125-.2879375-.0201875-.0201875-.0201875-.0201875-.0414375-.0435625-.860625-.92862505-1.21125-2.08568755-1.21125-3.49987505 0-1.4184375 1.107125-2.9611875 2.9590625-2.9611875 1.859375 0 2.9505625 1.5161875 2.9505625 2.9611875 0 1.36425-.3665625 2.57975-1.217625 3.49881255-.02125.0223125-.02125.0223125-.03825.040375-.027625.027625-.027625.027625-.0478125.0499375-.074375.0775625-.0818125.0945625-.08075.2295-.0010625.051.02125.078625.136.1370625.0733125.0371875.155125.0754375.25925.12325-.0329375-.0138125.374.1689375.4919375.2241875 1.241.5865 1.87425 1.2973125 1.88275 2.6233125z"></path></svg>
+                        </div>
+                        <button class="items-center text-md font-normal focus:outline-none text-gray-600">Guests</button>
+                    </div>
+                </div>
+                <div class="flex-auto px-2">
+                    <div class="flex items-center">
+                        <button class="bg-gray-800 hover:bg-black text-white py-1 px-3 border border-gray-700 rounded-lg focus:outline-none ">
+                            <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true" focusable="false" style="height: 1em; width: 1em; display: block; fill: currentcolor;"><path d="m10.4 18.2c-4.2-.6-7.2-4.5-6.6-8.8.6-4.2 4.5-7.2 8.8-6.6 4.2.6 7.2 4.5 6.6 8.8-.6 4.2-4.6 7.2-8.8 6.6m12.6 3.8-5-5c1.4-1.4 2.3-3.1 2.6-5.2.7-5.1-2.8-9.7-7.8-10.5-5-.7-9.7 2.8-10.5 7.9-.7 5.1 2.8 9.7 7.8 10.5 2.5.4 4.9-.3 6.7-1.7v.1l5 5c .3.3.8.3 1.1 0s .4-.8.1-1.1" fill-rule="evenodd"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+        </div>
     {% endblock search-bar %}
 </div>
 <ul class="flex items-center text-base font-medium h-full">
