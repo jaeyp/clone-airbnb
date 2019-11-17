@@ -1,8 +1,15 @@
 {% load static %}
-<a href="{% url 'core:home' %}">
-    <img class="w-8" src="{% static 'img/logo.svg' %}" alt=""/>
-</a>
-<ul>
+<div class="flex items-center w-1/3">
+    <a href="{% url 'core:home' %}" class="mr-6">
+        <img class="w-8" src="{% static 'img/logo.svg' %}" alt=""/>
+    </a>
+    {% block search-bar %}
+        <form method="get" action="{% url 'rooms:search' %}" class="w-1/2 sm:w-full md:w-3/4">
+            <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-md font-bold hover:shadow-lg focus:outline-none placeholder-gray-600" type="text" name="city" placeholder='Try "London"' />
+        </form>
+    {% endblock search-bar %}
+</div>
+<ul class="flex items-center text-base font-medium h-full">
     <!-- Q. How can we access `user` (user.is_authenticated) here?
         `context_processors` are function that add model information to templates.
         A `context processor` has a very simple interface: 
@@ -21,10 +28,11 @@
         Using RequestContext Section from https://docs.djangoproject.com/en/2.2/ref/templates/api/
     -->
     {% if user.is_authenticated %}
-    <li><a href="{% url 'users:logout' %}">Log out</a></li>
+    <li class="nav-link"><a href="{% url 'users:logout' %}">Log out</a></li>
     {% else %}
-    <li><a href="{% url 'users:login' %}">Log in</a></li>
-    <li><a href="{% url 'users:signup' %}">Sign up</a></li>
+    <!-- <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:signup' %}">Sign up</a></li>
+    <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:login' %}">Log in</a></li> -->
+    <li class="nav-link"><a href="{% url 'users:signup' %}">Sign up</a></li>
+    <li class="nav-link"><a href="{% url 'users:login' %}">Log in</a></li>
     {% endif %}
-
-</ul>
+</mr-3 ul>

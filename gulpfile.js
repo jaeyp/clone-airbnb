@@ -48,4 +48,5 @@ const jobs = gulp.series([taskImg, taskStyle]);
  * Exports Methods
  */
 exports.clean = gulp.series([clean]);
+exports.css = gulp.series([taskStyle]);
 exports.default = gulp.series([prepare, jobs]); // npm run build
