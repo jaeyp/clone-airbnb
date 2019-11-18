@@ -158,6 +158,15 @@ class Room(AbsctractTimeStampedModel):
         else:
             return 0
 
+    def first_photo(self):
+
+        """ Get the first photo of room """
+
+        # Unpacking (destructuring) assignment
+        # Put comma (photo,) in order to let python know we want to get the first eliment of array
+        (photo,) = self.photos.all()[:1]
+        return photo.file.url
+
 
 class Photo(AbsctractTimeStampedModel):
 
