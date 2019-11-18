@@ -18,6 +18,9 @@ from django_countries import countries
 # Custom packages
 from . import models, forms
 
+# from core.utils import Const
+from core import constants as CONST
+
 # Create your views here.
 
 
@@ -34,8 +37,8 @@ class HomeView(ListView):
     model = models.Room
 
     # 2. Set Attributes: refers to ccbv.co.uk
-    paginate_by = 5
-    paginate_orphans = 2
+    paginate_by = CONST.PAGINATE_BY
+    paginate_orphans = CONST.PAGINATE_ORPHANS
     ordering = "price"
     # page_kwarg = "page"  # page keyward argument - default: "page"
     # context_object_name = "rooms"  # change object_list to rooms
@@ -55,11 +58,13 @@ class HomeView(ListView):
 
 
 def all_rooms(request):
+
     """ all_rooms
         Function Based Home View
         it renders home.html page by using Paginator
         https://docs.djangoproject.com/en/2.2/topics/pagination/
     """
+
     # 1. Get the value of key "page" from GET request
     page = request.GET.get("page", 1)
 
@@ -67,7 +72,7 @@ def all_rooms(request):
     all_rooms = models.Room.objects.all()
 
     # 3. Create a Paginator instance
-    paginator = Paginator(all_rooms, 5, orphans=2)
+    paginator = Paginator(all_rooms, CONST.PAGINATE_BY, orphans=CONST.PAGINATE_ORPHANS)
     # print(vars(rooms))  # object_list of rooms in the page, number, paginator instance
     # print(vars(rooms.paginator))  # object_list of all room, per_page, orphans, allow_empty_first_page, count...
 
@@ -141,6 +146,7 @@ class RoomDetailView(DetailView):
 
 
 def room_detail(request, id):
+
     """ room_detail
         Function Based Room Detail View
     """
@@ -177,6 +183,7 @@ def room_detail(request, id):
 
 
 class SearchView(View):
+
     """ SearchView definition
         Class Based Room Search View
         """
@@ -266,7 +273,7 @@ class SearchView(View):
                     "name"
                 )  # added order_by() to fix 'UnorderedObjectListWarning'
 
-                paginator = Paginator(qs_rooms, 5, orphans=2)
+                paginator = Paginator(qs_rooms, CONST.PAGINATE_BY, orphans=CONST.PAGINATE_ORPHANS)
                 page = request.GET.get("page", 1)
                 rooms = paginator.get_page(page)
 
@@ -290,9 +297,11 @@ class SearchView(View):
 
 
 def search(request):
+
     """ search
         Function Based Room Search View
         """
+
     # =========================================
     # Search View in a manual way
     # =========================================
