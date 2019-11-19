@@ -1,14 +1,15 @@
 {% load static %}
-<div class="flex items-center w-2/5">
-    <a href="{% url 'core:home' %}" class="mr-6">
-        <img class="w-8" src="{% static 'img/logo.svg' %}" alt=""/>
+<!-- <div class="flex items-center w-2/5"> -->
+<div class="flex items-center w-8/12 sm:w-7/12 md:w-6/12 lg:w-5/12 xl:w-4/12">
+    <a href="{% url 'core:home' %}" class="mr-0 md:mr-6 lg:mr-6 xl:mr-6 invisible xl:visible lg:visible md:visible">
+        <img class="w-0 md:w-8 lg:w-8 xl:w-8" src="{% static 'img/logo.svg' %}" alt=""/>
     </a>
     <!-- TODO: Set min-width in TailwindCSS way
         e.g. .class {min-width: 550px; width: 75%;}
     -->
     {% block search-bar %}
         <!-- Only Search Bar -->
-        <form method="get" action="{% url 'rooms:search' %}" class="w-1/2 sm:w-full md:w-3/4">
+        <form method="get" action="{% url 'rooms:search' %}" class="w-full">
             <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-base font-semibold hover:shadow-lg focus:border-black focus:outline-none placeholder-gray-600" type="text" name="city" placeholder="Anywhere" />
         </form>
         <!-- Dates, Guests, and Search Button -->
@@ -53,7 +54,7 @@
         </div>
     {% endblock search-bar %}
 </div>
-<ul class="flex items-center text-base font-medium h-full">
+<ul class="flex items-center text-xs sm:text-sm md:text-sm lg:text-base xl:text-base font-thin sm:font-normal md:text-medium lg:text-medium xl:font-medium h-full">
     <!-- Q. How can we access `user` (user.is_authenticated) here?
         `context_processors` are function that add model information to templates.
         A `context processor` has a very simple interface: 
