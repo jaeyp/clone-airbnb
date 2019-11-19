@@ -1,31 +1,33 @@
 <div class="w-1/4 mb-10 px-2 overflow-hidden">
-    <!--image-->
-    <div class="w-full h-64 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.first_photo}})"></div>
-    <!--host & rating-->
-    <div class="flex justify-between mb-1">
-        <div class="flex w-4/5">
-            {% if room.host.superhost %}
-                <span class="mr-1 uppercase font-medium text-xs border border-black text-black rounded py-px px-1">Superhost</span>
-            {% endif %}
-            <!-- <span class="text-sm text-gray-600">{{room.city}} &#183 {{room.country.name}}</span> -->
-            <span class="text-sm text-gray-600 block truncate">{{room.city}} &#183; {{room.country.name}}</span>
+    <a href="{% url 'rooms:detail' room.pk %}">
+        <!--image-->
+        <div class="w-full h-64 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.first_photo}})"></div>
+        <!--host & rating-->
+        <div class="flex justify-between mb-1">
+            <div class="flex w-4/5">
+                {% if room.host.superhost %}
+                    <span class="mr-1 uppercase font-medium text-xs border border-black text-black rounded py-px px-1">Superhost</span>
+                {% endif %}
+                <!-- <span class="text-sm text-gray-600">{{room.city}} &#183 {{room.country.name}}</span> -->
+                <span class="text-sm text-gray-600 block truncate">{{room.city}} &#183; {{room.country.name}}</span>
+            </div>
+            <span class="flex text-sm items-center">
+                <!-- Tips. html snippet: i tag with class
+                    type "i." and tab 
+                -->
+                <i class="fas fa-star text-red-500 text-sm mr-1"></i>
+                {{room.total_rating}}
+            </span>
         </div>
-        <span class="flex text-sm items-center">
-            <!-- Tips. html snippet: i tag with class
-                type "i." and tab 
-            -->
-            <i class="fas fa-star text-red-500 text-sm mr-1"></i>
-            {{room.total_rating}}
-        </span>
-    </div>
-    <!--room name-->
-    <!-- Tips. truncate overflowing text with an ellipsis (…)
-        Use .truncate with <p> or 
-            .block & .truncate with <span> -->
-    <span class="text-black w-11/12 block truncate">{{room.name}}</span>
-    <span class="font-bold">${{room.price}}</span>/night
-    <!-- <a href='{% url "rooms:detail" room.id %}'>
-        <img src="{{room.first_photo}}" alt="">
-        {{room.name}} / ${{room.price}}
-    </a> -->
+        <!--room name-->
+        <!-- Tips. truncate overflowing text with an ellipsis (…)
+            Use .truncate with <p> or 
+                .block & .truncate with <span> -->
+        <span class="text-black w-11/12 block truncate">{{room.name}}</span>
+        <span class="font-bold">${{room.price}}</span>/night
+        <!-- <a href='{% url "rooms:detail" room.id %}'>
+            <img src="{{room.first_photo}}" alt="">
+            {{room.name}} / ${{room.price}}
+        </a> -->
+    </a>
 </div>
