@@ -43,7 +43,7 @@ class LoginView(FormView):
     # It is useful for when you need to use a URL reversal before your project’s URLConf is loaded.
     success_url = reverse_lazy("core:home")  # reverse("core:home")
     # initial: A dictionary containing initial data for the form.
-    initial = {"email": "jp.inseoul@gmail.com"}
+    initial = {"email": ""}
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
@@ -67,7 +67,7 @@ class SignUpView(FormView):
     # form_class = forms.DerivedSignUpForm  # using built-in form
     form_class = forms.SignUpForm  # using cutom form
     success_url = reverse_lazy("core:home")
-    initial = {"first_name": "Jaey", "last_name": "Park", "email": "jp.inseoul@gmail.com"}
+    initial = {"first_name": "", "last_name": "", "email": ""}
 
     # TODO: email verification scenario has been improved
     # form is valid
