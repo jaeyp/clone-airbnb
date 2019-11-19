@@ -9,7 +9,7 @@
     {% block search-bar %}
         <!-- Only Search Bar -->
         <form method="get" action="{% url 'rooms:search' %}" class="w-1/2 sm:w-full md:w-3/4">
-            <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-md font-bold hover:shadow-lg focus:outline-none placeholder-gray-600" type="text" name="city" placeholder='Try "London"' />
+            <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-base font-semibold hover:shadow-lg focus:border-black focus:outline-none placeholder-gray-600" type="text" name="city" placeholder="Anywhere" />
         </form>
         <!-- Dates, Guests, and Search Button -->
         <!-- TODO: Hide button element according to screen size by using media-query
@@ -19,7 +19,7 @@
             <div class="w-2/3">
                 <div >
                     <form method="get" action="{% url 'rooms:search' %}" >
-                        <input class="text-md font-bold placeholder-gray-600 focus:outline-none" type="text" name="city" placeholder='Try "London"' />
+                        <input class="text-md font-bold placeholder-gray-600 focus:outline-none" type="text" name="city" placeholder="Anywhere" />
                     </form>
                 </div>
             </div>
