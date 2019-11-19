@@ -14,9 +14,7 @@ class Command(BaseCommand):
     help = "This command generates many {NAME}"
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "--number", default=1, type=int, help="How many {NAME} do you want to create"
-        )
+        parser.add_argument("--number", default=1, type=int, help="How many {NAME} do you want to create")
 
     def handle(self, *args, **options):
         number = options.get("number")
@@ -27,7 +25,7 @@ class Command(BaseCommand):
             room_models.Room,
             number,
             {
-                "name": lambda x: seeder.faker.text()[: random.randint(10, 30)],
+                "name": lambda x: seeder.faker.text()[: random.randint(10, 120)],
                 "host": lambda x: random.choice(all_users),
                 "property_type": lambda x: random.choice(property_types),
                 "price": lambda x: random.randint(10, 500),
@@ -50,9 +48,7 @@ class Command(BaseCommand):
             room = room_models.Room.objects.get(pk=pk)
             for i in range(5, random.randint(8, 20)):
                 room_models.Photo.objects.create(
-                    caption=seeder.faker.sentence(),
-                    room=room,
-                    file=f"room_photos/{random.randint(1, 57)}.webp",
+                    caption=seeder.faker.sentence(), room=room, file=f"room_photos/{random.randint(1, 57)}.webp",
                 )
             for a in amenities:
                 draw = random.randint(1, 10)
