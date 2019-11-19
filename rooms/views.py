@@ -41,7 +41,11 @@ class HomeView(ListView):
     paginate_orphans = CONST.PAGINATE_ORPHANS
     ordering = "price"
     # page_kwarg = "page"  # page keyward argument - default: "page"
-    # context_object_name = "rooms"  # change object_list to rooms
+
+    """ If you want to use another name instead of "object_list" with Django template tags,
+        set context_object_name
+    """
+    # context_object_name = "rooms"
 
     """ if you don't want to use the given template name from CBV,
         set template_name as an argument of as_view(), or inside HomeView class
@@ -49,6 +53,8 @@ class HomeView(ListView):
     # template_name = "rooms/home4cbv.html"
 
     def get_context_data(self, **kwargs):
+        """ You can define additional variables in the context
+        """
         context = super().get_context_data(**kwargs)
         now = timezone.now()
         context["now"] = now
