@@ -3,7 +3,7 @@
 
 <!-- Page Name -->
 {% block page_title %}
-Log In
+    Log In
 {% endblock page_title %}
 
 <!-- Tips. You can hide search-bar with empty block like this. -->
@@ -12,28 +12,29 @@ Log In
 
 <!-- Page Content -->
 {% block content %}
-    {% include 'partials/social_login.html' %}
+    <div class="container w-full sm:w-7/12 md:w-6/12 lg:w-5/12 xl:w-4/12 mx-auto my-10 flex flex-col items-center border p-6 border-gray-400">
+        {% include 'partials/social_login.html' %}
    
-    <form method="POST" action="{% url 'users:login' %}">
-        <!-- Ref. CSRF attack -->
-        {% comment %}
-        [CSRF verification failed]
+        <form method="POST" action="{% url 'users:login' %}">
+            {% comment %}
+            [CSRF attack - CSRF verification failed]
 
-        - What is Cross-site Request Forgery? (CSRF)
-        It's an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. 
-        e.g. 
-        1. Embed this CSRF attack code to the document or email to change admin's password, and sent it.
-        <img src="http://auction.com/changeUserAcoount?id=admin&password=admin" width="0" height="0">
-        2. If admin user open the document on the browser in which they're currently authenticated with a cookie,
-        admin's password is changed.
+            - What is Cross-site Request Forgery? (CSRF)
+            It's an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. 
+            e.g. 
+            1. Embed this CSRF attack code to the document or email to change admin's password, and sent it.
+            <img src="http://auction.com/changeUserAcoount?id=admin&password=admin" width="0" height="0">
+            2. If admin user open the document on the browser in which they're currently authenticated with a cookie,
+            admin's password is changed.
 
-        - How to prevent it in Django
-        Add {% csrf_token %} in your POST form
-        This token verifies that post request comes from this website
-        {% endcomment %}
-        
-        {% csrf_token %}
-        {{form.as_p}}
-        <button>Log In</button>
-    </form>
+            - How to prevent it in Django
+            Add {% csrf_token %} in your POST form
+            This token verifies that post request comes from this website
+            {% endcomment %}
+            
+            {% csrf_token %}
+            {{form.as_p}}
+            <button>Log In</button>
+        </form>
+    </div>
 {% endblock content %}
