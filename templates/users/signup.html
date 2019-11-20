@@ -33,6 +33,7 @@ Sign Up
             {% endif %}
 
             <!-- inputs -->
+            <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
             {% for field in form %}
                 {% include 'partials/input.html' with field=field %}                
             {% endfor %}
