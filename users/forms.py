@@ -4,6 +4,8 @@ from django import forms
 # Refs. https://docs.djangoproject.com/en/2.2/topics/auth/default/#module-django.contrib.auth.forms
 from django.contrib.auth.forms import UserCreationForm
 
+from django.contrib.auth import password_validation as validator
+
 from . import models
 
 
@@ -71,6 +73,7 @@ class LoginForm(forms.Form):
 
 
 # SignUp Form derived and extended from Built-in UserCreationForm
+# TODO: fixe save failure issue
 class DerivedSignUpForm(UserCreationForm):
     class Meta:
         model = models.User
@@ -84,15 +87,27 @@ class DerivedSignUpForm(UserCreationForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Create password"}))
     password_confirmed = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm password"}))
 
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        try:
+            models.User.objects.get(email=email)
+            raise forms.ValidationError("That email is already taken", code="existing_user")
+        except models.User.DoesNotExist:
+            print(email)
+            return email
+
     def clean_password_confirmed(self):
+        print("clean_password_confirmed")
         password = self.cleaned_data.get("password")
         password_confirmed = self.cleaned_data.get("password_confirmed")
         if password != password_confirmed:
             raise forms.ValidationError("Password confirmation does not match")
         else:
+            print(password)
             return password
 
     def save(self):
+        print("DerivedSignUpForm - user save")
         first_name = self.cleaned_data.get("first_name")
         last_name = self.cleaned_data.get("last_name")
         email = self.cleaned_data.get("email")
@@ -107,7 +122,7 @@ class DerivedSignUpForm(UserCreationForm):
 # Custom SignUp Form (preferred. - more customizable)
 # In order to add more features, check source codes of built-in forms
 # from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, PasswordResetForm, ...
-class SignUpForm(forms.Form):
+""" class SignUpForm(forms.Form):
 
     first_name = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "First name"}), max_length=80)
     last_name = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Last name"}), max_length=80)
@@ -122,13 +137,17 @@ class SignUpForm(forms.Form):
         email = self.cleaned_data.get("email")
         try:
             models.User.objects.get(email=email)
-            raise forms.ValidationError("User already exists with that email")
+            raise forms.ValidationError("User already exists with that email", code="existing_user")
         except models.User.DoesNotExist:
             return email
 
     def clean_password_confirmed(self):
         password = self.cleaned_data.get("password")
         password_confirmed = self.cleaned_data.get("password_confirmed")
+        
+        # https://docs.djangoproject.com/en/2.2/topics/auth/passwords/#django.contrib.auth.password_validation.validate_password
+        validator.validate_password(password)
+
         if password != password_confirmed:
             raise forms.ValidationError("Password confirmation does not match")
         else:
@@ -143,7 +162,7 @@ class SignUpForm(forms.Form):
         user = models.User.objects.create_user(username=email, email=email, password=password)
         user.first_name = first_name
         user.last_name = last_name
-        user.save()
+        user.save() """
 
 
 # ModelForm
@@ -152,20 +171,36 @@ class SignUpForm(forms.Form):
 # Ref. https://docs.djangoproject.com/en/2.1/topics/forms/modelforms/
 
 
-""" class SignUpForm(forms.ModelForm):
+class SignUpForm(forms.ModelForm):
     class Meta:
         model = models.User
         fields = ("first_name", "last_name", "email")
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "First name"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Last name"}),
+            "email": forms.TextInput(attrs={"placeholder": "Email address"}),
+        }
 
-    # we keep these password variables since User's password is an encrypted one
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirmed = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Create password"}))
+    password_confirmed = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm password"}))
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        try:
+            models.User.objects.get(email=email)
+            raise forms.ValidationError("That email is already taken", code="existing_user")
+        except models.User.DoesNotExist:
+            return email
 
     def clean_password_confirmed(self):
         password = self.cleaned_data.get("password")
         password_confirmed = self.cleaned_data.get("password_confirmed")
+
+        # https://docs.djangoproject.com/en/2.2/topics/auth/passwords/#django.contrib.auth.password_validation.validate_password
+        validator.validate_password(password)
+
         if password != password_confirmed:
-            raise forms.ValidationError("Password confirmation does not match")
+            raise forms.ValidationError("Password confirmation does not match", code="")
         else:
             return password
 
@@ -178,4 +213,4 @@ class SignUpForm(forms.Form):
         password = self.cleaned_data.get("password")
         user.username = email
         user.set_password(password)
-        user.save() """
+        user.save()
