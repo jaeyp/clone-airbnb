@@ -40,10 +40,15 @@ class LoginForm(forms.Form):
                 return self.cleaned_data
             else:
                 # raise forms.ValidationError("Password is wrong")
-                self.add_error("password", forms.ValidationError("Password is wrong"))
+                # self.add_error("password", forms.ValidationError("Password is wrong"))
+
+                # non_field_errors
+                # https://docs.djangoproject.com/en/2.2/ref/forms/api/#django.forms.Form.non_field_errors
+                self.add_error(None, forms.ValidationError("Password is wrong"))
         except models.User.DoesNotExist:
             # raise forms.ValidationError("User does not exist")
-            self.add_error("email", forms.ValidationError("User does not exist"))
+            # self.add_error("email", forms.ValidationError("User does not exist"))
+            self.add_error(None, forms.ValidationError("User does not exist"))
 
     """ def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -192,17 +197,23 @@ class SignUpForm(forms.ModelForm):
         except models.User.DoesNotExist:
             return email
 
-    def clean_password_confirmed(self):
+    def clean_password(self):
         password = self.cleaned_data.get("password")
-        password_confirmed = self.cleaned_data.get("password_confirmed")
 
         # https://docs.djangoproject.com/en/2.2/topics/auth/passwords/#django.contrib.auth.password_validation.validate_password
         validator.validate_password(password)
+        return password
 
-        if password != password_confirmed:
-            raise forms.ValidationError("Password confirmation does not match", code="")
-        else:
-            return password
+    def clean_password_confirmed(self):
+        password = self.cleaned_data.get("password")
+        if password is not None:
+            password_confirmed = self.cleaned_data.get("password_confirmed")
+            print(f"{password} == {password_confirmed}")
+
+            if password != password_confirmed:
+                raise forms.ValidationError("Password confirmation does not match", code="")
+            else:
+                return password
 
     # https://docs.djangoproject.com/en/2.1/topics/forms/modelforms/#the-save-method
     def save(self, *args, **kwargs):
