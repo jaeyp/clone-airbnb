@@ -26,23 +26,28 @@ Sign Up
             {% csrf_token %}
             <div class="flex flex-col items-center w-full">
                 <div class="input-div">
-                    <input type="text" placeholder="First name">
+                    <!-- <input type="text" placeholder="First name"> -->
+                    {{form.first_name}}
                     <i class="far fa-user"></i>
                 </div>
                 <div class="input-div">
-                    <input type="text" placeholder="Last name">
+                    <!-- <input type="text" placeholder="Last name"> -->
+                    {{form.last_name}}
                     <i class="far fa-user"></i>
                 </div>
                 <div class="input-div">
-                    <input type="email" placeholder="Email address">
+                    <!-- <input type="email" placeholder="Email address"> -->
+                    {{form.email}}
                     <i class="far fa-envelope"></i>
                 </div>
                 <div class="input-div">
-                    <input type="password" placeholder="Create password">
+                    <!-- <input type="password" placeholder="Create password"> -->
+                    {{form.password}}
                     <i class="fas fa-key"></i>
                 </div>
                 <div class="input-div">
-                    <input type="password" placeholder="Confirm password">
+                    <!-- <input type="password" placeholder="Confirm password"> -->
+                    {{form.password_confirmed}}
                     <i class="fas fa-key"></i>
                 </div>
             </div>

@@ -9,8 +9,8 @@ from . import models
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email address"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Password"}))
 
     # Custom Form field validator/formatter
     """ clean_<fieldname>() method
@@ -72,16 +72,36 @@ class LoginForm(forms.Form):
 
 # SignUp Form derived and extended from Built-in UserCreationForm
 class DerivedSignUpForm(UserCreationForm):
-    # add email field
-    username = forms.EmailField(label="Email")
-
     class Meta:
         model = models.User
-        fields = (
-            "username",
-            "first_name",
-            "last_name",
-        )
+        fields = ("first_name", "last_name", "email")
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "First name"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Last name"}),
+            "email": forms.TextInput(attrs={"placeholder": "Email address"}),
+        }
+
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Create password"}))
+    password_confirmed = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm password"}))
+
+    def clean_password_confirmed(self):
+        password = self.cleaned_data.get("password")
+        password_confirmed = self.cleaned_data.get("password_confirmed")
+        if password != password_confirmed:
+            raise forms.ValidationError("Password confirmation does not match")
+        else:
+            return password
+
+    def save(self):
+        first_name = self.cleaned_data.get("first_name")
+        last_name = self.cleaned_data.get("last_name")
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
+
+        user = models.User.objects.create_user(username=email, email=email, password=password)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
 
 
 # Custom SignUp Form (preferred. - more customizable)
@@ -89,11 +109,12 @@ class DerivedSignUpForm(UserCreationForm):
 # from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, PasswordResetForm, ...
 class SignUpForm(forms.Form):
 
-    first_name = forms.CharField(max_length=80)
-    last_name = forms.CharField(max_length=80)
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirmed = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    first_name = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "First name"}), max_length=80)
+    last_name = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Last name"}), max_length=80)
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "Email address"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Create password"}))
+    password_confirmed = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Confirm password"}))
+    # password_confirmed = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
     # Custom Form field validator/formatter
     # clean_<fieldname>() method

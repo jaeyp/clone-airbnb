@@ -44,11 +44,13 @@
             {% csrf_token %}
             <div class="flex flex-col items-center w-full">
                 <div class="input-div">
-                    <input type="email" placeholder="Email address">
+                    <!-- <input type="email" placeholder="Email address"> -->
+                    {{form.email}}
                     <i class="far fa-envelope"></i>
                 </div>
                 <div class="input-div">
-                    <input type="password" placeholder="Password">
+                    <!-- <input type="password" placeholder="Password"> -->
+                    {{form.password}}
                     <i class="fas fa-key"></i>
                 </div>
             </div>
