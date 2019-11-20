@@ -30,25 +30,40 @@ Sign Up
                     {{form.first_name}}
                     <i class="far fa-user"></i>
                 </div>
+                <div class="w-full text-sm font-medium text-red-500">
+                    {{form.first_name.errors}}
+                </div>
                 <div class="input-div">
                     <!-- <input type="text" placeholder="Last name"> -->
                     {{form.last_name}}
                     <i class="far fa-user"></i>
+                </div>
+                <div class="w-full text-sm font-medium text-red-500">
+                    {{form.last_name.errors}}
                 </div>
                 <div class="input-div">
                     <!-- <input type="email" placeholder="Email address"> -->
                     {{form.email}}
                     <i class="far fa-envelope"></i>
                 </div>
+                <div class="w-full text-sm font-medium text-red-500">
+                    {{form.email.errors}}
+                </div>
                 <div class="input-div">
                     <!-- <input type="password" placeholder="Create password"> -->
                     {{form.password}}
                     <i class="fas fa-key"></i>
                 </div>
+                <div class="w-full text-sm font-medium text-red-500">
+                    {{form.password.errors}}
+                </div>
                 <div class="input-div">
                     <!-- <input type="password" placeholder="Confirm password"> -->
                     {{form.password_confirmed}}
                     <i class="fas fa-key"></i>
+                </div>
+                <div class="w-full text-sm font-medium text-red-500">
+                    {{form.password_confirmed.errors}}
                 </div>
             </div>
             <!-- {{form.as_p}} -->
