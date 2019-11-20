@@ -12,6 +12,9 @@ module.exports = {
       },
       borderRadius: {
         xl: "1.5rem"
+      },
+      borderWidth: {
+        "16": "16px"
       }
     }
   },
