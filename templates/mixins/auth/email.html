@@ -12,7 +12,7 @@
     <!-- inputs -->
     <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
     {% for field in form %}
-        {% include 'partials/input.html' with field=field %}                
+        {% include 'mixins/auth/input.html' with field=field %}                
     {% endfor %}
 
     <!-- Call to Action button-->
@@ -50,7 +50,7 @@
         <!-- inputs -->
         <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
         {% for field in form %}
-            {% include 'partials/input.html' with field=field %}                
+            {% include 'mixins/auth/input.html' with field=field %}                
         {% endfor %}
 
         <!-- <div class="flex flex-col items-center w-full">
@@ -82,7 +82,7 @@
         <!-- inputs -->
         <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
         {% for field in form %}
-            {% include 'partials/input.html' with field=field %}                
+            {% include 'mixins/auth/input.html' with field=field %}                
         {% endfor %}
 
         <!-- <div class="flex flex-col items-center w-full">

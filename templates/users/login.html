@@ -14,16 +14,16 @@
 {% block content %}
     <div class="container w-full sm:w-6/12 md:w-5/12 lg:w-4/12 xl:w-3/12 mx-auto my-10 flex flex-col items-center border p-6 border-gray-400">
         <!-- Social Login -->
-        {% include 'partials/social_login.html' %}
+        {% include 'mixins/auth/social.html' %}
    
         <!-- divider -->
-        {% include 'partials/divider.html' with text="or" %}
+        {% include 'mixins/auth/divider.html' with text="or" %}
 
         <!-- Email Login -->
-        {% include 'partials/email_login.html' with form=form cta="Log In" %}        
+        {% include 'mixins/auth/email.html' with form=form cta="Log In" %}        
 
         <!-- divider -->
-        {% include 'partials/divider.html' %}
+        {% include 'mixins/auth/divider.html' %}
 
         <!-- Move to Signup -->
         <div class="w-full">

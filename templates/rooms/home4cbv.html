@@ -43,7 +43,7 @@
                 URL tag: {% url 'url_path:url_name' arg1 arg2 .. %}
                 {% endcomment %}
                 <!-- with room=room : pass 'room' object to room_card.html-->
-                {% include 'partials/room_card.html' with room=room %}
+                {% include 'mixins/room_card.html' with room=room %}
             {% endfor %}
         </div>
 
