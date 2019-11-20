@@ -42,18 +42,31 @@
             {% endcomment %}
             
             {% csrf_token %}
-            <div class="flex flex-col items-center w-full">
+
+            <!-- non_field_errors -->
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="w-full text-sm font-medium text-red-500">
+                        {{error}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- inputs -->
+            {% for field in form %}
+                {% include 'partials/input.html' with field=field %}                
+            {% endfor %}
+
+            <!-- <div class="flex flex-col items-center w-full">
                 <div class="input-div">
-                    <!-- <input type="email" placeholder="Email address"> -->
                     {{form.email}}
                     <i class="far fa-envelope"></i>
                 </div>
                 <div class="input-div">
-                    <!-- <input type="password" placeholder="Password"> -->
                     {{form.password}}
                     <i class="fas fa-key"></i>
                 </div>
-            </div>
+            </div> -->
             <!-- {{form.as_p}} -->
             <button class="btn bg-red-500 text-white font-bold">Log In</button>
         </form>

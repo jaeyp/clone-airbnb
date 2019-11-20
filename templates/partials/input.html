@@ -1,0 +1,20 @@
+<div class="flex flex-col items-center w-full">
+    <!-- input with icon -->
+    <div class="input-div {% if field.errors %} has_error {% endif %}">
+        <!-- <input type="text" placeholder="First name"> -->
+        {{field}}
+        
+        {% if field.name == "first_name" or field.name == "last_name" %}
+            <i class="far fa-user"></i>
+        {% elif field.name == "email" %}
+            <i class="far fa-envelope"></i>
+        {% else %}
+            <i class="fas fa-key"></i>
+        {% endif %}
+            
+    </div>
+    <!-- error -->
+    <div class="w-full text-sm font-medium text-red-500">
+        {{field.errors}}
+    </div>
+</div>

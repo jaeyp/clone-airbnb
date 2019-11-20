@@ -24,9 +24,23 @@ Sign Up
             
         <form method="POST" action="{% url 'users:signup' %}" class="w-full">
             {% csrf_token %}
-            <div class="flex flex-col items-center w-full">
+
+            <!-- non_field_errors -->
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="w-full text-sm font-medium text-red-500">
+                        {{error}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            <!-- inputs -->
+            {% for field in form %}
+                {% include 'partials/input.html' with field=field %}                
+            {% endfor %}
+
+            <!-- <div class="flex flex-col items-center w-full">
                 <div class="input-div">
-                    <!-- <input type="text" placeholder="First name"> -->
                     {{form.first_name}}
                     <i class="far fa-user"></i>
                 </div>
@@ -34,7 +48,6 @@ Sign Up
                     {{form.first_name.errors}}
                 </div>
                 <div class="input-div">
-                    <!-- <input type="text" placeholder="Last name"> -->
                     {{form.last_name}}
                     <i class="far fa-user"></i>
                 </div>
@@ -42,7 +55,6 @@ Sign Up
                     {{form.last_name.errors}}
                 </div>
                 <div class="input-div">
-                    <!-- <input type="email" placeholder="Email address"> -->
                     {{form.email}}
                     <i class="far fa-envelope"></i>
                 </div>
@@ -50,7 +62,6 @@ Sign Up
                     {{form.email.errors}}
                 </div>
                 <div class="input-div">
-                    <!-- <input type="password" placeholder="Create password"> -->
                     {{form.password}}
                     <i class="fas fa-key"></i>
                 </div>
@@ -58,14 +69,13 @@ Sign Up
                     {{form.password.errors}}
                 </div>
                 <div class="input-div">
-                    <!-- <input type="password" placeholder="Confirm password"> -->
                     {{form.password_confirmed}}
                     <i class="fas fa-key"></i>
                 </div>
                 <div class="w-full text-sm font-medium text-red-500">
                     {{form.password_confirmed.errors}}
                 </div>
-            </div>
+            </div> -->
             <!-- {{form.as_p}} -->
             <button class="btn bg-red-500 text-white font-bold">Sign Up</button>
         </form>
