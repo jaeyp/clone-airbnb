@@ -17,63 +17,13 @@
         {% include 'partials/social_login.html' %}
    
         <!-- divider -->
-        <div class="flex items-center w-full my-2">
-            <div class="h-px w-full bg-gray-400"></div>
-            <span class="text-gray-600 font-medium mx-4">or</span>
-            <div class="h-px w-full bg-gray-400"></div>
-        </div>
+        {% include 'partials/divider.html' with text="or" %}
 
         <!-- Email Login -->
-        <form method="POST" action="{% url 'users:login' %}" class="w-full">
-            {% comment %}
-            [CSRF attack - CSRF verification failed]
+        {% include 'partials/email_login.html' with form=form cta="Log In" %}        
 
-            - What is Cross-site Request Forgery? (CSRF)
-            It's an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. 
-            e.g. 
-            1. Embed this CSRF attack code to the document or email to change admin's password, and sent it.
-            <img src="http://auction.com/changeUserAcoount?id=admin&password=admin" width="0" height="0">
-            2. If admin user open the document on the browser in which they're currently authenticated with a cookie,
-            admin's password is changed.
-
-            - How to prevent it in Django
-            Add {% csrf_token %} in your POST form
-            This token verifies that post request comes from this website
-            {% endcomment %}
-            
-            {% csrf_token %}
-
-            <!-- non_field_errors -->
-            {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                    <span class="w-full text-sm font-medium text-red-500">{{error}}</span>
-                {% endfor %}
-            {% endif %}
-
-            <!-- inputs -->
-            <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
-            {% for field in form %}
-                {% include 'partials/input.html' with field=field %}                
-            {% endfor %}
-
-            <!-- <div class="flex flex-col items-center w-full">
-                <div class="input-div">
-                    {{form.email}}
-                    <i class="far fa-envelope"></i>
-                </div>
-                <div class="input-div">
-                    {{form.password}}
-                    <i class="fas fa-key"></i>
-                </div>
-            </div> -->
-            <!-- {{form.as_p}} -->
-            <button class="btn bg-red-500 text-white font-bold">Log In</button>
-        </form>
-
-        <!-- separator -->
-        <div class="flex items-center w-full my-4">
-            <div class="h-px w-full bg-gray-400"></div>
-        </div>
+        <!-- divider -->
+        {% include 'partials/divider.html' %}
 
         <!-- Move to Signup -->
         <div class="w-full">
