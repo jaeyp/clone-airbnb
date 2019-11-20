@@ -19,4 +19,23 @@
   }
 }
 
+.btn {
+  @apply w-full text-center rounded my-2 py-2 font-medium text-base;
+}
+
+.input-div {
+  @apply flex justify-between items-center w-full text-center text-left border border-gray-600 rounded my-2 py-2 px-4;
+  input {
+    @apply w-full font-medium text-base;
+
+    // pseudo classes
+    &:focus {
+      @apply outline-none;
+    }
+  }
+  i {
+    @apply ml-2 text-gray-600;
+  }
+}
+
 @tailwind utilities;
