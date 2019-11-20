@@ -46,9 +46,7 @@
             <!-- non_field_errors -->
             {% if form.non_field_errors %}
                 {% for error in form.non_field_errors %}
-                    <div class="w-full text-sm font-medium text-red-500">
-                        {{error}}
-                    </div>
+                    <span class="w-full text-sm font-medium text-red-500">{{error}}</span>
                 {% endfor %}
             {% endif %}
 
