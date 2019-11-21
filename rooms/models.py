@@ -130,7 +130,16 @@ class Room(AbsctractTimeStampedModel):
 
     def get_absolute_url(self):
 
-        """ Overriding get_absolute_url method """
+        """ Overriding get_absolute_url method 
+            https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url
+
+            Define a get_absolute_url() method to tell Django how to calculate the canonical URL for an object. 
+            To callers, this method should appear to return a string that can be used to refer to the object over HTTP.
+
+            One place Django uses get_absolute_url() is in the admin app. 
+            If an object defines this method, the object-editing page will have a “View on site” link
+            that will jump you directly to the object’s public view, as given by get_absolute_url().
+        """
 
         """ reverse()
             you can convert URL_pattern_name to absolute_url
@@ -140,7 +149,7 @@ class Room(AbsctractTimeStampedModel):
             you can invoke reverse() like this,
                 reverse("rooms:detail", kwargs={"id": self.id})
         """
-        return reverse("rooms:detail", kwargs={"id": self.id})
+        return reverse("rooms:detail", kwargs={"id": self.id})  # rooms:detail + id => /room/id
 
     # ======================================
     # CUSTOM METHODS
