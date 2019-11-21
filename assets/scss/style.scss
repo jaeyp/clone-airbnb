@@ -69,7 +69,7 @@ div .input-div {
 
 .message {
   @apply w-full font-normal text-sm;
-  &.fadein {
+  &.notice {
     animation: messageFadeIn 5s ease-in-out forwards;
     @apply w-auto font-bold text-base;
   }

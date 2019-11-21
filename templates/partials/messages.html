@@ -8,13 +8,13 @@
         </li>
         {% endfor %}
     </ul>
-    {% elif type == "message" %}
-    <!-- <ul class="absolute mx-auto top-10 left-0 right-0 z-10 flex justify-center">
+    {% elif type == "notice" %}
+    <ul class="absolute mx-auto top-0 left-0 right-0 flex justify-center">
         {% for message in messages %}
-        <li {% if message.tags %} class="message fadein {{ message.tags }}"{% endif %}>
+        <li {% if message.tags %} class="message notice z-10 {{ message.tags }}"{% endif %}>
             {{ message }}
         </li>
         {% endfor %}
-    </ul> -->
+    </ul>
     {% endif %}
 {% endif %}
