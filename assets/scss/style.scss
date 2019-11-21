@@ -48,21 +48,40 @@ div .input-div {
 }
 
 // Messages
-.messages {
-  @apply w-full font-normal text-sm mx-2;
-  .debug {
-    @apply text-gray-800;
+@keyframes messageFadeIn {
+  0% {
+    opacity: 0;
   }
-  .info {
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.message {
+  @apply w-full font-normal text-sm;
+
+  &.fadeIn {
+    animation: messageFadeIn 3s ease-in-out forwards;
+  }
+  &.debug {
+    @apply text-gray-700;
+  }
+  &.info {
     @apply text-blue-600;
   }
-  .success {
+  &.success {
     @apply text-green-600;
   }
-  .warning {
+  &.warning {
     @apply text-yellow-600;
   }
-  .error {
+  &.error {
     @apply text-red-600;
   }
 }
