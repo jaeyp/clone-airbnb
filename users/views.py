@@ -52,6 +52,7 @@ class LoginView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
+            messages.success(self.request, f"Welcome, {user.first_name}!")
 
         # The default form_valid() simply redirects to the success_url.
         return super().form_valid(form)
@@ -137,7 +138,7 @@ def github_callback(request):
             json_response = response.json()
             error = json_response.get("error", None)
             if error is not None:
-                raise GithubException()
+                raise GithubException("Can't get access token")
             else:
                 # 3. Use the access token to access the API
                 access_token = json_response.get("access_token")
@@ -174,15 +175,17 @@ def github_callback(request):
                         user.save()
 
                     login(request, user)
+                    messages.success(request, f"Welcome, {user.first_name}!")
                     return redirect(reverse("core:home"))
                 else:
-                    raise GithubException()
+                    raise GithubException("Can't get user profile")
         else:
-            raise GithubException()
+            raise GithubException("Something went wrong")
 
-    except Exception:
+    except Exception as e:
         # TODO: error messages
-        messages.debug(request, "Something went wrong with client (%s)" % client_id)
+        # messages.debug(request, "Something went wrong with client (%s)" % client_id)
+        messages.error(request, e)
         return redirect(reverse("users:login"))
 
 
@@ -222,7 +225,7 @@ def google_callback(request):
             json_response = response.json()
             error = json_response.get("error", None)
             if error is not None:
-                raise GoogleException()
+                raise GoogleException("Can't get access token")
             else:
                 access_token = json_response.get("access_token")
                 # 3. Obtain user information from the ID token
@@ -257,14 +260,16 @@ def google_callback(request):
                         user.save()
 
                     login(request, user)
+                    messages.success(request, f"Welcome, {user.first_name}!")
                     return redirect(reverse("core:home"))
                 else:
-                    raise GoogleException()
+                    raise GoogleException("Can't get user profile")
         else:
-            raise GoogleException()
+            raise GoogleException("Something went wrong")
 
-    except Exception:
+    except Exception as e:
         # TODO: error messages
+        messages.error(request, e)
         return redirect(reverse("users:login"))
 
 
@@ -300,7 +305,7 @@ def facebook_callback(request):
             print(f"json response: {json_response}")
             error = json_response.get("error", None)
             if error is not None:
-                raise FacebookException()
+                raise FacebookException("Can't get access token")
             else:
                 access_token = json_response.get("access_token")
                 # 3. Obtain user information from the ID token
@@ -336,14 +341,16 @@ def facebook_callback(request):
                         user.save()
 
                     login(request, user)
+                    messages.success(request, f"Welcome {user.first_name}")
                     return redirect(reverse("core:home"))
                 else:
-                    raise FacebookException()
+                    raise FacebookException("Can't get user profile")
         else:
-            raise FacebookException()
+            raise FacebookException("Something went wrong")
 
-    except Exception:
+    except Exception as e:
         # TODO: error messages
+        messages.error(request, e)
         return redirect(reverse("users:login"))
 
 
