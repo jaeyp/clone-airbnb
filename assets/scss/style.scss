@@ -51,23 +51,27 @@ div .input-div {
 @keyframes messageFadeIn {
   0% {
     opacity: 0;
+    transform: translateY(-30px);
   }
-  10% {
+  20% {
     opacity: 1;
+    transform: translateY(30px);
   }
-  90% {
+  80% {
     opacity: 1;
+    transform: translateY(30px);
   }
   100% {
     opacity: 0;
+    transform: translateY(-30px);
   }
 }
 
 .message {
   @apply w-full font-normal text-sm;
-
-  &.fadeIn {
-    animation: messageFadeIn 3s ease-in-out forwards;
+  &.fadein {
+    animation: messageFadeIn 5s ease-in-out forwards;
+    @apply w-auto font-bold text-base;
   }
   &.debug {
     @apply text-gray-700;
