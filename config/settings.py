@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as message_constants  # messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,6 +28,10 @@ SECRET_KEY = "(3up+$)ymc!pjiq1!(4(@xm@jba(v0_ds$8zq+hw3xthg6k%4f"
 # ALLOWED_HOSTS = "*"
 
 DEBUG = True
+
+# Default Message Level : INFO (20)
+# https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#message-levels
+MESSAGE_LEVEL = message_constants.DEBUG  # 10
 
 ALLOWED_HOSTS = []
 

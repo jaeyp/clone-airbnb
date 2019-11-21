@@ -23,6 +23,7 @@
   @apply w-full text-center rounded my-2 py-2 font-medium text-base;
 }
 
+// Login, Signup
 div .input-div {
   @apply flex justify-between items-center w-full text-center text-left border border-gray-600 rounded my-2 py-2 px-4;
 
@@ -43,6 +44,26 @@ div .input-div {
 
   i {
     @apply ml-2 text-gray-600;
+  }
+}
+
+// Messages
+.messages {
+  @apply w-full font-normal text-sm mx-2;
+  .debug {
+    @apply text-gray-800;
+  }
+  .info {
+    @apply text-blue-600;
+  }
+  .success {
+    @apply text-green-600;
+  }
+  .warning {
+    @apply text-yellow-600;
+  }
+  .error {
+    @apply text-red-600;
   }
 }
 

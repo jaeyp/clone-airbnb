@@ -4,6 +4,7 @@ from django.views.generic import FormView
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout  # , LoginView
+from django.contrib import messages
 from django.conf import settings
 from . import forms, models
 
@@ -181,6 +182,7 @@ def github_callback(request):
 
     except Exception:
         # TODO: error messages
+        messages.debug(request, "Something went wrong with client (%s)" % client_id)
         return redirect(reverse("users:login"))
 
 
