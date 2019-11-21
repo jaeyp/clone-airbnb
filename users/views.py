@@ -52,13 +52,14 @@ class LoginView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
-            messages.success(self.request, f"Welcome, {user.first_name}!")
+            messages.success(self.request, f"Welcome {user.first_name}")
 
         # The default form_valid() simply redirects to the success_url.
         return super().form_valid(form)
 
 
 def log_out(request):
+    messages.success(request, f"See you later")
     logout(request)
     return redirect(reverse("core:home"))
 
@@ -175,7 +176,7 @@ def github_callback(request):
                         user.save()
 
                     login(request, user)
-                    messages.success(request, f"Welcome, {user.first_name}!")
+                    messages.success(request, f"Welcome {user.first_name}")
                     return redirect(reverse("core:home"))
                 else:
                     raise GithubException("Can't get user profile")
@@ -260,7 +261,7 @@ def google_callback(request):
                         user.save()
 
                     login(request, user)
-                    messages.success(request, f"Welcome, {user.first_name}!")
+                    messages.success(request, f"Welcome {user.first_name}")
                     return redirect(reverse("core:home"))
                 else:
                     raise GoogleException("Can't get user profile")
