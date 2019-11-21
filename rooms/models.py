@@ -133,7 +133,7 @@ class Room(AbsctractTimeStampedModel):
         """ Overriding get_absolute_url method 
             https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url
 
-            Define a get_absolute_url() method to tell Django how to calculate the canonical URL for an object. 
+            Define a get_absolute_url() method to tell Django how to calculate the canonical URL for an object.
             To callers, this method should appear to return a string that can be used to refer to the object over HTTP.
 
             One place Django uses get_absolute_url() is in the admin app. 
@@ -142,6 +142,8 @@ class Room(AbsctractTimeStampedModel):
         """
 
         """ reverse()
+            https://docs.djangoproject.com/en/2.2/ref/urlresolvers/#reverse
+            
             you can convert URL_pattern_name to absolute_url
             e.g.
             if you have 'detail' url pattern in rooms/urls.py like this,
