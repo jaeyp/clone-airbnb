@@ -14,7 +14,7 @@
     <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
     {% for field in form %}
         <div class="my-2">
-            <span class="font-medium text-gray-700">{{field.name}}</span>
+            <span class="font-medium text-gray-700">{{field.label}}</span>
             {% include 'mixins/auth/input.html' with field=field %}      
         </div>          
     {% endfor %}
