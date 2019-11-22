@@ -1,6 +1,7 @@
 import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 
 # support sending email
 from django.conf import settings  # To access environment variables from config/settings.py
@@ -52,7 +53,7 @@ class User(AbstractUser):
 
     # [null vs blank]
     # null is purely database-related (for DB), whereas blank is validation-related (for Form)
-    avatar = models.ImageField(upload_to="avatars", null=True, blank=True)
+    avatar = models.ImageField(upload_to="avatars", null=True, blank=True)  # path: /uploads/avatars
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, null=True, blank=True)
     bio = models.TextField(default="", blank=True)
     birthdate = models.DateField(null=True, blank=True)
@@ -64,6 +65,10 @@ class User(AbstractUser):
         max_length=120, default="", blank=True
     )  # random secret code for email varification
     login_method = models.CharField(choices=LOGIN_CHOICES, max_length=20, null=True, blank=True, default=LOGIN_EMAIL)
+
+    def get_absolute_url(self):
+        print(f"users:profile with {self.pk}")
+        return reverse("users:profile", kwargs={"pk": self.pk})
 
     def verify_email(self):
         if self.email_verified is False:

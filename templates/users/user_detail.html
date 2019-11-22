@@ -1,0 +1,61 @@
+<!-- base template having header & footer -->
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+    {{user_selected.first_name}}'s Profile
+{% endblock page_title %}
+
+<!-- Tips. You can hide search-bar with empty block like this. -->
+{% block search-bar %}
+{% endblock search-bar %}
+
+<!-- Page Content -->
+{% block content %}
+
+    <!-- user info -->
+    <div class="container w-full sm:w-6/12 md:w-5/12 lg:w-4/12 xl:w-3/12 mx-auto my-10 flex flex-col items-center border p-6 border-gray-400">
+
+        <!-- user avatar -->
+        {% include 'mixins/user_avatar.html' with user=user_selected %}
+        
+        <!-- user name -->
+        <div class="flex items-center">
+            <span class="text-3xl my-1">
+                {{user_selected.first_name}}
+            </span>
+            {% if user_selected.superhost %}
+                <i class="fas fa-check-circle text-teal-400 ml-1"></i>
+            {% endif %}
+        </div>
+
+        <!-- user bio -->
+        <span class="text-base my-2">{{user_selected.bio}}</span>
+        
+        <!-- edit profile -->
+        {% if user == user_selected %}
+            <a href="{% url 'users:update' %}" class="btn bg-red-500 text-white font-bold">Edit Profile</a>
+        {% endif %}
+            
+    </div>
+
+    <!-- user's room info -->
+    {% if user_selected.rooms.count > 0 %}
+    <div class="container mx-auto">
+
+        <!-- title -->
+        <div class="flex flex-wrap px-2 mb-4">
+            <div class="text-xl font-bold text-gray-800 ml-2">{{user_selected.first_name}}'s Rooms</div>
+        </div>
+
+        <!-- room list -->
+        <div class="flex flex-wrap">
+            {% for room in user_selected.rooms.all %}
+                {% include 'mixins/room_card.html' with room=room %}
+            {% endfor %}
+        </div>
+        
+    </div>
+    {% endif %}
+    
+{% endblock content %}

@@ -1,9 +1,10 @@
 import requests
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, DetailView, UpdateView
 from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout  # , LoginView
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib import messages
 from django.conf import settings
 from . import forms, models
@@ -387,3 +388,71 @@ def log_out(request):
     logout(request)
     return redirect(reverse("core:home"))
 """
+
+
+class UserProfileView(DetailView):
+
+    model = models.User
+
+    # context_object_name: Designates the name of the variable to use in the context.
+    # Here, default context_object_name is user.
+    # But we are using user object for current logged in user.
+    # So it make some problem when we access other user in template.
+    # e.g. from this link <a href="{{room.host.get_absolute_url}}">
+    # Set context_object_name here, so that we can distinguish selected user and authorized user.
+    context_object_name = "user_selected"
+
+    # How to extend context data
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["extended_value"] = "This is an extended data to context!"  # use {{extended_value}} in templates
+        return context
+
+
+class UserProfileUpdateView(UpdateView):
+
+    """ User Profile Update View
+        https://docs.djangoproject.com/en/2.1/topics/class-based-views/generic-editing/#model-forms
+        You don’t even need to provide a success_url for CreateView or UpdateView
+        - they will use get_absolute_url() on the model object if available.
+    """
+
+    model = models.User
+    template_name = "users/update_profile.html"
+    fields = (
+        # "email",  # not allow to change username
+        "first_name",
+        "last_name",
+        "avatar",
+        "gender",
+        "bio",
+        "birthdate",
+        "language",
+        "currency",
+    )
+
+    # Overriding get_object()
+    # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_object
+    # Django automatically calls get_object() to get the object that needs to be updated by your form
+    def get_object(self, queryset=None):
+        print(f"get_object: {self.request.user.avatar}")
+        return self.request.user
+        # e.g. return OtherModel.objects.get(pk=self.request.GET.get('pk'))
+
+    # Overriding form_valid() - intercepting changes
+    # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#form_valid
+    def form_valid(self, form):
+        # Applying email changes to username
+        # 1. catch email before it's saved
+        # 2. and copy it as username
+        email = form.cleaned_data.get("email")
+        if email is not None:
+            self.object.username = email
+            self.object.save()
+        return super().form_valid(form)
+
+
+class PasswordUpdateView(PasswordChangeView):
+
+    template_name = "users/update_password.html"
+    success_url = reverse_lazy("core:home")

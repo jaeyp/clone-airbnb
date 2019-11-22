@@ -73,6 +73,18 @@
         Using RequestContext Section from https://docs.djangoproject.com/en/2.2/ref/templates/api/
     -->
     {% if user.is_authenticated %}
+    {% comment %}
+        <li class="nav-link"><a href="{% url 'users:profile' user.pk %}">Profile</a></li>
+        https://docs.djangoproject.com/en/2.2/ref/models/instances/#get-absolute-url
+
+        It’s good practice to use get_absolute_url() in templates, instead of hard-coding your objects’ URLs. For example, this template code is bad:
+            <!-- BAD template code. Avoid! -->
+            <a href="/people/{{ object.id }}/">{{ object.name }}</a>
+
+        This template code is much better:
+            <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
+    {% endcomment %}
+    <li class="nav-link"><a href="{{user.get_absolute_url}}">Profile</a></li>
     <li class="nav-link"><a href="{% url 'users:logout' %}">Log out</a></li>
     {% else %}
     <!-- <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:signup' %}">Sign up</a></li>

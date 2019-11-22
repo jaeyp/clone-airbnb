@@ -4,16 +4,19 @@ from . import views
 app_name = "users"
 
 urlpatterns = [
-    path("login/", views.LoginView.as_view(), name="login"),
-    path("logout/", views.log_out, name="logout"),
-    path("signup/", views.SignUpView.as_view(), name="signup"),
-    path("verify/<str:key>", views.complete_verification, name="complete-verification"),
+    path("login/", views.LoginView.as_view(), name="login"),  # users:login
+    path("logout/", views.log_out, name="logout"),  # users:logout
+    path("signup/", views.SignUpView.as_view(), name="signup"),  # users:signup
+    path("verify/<str:key>/", views.complete_verification, name="complete-verification"),
+    path("<int:pk>/", views.UserProfileView.as_view(), name="profile"),  # users:profile
+    path("update-profile/", views.UserProfileUpdateView.as_view(), name="update"),
+    path("update-password/", views.PasswordUpdateView.as_view(), name="password"),
     # TODO: integrate three social logins (github, google, facebook)
     # path("login/social/<str:key>", views.social_login, name="social-login"),
-    path("login/github", views.github_login, name="github-login"),
-    path("auth/github", views.github_callback, name="github-callback"),
-    path("login/google", views.google_login, name="google-login"),
-    path("auth/google", views.google_callback, name="google-callback"),
-    path("login/facebook", views.facebook_login, name="facebook-login"),
-    path("auth/facebook", views.facebook_callback, name="facebook-callback"),
+    path("login/github/", views.github_login, name="github-login"),  # users:github-login
+    path("auth/github/", views.github_callback, name="github-callback"),
+    path("login/google/", views.google_login, name="google-login"),  # users:google-login
+    path("auth/google/", views.google_callback, name="google-callback"),
+    path("login/facebook/", views.facebook_login, name="facebook-login"),  # users:facebook-login
+    path("auth/facebook/", views.facebook_callback, name="facebook-callback"),
 ]

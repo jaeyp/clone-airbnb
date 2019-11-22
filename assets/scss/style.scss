@@ -28,12 +28,15 @@ div .input-div {
   @apply flex justify-between items-center w-full text-center text-left border border-gray-600 rounded my-2 py-2 px-4;
 
   // In case that both classes .input-div and .has_error together is used in a same div.
-  // div .input-div.has_error {} == div .input-div { &.has_error {} }
+  // - two class: div .input-div.has_error {} == div .input-div { &.has_error {} }
+  // - sub class: div .input-div .has_error {} == div .input-div { .has_error {} }
   &.has_error {
     @apply border-2 border-red-500; // append more style highlighting error
   }
 
-  input {
+  input,
+  textarea,
+  select {
     @apply w-full font-medium text-base;
 
     // pseudo classes
@@ -45,6 +48,11 @@ div .input-div {
   i {
     @apply ml-2 text-gray-600;
   }
+}
+
+textarea {
+  resize: none;
+  height: 100px;
 }
 
 // Messages
