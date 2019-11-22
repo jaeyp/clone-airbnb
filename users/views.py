@@ -411,7 +411,8 @@ class UserProfileView(DetailView):
 
 # Tips! trade-off with UpdateView
 # If you want to have more customizable update view,
-# Don't use UpdateView, but use FormView with ModelForm!
+# Don't use UpdateView, but use FormView with ModelForm! (Preferred, if you have enough time to do)
+# Using FormView is always preferred because using UpdateView and set widget is too hacky!
 #
 # With FormView for UpdateView, we would have to
 # 1. create a form
@@ -479,6 +480,7 @@ class PasswordUpdateView(PasswordChangeView):
     template_name = "users/update_password.html"
     success_url = reverse_lazy("core:home")
 
+    # Modify the current form
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
         # print(form)  # to check fields name
