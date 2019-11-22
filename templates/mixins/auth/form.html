@@ -1,5 +1,6 @@
 <!-- We can skip 'action' field here becuase , if there is no action, request is sent to the same url as default-->
-<form method="POST" class="w-full">
+<!-- To support image upload with user profile, set enctype="multipart/form-data" -->
+<form method="POST" class="w-full" enctype="multipart/form-data">
     {% csrf_token %}
 
     <!-- non_field_errors -->
