@@ -26,18 +26,18 @@ class User(AbstractUser):
     GENDER_FEMALE = "female"
     GENDER_OTHER = "other"
 
-    GENDER_CHOICES = ((GENDER_MALE, "Male"), (GENDER_FEMALE, "Female"), (GENDER_OTHER, "Other"))
+    GENDER_CHOICES = (("", "Select gender"), (GENDER_MALE, "Male"), (GENDER_FEMALE, "Female"), (GENDER_OTHER, "Other"))
 
     LANGUAGE_ENGLISH = "en"
     LANGUAGE_KOREAN = "kr"
 
-    LANGUAGE_CHOICES = ((LANGUAGE_ENGLISH, "English"), (LANGUAGE_KOREAN, "Korean"))
+    LANGUAGE_CHOICES = (("", "Select language"), (LANGUAGE_ENGLISH, "English"), (LANGUAGE_KOREAN, "Korean"))
 
     CURRENCY_USD = "usd"
     CURRENCY_CAD = "cad"
     CURRENCY_KRW = "krw"
 
-    CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_CAD, "CAD"), (CURRENCY_KRW, "KRW"))
+    CURRENCY_CHOICES = (("", "Select currency"), (CURRENCY_USD, "USD"), (CURRENCY_CAD, "CAD"), (CURRENCY_KRW, "KRW"))
 
     LOGIN_EMAIL = "email"
     LOGIN_GITHUB = "github"
@@ -67,7 +67,7 @@ class User(AbstractUser):
     login_method = models.CharField(choices=LOGIN_CHOICES, max_length=20, null=True, blank=True, default=LOGIN_EMAIL)
 
     def get_absolute_url(self):
-        print(f"users:profile with {self.pk}")
+        # print(f"users:profile with {self.pk}")
         return reverse("users:profile", kwargs={"pk": self.pk})
 
     def verify_email(self):

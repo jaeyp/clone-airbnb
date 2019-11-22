@@ -409,6 +409,16 @@ class UserProfileView(DetailView):
         return context
 
 
+# Tips! trade-off with UpdateView
+# If you want to have more customizable update view,
+# Don't use UpdateView, but use FormView with ModelForm!
+#
+# With FormView for UpdateView, we would have to
+# 1. create a form
+# 2. recieve get requests
+# 3. find a user
+# 4. put user data inside of the form
+# then, override form_valid(), save, redirect..
 class UserProfileUpdateView(UpdateView):
 
     """ User Profile Update View
@@ -435,9 +445,21 @@ class UserProfileUpdateView(UpdateView):
     # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_object
     # Django automatically calls get_object() to get the object that needs to be updated by your form
     def get_object(self, queryset=None):
-        print(f"get_object: {self.request.user.avatar}")
+        # print(f"get_object: {self.request.user.avatar}")
         return self.request.user
         # e.g. return OtherModel.objects.get(pk=self.request.GET.get('pk'))
+
+    # Overriding get_form()
+    # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_form
+    # To modify the current form
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        # print(form)  # to check fields name
+        form.fields["first_name"].widget.attrs = {"placeholder": "First name"}
+        form.fields["last_name"].widget.attrs = {"placeholder": "Last name"}
+        form.fields["bio"].widget.attrs = {"placeholder": "Bio"}
+        form.fields["birthdate"].widget.attrs = {"placeholder": "Birthdate"}
+        return form
 
     # Overriding form_valid() - intercepting changes
     # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#form_valid
@@ -456,3 +478,11 @@ class PasswordUpdateView(PasswordChangeView):
 
     template_name = "users/update_password.html"
     success_url = reverse_lazy("core:home")
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        # print(form)  # to check fields name
+        form.fields["old_password"].widget.attrs = {"placeholder": "Old password"}
+        form.fields["new_password1"].widget.attrs = {"placeholder": "New password"}
+        form.fields["new_password2"].widget.attrs = {"placeholder": "New password confirmation"}
+        return form
