@@ -27,7 +27,7 @@ from core import constants as CONST
 class HomeView(ListView):
 
     """ HomeView Definition
-        Class Based Home View
+        Class Based Home View (CBV)
 
         [Generic ListView]
         http://ccbv.co.uk/projects/Django/2.2/django.views.generic.list/ListView/
@@ -66,7 +66,7 @@ class HomeView(ListView):
 def all_rooms(request):
 
     """ all_rooms
-        Function Based Home View
+        Function Based Home View (FBV)
         it renders home.html page by using Paginator
         https://docs.djangoproject.com/en/2.2/topics/pagination/
     """
