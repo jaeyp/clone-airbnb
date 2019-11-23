@@ -499,6 +499,7 @@ class UserProfileUpdateView(mixins.LoggedInOnlyView, SuccessMessageMixin, Update
 
 class PasswordUpdateView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, SuccessMessageMixin, PasswordChangeView):
 
+    # replace default admin view
     template_name = "users/update_password.html"
     # success_url = reverse_lazy("core:home")  # go to home
     success_message = "Password Updated"
