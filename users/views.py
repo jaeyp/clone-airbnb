@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout  # , LoginView
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.conf import settings
 from . import forms, models
 
@@ -424,7 +425,7 @@ class UserProfileView(DetailView):
 # 3. find a user
 # 4. put user data inside of the form
 # then, override form_valid(), save, redirect..
-class UserProfileUpdateView(UpdateView):
+class UserProfileUpdateView(SuccessMessageMixin, UpdateView):
 
     """ User Profile Update View
         https://docs.djangoproject.com/en/2.1/topics/class-based-views/generic-editing/#model-forms
@@ -445,6 +446,9 @@ class UserProfileUpdateView(UpdateView):
         "language",
         "currency",
     )
+    # SuccessMessageMixin
+    # https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#adding-messages-in-class-based-views
+    success_message = "Profile Updated"
 
     # Overriding get_object()
     # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_object
