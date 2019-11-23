@@ -55,6 +55,25 @@ textarea {
   height: 100px;
 }
 
+// Gallery
+@keyframes bgZoomIn {
+  0% {
+    background-size: 100% 100%;
+    opacity: 0.9;
+  }
+  100% {
+    background-size: 105% 105%;
+    opacity: 1;
+  }
+}
+.zoom:hover {
+  animation: bgZoomIn 1s forwards;
+}
+.zoom:not(:hover) {
+  background-size: 100% 100%;
+  opacity: 0.9;
+}
+
 // Messages
 @keyframes messageFadeIn {
   0% {
