@@ -1,7 +1,7 @@
 <div class="w-1/4 mb-10 px-2 overflow-hidden">
     <a href="{% url 'rooms:detail' room.pk %}">
         <!--image-->
-        <div class="w-full h-64 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.first_photo}})"></div>
+        <div class="w-full h-64 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.get_first_photo}})"></div>
         <!--host & rating-->
         <div class="flex justify-between mb-1">
             <div class="flex w-4/5">
@@ -16,7 +16,7 @@
                     type "i." and tab 
                 -->
                 <i class="fas fa-star text-red-500 text-sm mr-1"></i>
-                {{room.total_rating}}
+                {{room.get_total_rating}}
             </span>
         </div>
         <!--room name-->
@@ -26,7 +26,7 @@
         <span class="text-black w-11/12 block truncate">{{room.name}}</span>
         <span class="font-bold">${{room.price}}</span>/night
         <!-- <a href='{% url "rooms:detail" room.id %}'>
-            <img src="{{room.first_photo}}" alt="">
+            <img src="{{room.get_first_photo}}" alt="">
             {{room.name}} / ${{room.price}}
         </a> -->
     </a>

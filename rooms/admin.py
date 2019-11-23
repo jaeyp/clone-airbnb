@@ -67,7 +67,7 @@ class RoomAdmin(admin.ModelAdmin):  # conneting admin pannel
         "instant_book",
         "count_amenities",  # function
         "count_photos",  # function
-        "total_rating",
+        "get_total_rating",  # function
     )
 
     ordering = ("price", "guests", "beds", "bedrooms", "bathrooms")

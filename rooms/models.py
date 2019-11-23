@@ -157,7 +157,7 @@ class Room(AbsctractTimeStampedModel):
     # CUSTOM METHODS
     # ======================================
 
-    def total_rating(self):
+    def get_total_rating(self):
         all_reviews = self.reviews.all()
         all_ratings = 0
 
@@ -169,7 +169,7 @@ class Room(AbsctractTimeStampedModel):
         else:
             return 0
 
-    def first_photo(self):
+    def get_first_photo(self):
 
         """ Get the first photo of room """
 
