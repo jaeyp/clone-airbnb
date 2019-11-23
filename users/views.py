@@ -514,3 +514,44 @@ class PasswordUpdateView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, Suc
 
     def get_success_url(self):
         return self.request.user.get_absolute_url()  # go to profile
+
+
+# ===============================================================
+# More things for User
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#using-the-django-authentication-system
+
+# TODO: "Built-in views" VS "Built-in forms"
+# Built-in views: https://docs.djangoproject.com/en/2.2/ref/views/#module-django.views
+# Built-in views (for all authentication views): https://docs.djangoproject.com/en/2.2/topics/auth/default/#all-authentication-views
+# If you don’t want to use the built-in views, but want the convenience of not having to write forms for this functionality,
+# Buildt-in forms: https://docs.djangoproject.com/en/2.2/topics/auth/default/#module-django.contrib.auth.forms
+
+# TODO: Password Reset
+# PasswordResetView
+# PasswordResetDoneView
+# PasswordResetConfirmView
+# PasswordResetCompleteView
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.views.PasswordResetView
+#
+# accounts/password_reset/ [name='password_reset']
+# accounts/password_reset/done/ [name='password_reset_done']
+# accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm'] - django generate two tokens & send url by email
+# accounts/reset/done/ [name='password_reset_complete']
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#module-django.contrib.auth.views
+
+# TODO: Writing your own validator
+# https://docs.djangoproject.com/en/2.2/topics/auth/passwords/#writing-your-own-validator
+
+# TODO: Decorators
+# @require_http_methods
+# @require_GET
+# @require_POST
+# @require_safe
+# @login_required
+# ...
+
+# TODO: Decorating class-based views
+# https://docs.djangoproject.com/en/2.2/topics/class-based-views/intro/#decorating-class-based-views
+
+# TODO: Study User Permissions
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#permissions-and-authorization
