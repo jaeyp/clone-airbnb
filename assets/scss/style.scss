@@ -78,7 +78,7 @@ textarea {
 .message {
   @apply w-full font-normal text-sm;
   &.notice {
-    animation: messageFadeIn 5s ease-in-out forwards;
+    animation: messageFadeIn 4s ease-in-out forwards;
     @apply w-auto font-bold text-base;
   }
   &.debug {
