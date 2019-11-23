@@ -8,7 +8,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.conf import settings
-from . import forms, models
+from . import forms, models, mixins
 
 """ Implementation of LoginView """
 
@@ -36,7 +36,7 @@ class LoginView(LoginView):
 # Attributes: http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/FormView/
 
 
-class LoginView(FormView):
+class LoginView(mixins.LoggedOutOnlyView, FormView):
     # FormView inherits TemplateResponseMixin so template_name can be used here.
     template_name = "users/login.html"
     # form_class: The form class to instantiate.
