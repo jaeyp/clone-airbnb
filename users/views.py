@@ -483,10 +483,11 @@ class UserProfileUpdateView(SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 
-class PasswordUpdateView(PasswordChangeView):
+class PasswordUpdateView(SuccessMessageMixin, PasswordChangeView):
 
     template_name = "users/update_password.html"
     # success_url = reverse_lazy("core:home")  # go to home
+    success_message = "Password Updated"
 
     # Modify the current form
     def get_form(self, form_class=None):
