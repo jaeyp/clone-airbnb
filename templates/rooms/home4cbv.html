@@ -54,16 +54,16 @@
                     <i class="fas fa-chevron-left"></i>
                 </a>
             {% else %}
-                <i class="fas fa-chevron-left text-teal-200"></i>
+                <i class="fas fa-chevron-left text-teal-100"></i>
             {% endif %}
 
-            <span class="ml-3 font-semibold text-teal-600">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
-            <span class="mx-2 text-teal-200">&#10073;</span>
+            <span class="ml-3 font-semibold text-gray-600">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
+            <span class="mx-2 text-teal-600">&#10073;</span>
             {% for page in page_obj.paginator.page_range %}
                 {% if page == page_obj.number %}
-                    <a href="?page={{page}}" class="mx-1 font-bold text-teal-600">{{page}}</a>
+                    <a href="?page={{page}}" class="mx-1 font-bold text-gray-600">{{page}}</a>
                 {% else %}
-                    <a href="?page={{page}}" class="mx-1 text-teal-600">{{page}}</a>
+                    <a href="?page={{page}}" class="mx-1 text-gray-600">{{page}}</a>
                 {% endif %}
             {% endfor %}
 
@@ -72,7 +72,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </a>
             {% else %}
-                <i class="ml-2 fas fa-chevron-right text-teal-200"></i>
+                <i class="ml-2 fas fa-chevron-right text-teal-100"></i>
             {% endif %}
         </div>
         <!-- <h5>
