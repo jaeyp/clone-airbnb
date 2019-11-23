@@ -52,6 +52,8 @@ class LoginView(FormView):
         password = form.cleaned_data.get("password")
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
+            user.login_method = models.User.LOGIN_EMAIL
+            user.save()
             login(self.request, user)
             messages.success(self.request, f"Welcome, {user.first_name}!")
 
@@ -85,6 +87,8 @@ class SignUpView(FormView):
         password = form.cleaned_data.get("password")
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
+            user.login_method = models.User.LOGIN_EMAIL
+            user.save()
             login(self.request, user)
 
         # email verification
@@ -478,7 +482,7 @@ class UserProfileUpdateView(UpdateView):
 class PasswordUpdateView(PasswordChangeView):
 
     template_name = "users/update_password.html"
-    success_url = reverse_lazy("core:home")
+    # success_url = reverse_lazy("core:home")  # go to home
 
     # Modify the current form
     def get_form(self, form_class=None):
@@ -488,3 +492,6 @@ class PasswordUpdateView(PasswordChangeView):
         form.fields["new_password1"].widget.attrs = {"placeholder": "New password"}
         form.fields["new_password2"].widget.attrs = {"placeholder": "New password confirmation"}
         return form
+
+    def get_success_url(self):
+        return self.request.user.get_absolute_url()  # go to profile
