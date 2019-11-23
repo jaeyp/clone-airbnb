@@ -37,14 +37,20 @@ class LoginView(LoginView):
 
 
 class LoginView(mixins.LoggedOutOnlyView, FormView):
+
     # FormView inherits TemplateResponseMixin so template_name can be used here.
     template_name = "users/login.html"
+
     # form_class: The form class to instantiate.
     form_class = forms.LoginForm
+
     # success_url: The URL to redirect to when the form is successfully processed.
     # reverse_lazy(): A lazily evaluated version of reverse().
     # It is useful for when you need to use a URL reversal before your project’s URLConf is loaded.
+    """ Replaced it with get_success_url() for adding more logic, such as next?
     success_url = reverse_lazy("core:home")  # reverse("core:home")
+    """
+
     # initial: A dictionary containing initial data for the form.
     initial = {"email": ""}
 
@@ -61,6 +67,14 @@ class LoginView(mixins.LoggedOutOnlyView, FormView):
         # The default form_valid() simply redirects to the success_url.
         return super().form_valid(form)
 
+    def get_success_url(self):
+        next_url = self.request.GET.get("next")
+        if next_url is not None:
+            return next_url
+        else:
+            # we don't need reverse_lazy() here
+            return reverse("core:home")
+
 
 def log_out(request):
     user = request.user
@@ -70,7 +84,7 @@ def log_out(request):
 
 
 # Custom SignUp Form View
-class SignUpView(FormView):
+class SignUpView(mixins.LoggedOutOnlyView, FormView):
     template_name = "users/signup.html"
     # form_class = forms.DerivedSignUpForm  # using built-in form
     form_class = forms.SignUpForm  # using cutom form
@@ -425,7 +439,7 @@ class UserProfileView(DetailView):
 # 3. find a user
 # 4. put user data inside of the form
 # then, override form_valid(), save, redirect..
-class UserProfileUpdateView(SuccessMessageMixin, UpdateView):
+class UserProfileUpdateView(mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
 
     """ User Profile Update View
         https://docs.djangoproject.com/en/2.1/topics/class-based-views/generic-editing/#model-forms
@@ -483,7 +497,7 @@ class UserProfileUpdateView(SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 
-class PasswordUpdateView(SuccessMessageMixin, PasswordChangeView):
+class PasswordUpdateView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, SuccessMessageMixin, PasswordChangeView):
 
     template_name = "users/update_password.html"
     # success_url = reverse_lazy("core:home")  # go to home

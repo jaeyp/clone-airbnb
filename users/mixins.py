@@ -1,11 +1,21 @@
+from django.contrib import messages
+from django.urls import reverse_lazy
 from django.shortcuts import redirect, reverse
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 
+# UserPassesTestMixin(AccessMixin)
 # https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.mixins.UserPassesTestMixin
+
+# LoginRequiredMixin(AccessMixin)
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#the-loginrequired-mixin
+
+# AccessMixin
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.mixins.AccessMixin
 
 
 class LoggedOutOnlyView(UserPassesTestMixin):
-    permission_denied_message = "Page not found"
+
+    # permission_denied_message = "Can't go there"
 
     # if test_func return Ture, it go ahead.
     def test_func(self):
@@ -13,4 +23,19 @@ class LoggedOutOnlyView(UserPassesTestMixin):
 
     # https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.mixins.AccessMixin.handle_no_permission
     def handle_no_permission(self):
+        messages.error(self.request, "Can't go there")
+        return redirect("core:home")
+
+
+class LoggedInOnlyView(LoginRequiredMixin):
+
+    login_url = reverse_lazy("users:login")
+
+
+class EmailLoginOnlyView(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.login_method == "email"
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Can't go there")
         return redirect("core:home")
