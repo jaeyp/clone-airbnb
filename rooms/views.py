@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 
 # Class Based Views
-from django.views.generic import ListView, DetailView, View
+from django.views.generic import ListView, DetailView, View, UpdateView
 
 # third-party packages
 from django_countries import countries
@@ -148,7 +148,7 @@ class RoomDetailView(DetailView):
     """
 
     model = models.Room
-    pk_url_kwarg = "id"
+    pk_url_kwarg = "id"  # To use 'id' instead of 'pk'
 
 
 def room_detail(request, id):
@@ -509,3 +509,34 @@ def search(request):
     # =========================================
     # Rendering
     return render(request, "rooms/search.html", {"form": form, "rooms": qs_rooms})
+
+
+# https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-editing/#updateview
+class RoomEditView(UpdateView):
+
+    """ RoomEditView definition
+        Class Based Room Update View
+        When form is submitted, page redirects to get_absolute_url() of model automatically
+    """
+
+    model = models.Room
+    template_name = "rooms/edit.html"
+    fields = (
+        "name",
+        "description",
+        "country",
+        "city",
+        "price",
+        "address",
+        "guests",
+        "beds",
+        "bedrooms",
+        "bathrooms",
+        "check_in",
+        "check_out",
+        "instant_book",
+        "property_type",
+        "amenities",
+        "facilities",
+        "house_rules",
+    )

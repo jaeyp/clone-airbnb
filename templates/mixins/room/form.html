@@ -1,0 +1,23 @@
+<form method="POST" class="w-full" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- non_field_errors()
+        This method returns the list of errors from Form.errors that aren’t associated with a particular field.
+    -->
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <span class="w-full text-sm font-medium text-red-500">{{error}}</span>
+        {% endfor %}
+    {% endif %}
+
+    <!-- inputs -->
+    <!-- https://docs.djangoproject.com/en/2.2/topics/forms/#looping-over-the-form-s-fields -->
+    {% for field in form %}
+        <div class="my-2">
+            {% include 'mixins/room/input.html' with field=field %}      
+        </div>          
+    {% endfor %}
+
+    <!-- Call to Action button-->
+    <button class="btn-link bg-red-500 text-white font-bold">{{cta}}</button>
+</form>

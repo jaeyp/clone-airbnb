@@ -1,0 +1,30 @@
+<div class="flex flex-col w-full">
+    <!-- input with icon -->
+    
+    {% if field.name != "instant_book" %}    
+        <span class="font-medium text-gray-700">{{field.label}}</span>
+        <div class="input-div {% if field.errors %} has_error {% endif %}">
+            <!-- <input type="text" placeholder="First name"> -->
+            {{field}}
+            
+            {% if field.name == "first_name" or field.name == "last_name" %}
+                <i class="far fa-user"></i>
+            {% elif field.name == "email" %}
+                <i class="far fa-envelope"></i>
+            {% elif field.name == "password" or field.name == "password_confirmed" %}
+                <i class="fas fa-key"></i>
+            {% else %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="flex flex-auto w-full items-center mb-1">
+            <span class="font-medium text-gray-700 mr-2">{{field.label}}</span>
+            <div class="mt-1">{{field}}</div>
+        </div>
+    {% endif %}
+    
+    <!-- error -->
+    <div class="w-full text-sm font-medium text-red-500">
+        {{field.errors}}
+    </div>
+</div>

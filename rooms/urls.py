@@ -14,7 +14,8 @@ app_name = "rooms"
 
 # With pk_url_kwarg = "id"
 urlpatterns = [
-    path("<int:id>", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
+    path("<int:id>/", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
+    path("<int:pk>/edit/", views.RoomEditView.as_view(), name="edit"),
     path("search/", views.SearchView.as_view(), name="search"),
     # path("search/", views.search, name="search"),
 ]

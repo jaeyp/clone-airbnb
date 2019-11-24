@@ -121,8 +121,18 @@
 
 
         </div>
+        
+        <!-- vertical divider -->
+        <div class="w-1/12">
+        </div>
+
         <!-- Booking -->
-        <div class="w-5/12">
+        <div class="w-4/12">
+            
+            {% if room.host == user %}                
+                <a href="{% url 'rooms:edit' room.pk %}" class="btn-link bg-red-500 text-white block rounded-lg">Edit Room</a>
+            {% endif %}
+
         </div>
     </div>
 
