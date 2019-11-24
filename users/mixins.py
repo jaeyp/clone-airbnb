@@ -12,6 +12,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 # AccessMixin
 # https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.mixins.AccessMixin
 
+# Blog - Using Mixins With Class-Based Views
+# https://simpleisbetterthancomplex.com/tips/2016/09/27/django-tip-15-cbv-mixins.html
+
 
 class LoggedOutOnlyView(UserPassesTestMixin):
 
