@@ -3,7 +3,9 @@
 <form method="POST" class="w-full" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <!-- non_field_errors -->
+    <!-- non_field_errors()
+        This method returns the list of errors from Form.errors that aren’t associated with a particular field.
+    -->
     {% if form.non_field_errors %}
         {% for error in form.non_field_errors %}
             <span class="w-full text-sm font-medium text-red-500">{{error}}</span>
