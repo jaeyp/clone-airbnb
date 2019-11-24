@@ -178,6 +178,49 @@ class Room(AbsctractTimeStampedModel):
         (photo,) = self.photos.all()[:1]
         return photo.file.url
 
+    def get_next_four_photos(self):
+
+        """ Get the first five photos of room """
+
+        photos = self.photos.all()[1:5]
+        print(photos)
+        return photos
+
+    def get_first_two_reviews(self):
+
+        reviews = self.reviews.all()[:2]
+        print(reviews)
+        return reviews
+
+    def get_next_two_reviews(self):
+
+        reviews = self.reviews.all()[2:4]
+        return reviews
+
+    # It's deprecated by prularize
+    # https://docs.djangoproject.com/en/2.2/ref/templates/builtins/#pluralize
+    #
+    # def get_guests(self):
+    #     if self.guests == 1:
+    #         return "1 guest"
+    #     else:
+    #         return f"{self.guests} guests"
+    # def get_beds(self):
+    #     if self.beds == 1:
+    #         return "1 bed"
+    #     else:
+    #         return f"{self.beds} beds"
+    # def get_bedrooms(self):
+    #     if self.bedrooms == 1:
+    #         return "1 bedroom"
+    #     else:
+    #         return f"{self.bedrooms} bedrooms"
+    # def get_bathrooms(self):
+    #     if self.bathrooms == 1:
+    #         return "1 bathroom"
+    #     else:
+    #         return f"{self.bathrooms} bathrooms"
+
 
 class Photo(AbsctractTimeStampedModel):
 

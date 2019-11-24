@@ -53,7 +53,7 @@ class User(AbstractUser):
 
     # [null vs blank]
     # null is purely database-related (for DB), whereas blank is validation-related (for Form)
-    avatar = models.ImageField(upload_to="avatars", null=True, blank=True)  # path: /uploads/avatars
+    avatar = models.ImageField(upload_to="avatars", default="", null=True, blank=True)  # path: /uploads/avatars
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, null=True, blank=True)
     bio = models.TextField(default="", blank=True)
     birthdate = models.DateField(null=True, blank=True)

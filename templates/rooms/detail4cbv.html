@@ -7,8 +7,147 @@
 
 <!-- Page Content -->
 {% block content %}
-<div>
-    <!-- h1>{{object.name}}</h1> -->
+    <!-- Room Title -->
+    <div class="container mx-auto">
+        <div class="text-2xl font-semibold pt-2">{{room.name}}</div>
+        <div class="mb-5">
+            <i class="fas fa-star text-red-500 text-sm mr-1"></i>
+            <span class="text-sm text-gray-600">{{room.get_total_rating}}</span>
+                &#8901; 
+            <span class="text-sm font-medium text-gray-600">{{room.city}}.{{room.country}}</span>
+        </div>
+    </div>        
+
+    
+    {% comment %}
+    <!-- Normal Room View -->
+    <div class="container mx-auto">
+        <div class="h-50vh flex mb-10">
+            <div class="zoom w-1/2 bg-cover bg-center border-2 border-white" style="background-image: url({{room.get_first_photo}});"></div>
+            <div class="w-1/2 flex flex-wrap"> 
+                
+                {% for photo in room.get_next_four_photos %}
+                    <div class="zoom w-1/2 h-auto bg-cover bg-center border-2 border-white" style="background-image: url({{photo.file.url}});"></div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+    {% endcomment %}
+    
+    <!-- Wide Room View -->  
+    <div class="container max-w-full">
+        <div class="h-50vh flex mb-10">
+            <div class="zoom w-1/2 bg-center border border-gray-900" style="background-image: url({{room.get_first_photo}});"></div>
+            <div class="w-1/2 flex flex-wrap"> 
+                
+                {% for photo in room.get_next_four_photos %}
+                    <div class="zoom w-1/2 h-auto bg-center border border-gray-900" style="background-image: url({{photo.file.url}});"></div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Detail -->
+    <div class="container mx-auto flex justify-around">
+        <!-- Room Info -->
+        <div class="w-7/12">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h4 class="text-lg font-medium">{{room.name}}</h4>
+                    <!-- pluralize
+                        https://docs.djangoproject.com/en/2.2/ref/templates/builtins/#pluralize 
+                    -->
+                    <span class="font-normal text-base text-gray-700">
+                        {{room.property_type}} &#8901;
+                        {{room.guests}} guest{{room.guests|pluralize}} &#8901;
+                        {{room.beds}} bed{{room.beds|pluralize}} &#8901;
+                        {{room.bedrooms}} bedroom{{room.bedrooms|pluralize}} &#8901;
+                        {{room.bathrooms}} bathroom{{room.bathrooms|pluralize}}
+                    </span>
+                </div>
+                <a class="flex flex-col items-center mx-4" href="{{room.host.get_absolute_url}}">
+                    {% include "mixins/user_avatar.html" with user=room.host size=12 text=2 %}
+                    <span class="text-xs text-gray-600">{{room.host.first_name}}</span>
+                </a>
+            </div>
+            
+            <!-- divider -->
+            {% include 'mixins/divider.html' %}
+            
+            <div class="my-6">
+                <p>
+                    {{room.description}}
+                </p>
+            </div>
+            
+            <!-- divider -->
+            {% include 'mixins/divider.html' %}
+
+            <div class="my-6">
+                <h4 class="font-medium text-xl mb-4">Amenities</h4>
+                <!--  Hack. TailwindCSS remove bullet with <ul>
+                <ul>
+                    {% for a in room.amenities.all %}
+                        <li class="mb-2">{{a}}</li>
+                    {% endfor %}
+                </ul> -->
+                <!-- If you want to display bullet, don't use <ul> with TailwindCSS-->
+                {% for a in room.amenities.all %}
+                    <li class="mb-2">{{a}}</li>
+                {% endfor %}
+            </div>
+            
+            <!-- divider -->
+            {% include 'mixins/divider.html' %}
+
+            <div class="my-6">
+                <h4 class="font-medium text-xl mb-4">Facilities</h4>
+                {% for f in room.facilities.all %}
+                    <li class="mb-2">{{f}}</li>
+                {% endfor %}
+            </div>
+            
+            <!-- divider -->
+            {% include 'mixins/divider.html' %}
+
+            <div class="my-6">
+                <h4 class="font-medium text-xl mb-4">House Rules</h4>
+                {% for r in room.house_rules.all %}
+                    <li class="mb-2">{{r}}</li>
+                {% endfor %}
+            </div>
+
+
+        </div>
+        <!-- Booking -->
+        <div class="w-5/12">
+        </div>
+    </div>
+
+    <div class="container mx-auto">
+        <!-- divider -->
+        {% include 'mixins/divider.html' %}
+
+        <div class="my-6">
+            <div class="flex items-center font-medium mb-6">
+                <i class="fas fa-star text-red-500 text-sm mr-2"></i>
+                <span class="text-xl">{{room.get_total_rating}} ({{room.reviews.count}} review{{room.reviews.count|pluralize}})</span>    
+            </div>
+            <div class="flex mb-4">
+                {% for r in room.get_first_two_reviews %}
+                    {% include 'mixins/review_card.html' with review=r %}
+                {% endfor %}                    
+            </div>
+            <div class="flex">
+                {% for r in room.get_next_two_reviews %}
+                    {% include 'mixins/review_card.html' with review=r %}
+                {% endfor %}                    
+            </div>
+        </div>
+    </div>
+<!-- <div>
     <h1>{{room.name}}</h1>
     <h3>{{room.description}}</h3>
 </div>
@@ -39,6 +178,6 @@
         <li>{{r}}</li>
         {% endfor %}
     </ul>
-</div>
+</div> -->
 
 {% endblock content %}

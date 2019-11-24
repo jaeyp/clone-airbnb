@@ -1,0 +1,15 @@
+<div class="flex flex-col w-1/2 items-start mb-4 mr-20">
+    <div class="flex items-center my-2">
+        <a class="mr-4" href="{{review.user.get_absolute_url}}">
+            {% include "mixins/user_avatar.html" with user=review.user size=12 text=2 %}
+        </a>
+        <div class="flex flex-col items-start">
+            <span class="font-medium text-base">{{review.user.first_name}}</span>
+            <!-- builtin date formatting
+                https://docs.djangoproject.com/en/2.2/ref/templates/builtins/#date 
+            -->
+            <span class="font-normal text-sm text-gray-600">{{review.created|date:"F Y"}}</span>
+        </div>
+    </div>
+    <p>{{review}}</p>
+</div>
