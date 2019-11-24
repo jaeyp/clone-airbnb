@@ -58,11 +58,11 @@ textarea {
 // Gallery
 @keyframes bgZoomIn {
   0% {
-    background-size: 100% 100%;
+    background-size: 100% 120%;
     opacity: 0.95;
   }
   100% {
-    background-size: 105% 105%;
+    background-size: 105% 126%;
     opacity: 1;
   }
 }
@@ -70,7 +70,7 @@ textarea {
   animation: bgZoomIn 1s forwards;
 }
 .zoom:not(:hover) {
-  background-size: 100% 100%;
+  background-size: 100% 120%;
   opacity: 0.95;
 }
 
