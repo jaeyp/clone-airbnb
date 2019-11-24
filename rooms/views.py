@@ -17,6 +17,7 @@ from django_countries import countries
 
 # Custom packages
 from . import models, forms
+from users import mixins as user_mixins
 
 # from core.utils import Const
 from core import constants as CONST
@@ -512,14 +513,15 @@ def search(request):
 
 
 # https://docs.djangoproject.com/en/2.2/ref/class-based-views/generic-editing/#updateview
-class RoomEditView(UpdateView):
+# http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/
+class RoomEditView(user_mixins.LoggedInOnlyView, UpdateView):
 
     """ RoomEditView definition
         Class Based Room Update View
         When form is submitted, page redirects to get_absolute_url() of model automatically
     """
 
-    model = models.Room
+    model = models.Room  # this line invokes get_object() of UpdateView class
     template_name = "rooms/edit.html"
     fields = (
         "name",
@@ -540,3 +542,11 @@ class RoomEditView(UpdateView):
         "facilities",
         "house_rules",
     )
+
+    # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_object
+    def get_object(self, queryset=None):
+        room = super().get_object(queryset=queryset)
+        print(room.host.pk, self.request.user.pk)
+        if room.host.pk != self.request.user.pk:
+            raise Http404()
+        return room
