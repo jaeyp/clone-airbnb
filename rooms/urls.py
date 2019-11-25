@@ -19,8 +19,8 @@ urlpatterns = [
     # path("<int:pk>/", views.RoomPhotoView.as_view(), name="photos"),
     # {% url 'rooms:edit' room.pk %}
     path("<int:pk>/edit/", views.RoomEditView.as_view(), name="edit"),  # rooms:edit
-    # {% url 'rooms:edit-photos' room.pk %}
-    path("<int:pk>/edit/photos/", views.RoomPhotosEditView.as_view(), name="edit-photos"),  # rooms:edit-photos
+    # {% url 'rooms:photos' room.pk %}
+    path("<int:pk>/photos/", views.RoomPhotosView.as_view(), name="photos"),  # rooms:photos
     # {% url 'rooms:delete-photo' room.pk photo.pk %}
     path("<int:room_pk>/photos/<int:photo_pk>/delete/", views.delete_photo, name="delete-photo"),
     path("search/", views.SearchView.as_view(), name="search"),  # rooms:search

@@ -557,10 +557,13 @@ class RoomEditView(user_mixins.LoggedInOnlyView, UpdateView):
         return room
 
 
-class RoomPhotosEditView(user_mixins.LoggedInOnlyView, RoomDetailView):
+class RoomPhotosView(user_mixins.LoggedInOnlyView, RoomDetailView):
+
+    """ RoomPhotosView:
+        Photo management view for host """
 
     model = models.Room
-    template_name = "rooms/edit_photos.html"
+    template_name = "rooms/photos.html"
     # def get(self, requeset, *args, **kwargs):
     #   pass
 
@@ -598,6 +601,7 @@ def delete_photo(request, room_pk, photo_pk):
             # photo = models.Photo.objects.filter(pk=photo_pk)
             # photo.delete()
             messages.success(request, "Photo deleted")
-        return redirect(reverse("rooms:edit-photos", kwargs={"pk": room_pk}))
+        return redirect(reverse("rooms:photos", kwargs={"pk": room_pk}))
     except models.Room.DoesNotExist:
         return redirect(reverse("core:home"))
+
