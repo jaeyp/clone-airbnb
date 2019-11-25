@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login, logout  # , LoginView
 from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.conf import settings
@@ -515,6 +516,16 @@ class PasswordUpdateView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, Suc
 
     def get_success_url(self):
         return self.request.user.get_absolute_url()  # go to profile
+
+
+@login_required
+def start_hosting(request):
+    pass
+
+
+@login_required
+def stop_hosting(request):
+    pass
 
 
 # ===============================================================
