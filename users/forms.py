@@ -215,6 +215,7 @@ class SignUpForm(forms.ModelForm):
             else:
                 return password
 
+    # Intercepting user data and edit it before save
     # https://docs.djangoproject.com/en/2.1/topics/forms/modelforms/#the-save-method
     def save(self, *args, **kwargs):
         #  If you call save() with commit=False,
