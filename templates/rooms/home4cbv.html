@@ -36,7 +36,7 @@
         <div class="flex flex-wrap -mx-40"><!-- Check this. minor margin with tailwindCSS: "-mx-40" -->
             {% for room in object_list %}
                 {% comment %}
-                <a href="/rooms/{{room.id}}">
+                <a href="/rooms/{{room.pk}}">
                     {{room.name}} / ${{room.price}}
                 </a>
                 This is bad since we need to remember url path. instead, use URL tag as below.
