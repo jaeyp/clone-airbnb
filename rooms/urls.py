@@ -23,6 +23,8 @@ urlpatterns = [
     path("<int:pk>/photos/", views.RoomPhotosView.as_view(), name="photos"),  # rooms:photos
     # {% url 'rooms:delete-photo' room.pk photo.pk %}
     path("<int:room_pk>/photos/<int:photo_pk>/delete/", views.delete_photo, name="delete-photo"),
+    # {% url 'rooms:edit-photo' room.pk photo.pk %}
+    path("<int:room_pk>/photos/<int:photo_pk>/edit/", views.RoomPhotosEditView.as_view(), name="edit-photo"),
     path("search/", views.SearchView.as_view(), name="search"),  # rooms:search
     # path("search/", views.search, name="search"),
 ]

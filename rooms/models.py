@@ -151,7 +151,7 @@ class Room(AbsctractTimeStampedModel):
             you can invoke reverse() like this,
                 reverse("rooms:detail", kwargs={"id": self.id})
         """
-        return reverse("rooms:detail", kwargs={"id": self.id})  # rooms:detail + id => /room/id
+        return reverse("rooms:detail", kwargs={"pk": self.pk})  # rooms:detail + id => /room/id
 
     # ======================================
     # CUSTOM METHODS

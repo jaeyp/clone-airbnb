@@ -1,8 +1,9 @@
 from django.utils import timezone
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Function Based Views in manual way
 # from math import ceil
@@ -154,7 +155,7 @@ class RoomDetailView(DetailView):
     # pk_url_kwarg = "id"  # To use 'id' instead of 'pk'
 
 
-def room_detail(request, id):
+def room_detail(request, pk):
 
     """ room_detail
         Function Based Room Detail View
@@ -169,7 +170,7 @@ def room_detail(request, id):
         ALLOWED_HOSTS = "*"
     """
     try:
-        room = models.Room.objects.get(id=id)
+        room = models.Room.objects.get(pk=pk)
         return render(request, "rooms/detail.html", context={"room": room})
     except models.Room.DoesNotExist:
         """ DoesNotExist is different from PageNotFound error of HTTP
@@ -605,3 +606,22 @@ def delete_photo(request, room_pk, photo_pk):
     except models.Room.DoesNotExist:
         return redirect(reverse("core:home"))
 
+
+class RoomPhotosEditView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, UpdateView):
+
+    model = models.Photo
+    template_name = "rooms/edit_photo.html"
+    pk_url_kwarg = "photo_pk"
+    fields = ("caption",)  # Tips. adding ',' prevent for formatter to removes brackets
+
+    # SuccessMessageMixin
+    # https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#adding-messages-in-class-based-views
+    success_message = "Photo Updated"
+
+    # We can't do this 'cause it requires room.pk
+    # success_url = reverse_lazy("rooms:photos")
+
+    # So, we need logic with success_url
+    def get_success_url(self):
+        room_pk = self.kwargs.get("room_pk")
+        return reverse("rooms:photos", kwargs={"pk": room_pk})
