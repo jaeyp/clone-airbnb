@@ -639,15 +639,44 @@ class RoomPhotosEditView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, Upda
 # class RoomPhotosAddView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, FormView):
 class RoomPhotosAddView(user_mixins.LoggedInOnlyView, FormView):
 
-    model = models.Photo
+    # model = models.Photo  # it's already defined in CreatePhotoForm
+    # fields = ("caption", "file")  # it's already defined in CreatePhotoForm
     template_name = "rooms/add_photo.html"
-    fields = ("caption", "file")
     form_class = forms.CreatePhotoForm
     # success_message = "Photo Uploaded" # Can't use this and form_valid() together, use messages.success() instead
 
     def form_valid(self, form):
         pk = self.kwargs.get("pk")
-        form.save(pk)
+        form.save(pk)  # invoke save() passing the current room's pk
         messages.success(self.request, "Photo Uploaded")
         return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
 
+
+# Upload a new room
+# Derives FormView to intercept User data because we save a room with a User
+class RoomCreateView(user_mixins.LoggedInOnlyView, FormView):
+    form_class = forms.CreateRoomForm
+    template_name = "rooms/create.html"
+
+    # save room with user - way1
+    def form_valid(self, form):
+        room = form.save(self.request.user)  # invoke save() passing the current user
+        # save_m2m(): save_m2m() must be called after object is saved into database!!!
+        # So, first room.save() then form.save_m2m()
+        # https://docs.djangoproject.com/en/2.2/topics/forms/modelforms/#the-save-method
+        form.save_m2m()
+        print(f"--------- {room.pk}")
+        messages.success(self.request, "Room Created")
+        return redirect(reverse("rooms:detail", kwargs={"pk": room.pk}))
+
+    # save room with user - way2
+    """ def form_valid(self, form):
+        room = form.save()  # Intercepting: get object before writting into database
+        room.host = self.request.user
+        room.save()  # finally, save data into database!
+        # save_m2m(): save_m2m() must be called after object is saved into database!!!
+        # So, first room.save() then form.save_m2m()
+        # https://docs.djangoproject.com/en/2.2/topics/forms/modelforms/#the-save-method
+        form.save_m2m()
+        messages.success(self.request, "Room Created")
+        return redirect(reverse("rooms:detail", kwargs={"pk": room.pk})) """

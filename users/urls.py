@@ -11,6 +11,7 @@ urlpatterns = [
     path("<int:pk>/", views.UserProfileView.as_view(), name="profile"),  # {% url 'users:profile' user.pk %}
     path("update-profile/", views.UserProfileUpdateView.as_view(), name="update"),
     path("update-password/", views.PasswordUpdateView.as_view(), name="password"),
+    path("switch-hosting/", views.switch_hosting, name="switch-hosting"),
     # TODO: integrate three social logins (github, google, facebook)
     # path("login/social/<str:key>", views.social_login, name="social-login"),
     path("login/github/", views.github_login, name="github-login"),  # users:github-login

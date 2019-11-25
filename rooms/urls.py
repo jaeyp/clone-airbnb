@@ -14,6 +14,9 @@ app_name = "rooms"
 
 # With pk_url_kwarg = "id"
 urlpatterns = [
+    # {% url 'rooms:create' %}
+    path("create/", views.RoomCreateView.as_view(), name="create"),  # rooms:create
+    # {% url 'rooms:detail' room.pk %}
     path("<int:pk>/", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
     # TODO: room photo gallery
     # path("<int:pk>/gallery/", views.RoomGalleryView.as_view(), name="gallery"),

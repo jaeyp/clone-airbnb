@@ -175,16 +175,21 @@ class Room(AbsctractTimeStampedModel):
 
         # Unpacking (destructuring) assignment
         # Put comma (photo,) in order to let python know we want to get the first eliment of array
-        (photo,) = self.photos.all()[:1]
-        return photo.file.url
+        try:
+            (photo,) = self.photos.all()[:1]
+            return photo.file.url
+        except ValueError:
+            return None
 
     def get_next_four_photos(self):
 
         """ Get the first five photos of room """
-
-        photos = self.photos.all()[1:5]
-        print(photos)
-        return photos
+        try:
+            photos = self.photos.all()[1:5]
+            print(photos)
+            return photos
+        except ValueError:
+            return None
 
     def get_first_two_reviews(self):
 

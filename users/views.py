@@ -518,14 +518,34 @@ class PasswordUpdateView(mixins.LoggedInOnlyView, mixins.EmailLoginOnlyView, Suc
         return self.request.user.get_absolute_url()  # go to profile
 
 
+# Django - sessions
+# https://docs.djangoproject.com/en/2.2/topics/http/sessions/#examples
 @login_required
 def start_hosting(request):
-    pass
+    request.session["is_hosting"] = True
+    return redirect(reverse("core:home"))
 
 
 @login_required
 def stop_hosting(request):
-    pass
+    # To delete the current session
+    # 1. request.session.pop("is_hosting", True)
+    # or 2. request.session.flush()
+    # or 3. del request.session['is_hosting']
+    try:
+        del request.session["is_hosting"]
+    except KeyError:
+        pass
+    return redirect(reverse("core:home"))
+
+
+@login_required
+def switch_hosting(request):
+    try:
+        del request.session["is_hosting"]
+    except KeyError:
+        request.session["is_hosting"] = True
+    return redirect(reverse("core:home"))
 
 
 # ===============================================================

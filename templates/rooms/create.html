@@ -1,0 +1,22 @@
+<!-- Create Room Page -->
+
+<!-- base template having header & footer -->
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+    Create Room
+{% endblock page_title %}
+
+<!-- Tips. You can hide search-bar with empty block like this. -->
+{% block search-bar %}
+{% endblock search-bar %}
+
+<!-- Page Content -->
+{% block content %}
+    <div class="container w-full sm:w-10/12 md:w-8/12 lg:w-6/12 xl:w-4/12 mx-auto my-10 flex flex-col items-center border p-6 border-gray-400">
+
+        {% include 'mixins/room/form.html' with form=form cta="Create Room" %}  
+        
+    </div>
+{% endblock content %}

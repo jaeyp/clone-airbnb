@@ -38,13 +38,15 @@
     <!-- Wide Room View -->  
     <div class="container max-w-full">
         <div class="h-50vh flex mb-10">
-            <div class="zoom w-1/2 bg-center border border-gray-900" style="background-image: url({{room.get_first_photo}});"></div>
-            <div class="w-1/2 flex flex-wrap"> 
-                
+            <div class="w-1/2">
+                {% if room.get_first_photo %}
+                    <div class="zoom h-full bg-center border border-gray-900" style="background-image: url({{room.get_first_photo}});"></div>
+                {% endif %}
+            </div>
+            <div class="w-1/2 flex flex-wrap">
                 {% for photo in room.get_next_four_photos %}
                     <div class="zoom w-1/2 h-auto bg-center border border-gray-900" style="background-image: url({{photo.file.url}});"></div>
                 {% endfor %}
-                
             </div>
         </div>
     </div>
