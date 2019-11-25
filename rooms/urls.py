@@ -16,11 +16,13 @@ app_name = "rooms"
 urlpatterns = [
     path("<int:pk>/", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
     # TODO: room photo gallery
-    # path("<int:pk>/", views.RoomPhotoView.as_view(), name="photos"),
+    # path("<int:pk>/gallery/", views.RoomGalleryView.as_view(), name="gallery"),
     # {% url 'rooms:edit' room.pk %}
     path("<int:pk>/edit/", views.RoomEditView.as_view(), name="edit"),  # rooms:edit
     # {% url 'rooms:photos' room.pk %}
     path("<int:pk>/photos/", views.RoomPhotosView.as_view(), name="photos"),  # rooms:photos
+    # {% url 'rooms:add-photo' room.pk %}
+    path("<int:pk>/photos/add/", views.RoomPhotosAddView.as_view(), name="add-photo"),  # rooms:add-photo
     # {% url 'rooms:delete-photo' room.pk photo.pk %}
     path("<int:room_pk>/photos/<int:photo_pk>/delete/", views.delete_photo, name="delete-photo"),
     # {% url 'rooms:edit-photo' room.pk photo.pk %}

@@ -34,3 +34,27 @@ class SearchForm(forms.Form):
     facilities = forms.ModelMultipleChoiceField(
         required=False, queryset=models.Facility.objects.all(), widget=forms.CheckboxSelectMultiple
     )
+
+
+class CreatePhotoForm(forms.ModelForm):
+    class Meta:
+        model = models.Photo
+        fields = ("caption", "file")
+
+    # Intercepting user data and edit it before save
+    # https://docs.djangoproject.com/en/2.1/topics/forms/modelforms/#the-save-method
+
+    # this is not a View, 'pk' is not passed into this form as arguments
+    # So, we should pass pk manually through form.save() from form_valid() of View class (RoomPhotosAddView)
+    """ def save(self, *args, **kwargs):
+        pk = kwargs.get("pk")
+        photo = super().save(commit=False) """
+
+    def save(self, pk, *args, **kwargs):
+        print(pk)
+        # If you call save() with commit=False,
+        # then it will return an object that hasn’t yet been saved to the database.
+        photo = super().save(commit=False)
+        room = models.Room.objects.get(pk=pk)
+        photo.room = room
+        photo.save()

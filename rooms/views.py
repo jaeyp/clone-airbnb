@@ -13,7 +13,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
 
 # Class Based Views
-from django.views.generic import ListView, DetailView, View, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, FormView, View
 
 # third-party packages
 from django_countries import countries
@@ -625,3 +625,29 @@ class RoomPhotosEditView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, Upda
     def get_success_url(self):
         room_pk = self.kwargs.get("room_pk")
         return reverse("rooms:photos", kwargs={"pk": room_pk})
+
+
+# When we upload a photo, we also have to pass a room.pk of the photo.
+# So we can't get it with CreateView.
+""" class RoomPhotosAddView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, CreateView):
+
+    model = models.Photo
+    template_name = "rooms/add_photo.html"
+    fields = ("caption", "file") """
+
+# but can do it with a custom FormView.
+# class RoomPhotosAddView(user_mixins.LoggedInOnlyView, SuccessMessageMixin, FormView):
+class RoomPhotosAddView(user_mixins.LoggedInOnlyView, FormView):
+
+    model = models.Photo
+    template_name = "rooms/add_photo.html"
+    fields = ("caption", "file")
+    form_class = forms.CreatePhotoForm
+    # success_message = "Photo Uploaded" # Can't use this and form_valid() together, use messages.success() instead
+
+    def form_valid(self, form):
+        pk = self.kwargs.get("pk")
+        form.save(pk)
+        messages.success(self.request, "Photo Uploaded")
+        return redirect(reverse("rooms:photos", kwargs={"pk": pk}))
+
