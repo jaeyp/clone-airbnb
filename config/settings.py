@@ -200,3 +200,8 @@ FACEBOOK_TOKEN_ENDPOINT = "https://graph.facebook.com/v5.0/oauth/access_token"
 # Ref. Graph API - User
 # https://developers.facebook.com/docs/graph-api/reference/user/
 FACEBOOK_USERINFO_ENDPOINT = "https://graph.facebook.com/me"
+
+
+# To support login_required decorator
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#the-login-required-decorator
+LOGIN_URL = "/users/login"

@@ -14,8 +14,15 @@ app_name = "rooms"
 
 # With pk_url_kwarg = "id"
 urlpatterns = [
-    path("<int:id>/", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
-    path("<int:pk>/edit/", views.RoomEditView.as_view(), name="edit"),
-    path("search/", views.SearchView.as_view(), name="search"),
+    path("<int:pk>/", views.RoomDetailView.as_view(template_name="rooms/detail4cbv.html"), name="detail"),
+    # TODO: room photo gallery
+    # path("<int:pk>/", views.RoomPhotoView.as_view(), name="photos"),
+    # {% url 'rooms:edit' room.pk %}
+    path("<int:pk>/edit/", views.RoomEditView.as_view(), name="edit"),  # rooms:edit
+    # {% url 'rooms:edit-photos' room.pk %}
+    path("<int:pk>/edit/photos/", views.RoomPhotosEditView.as_view(), name="edit-photos"),  # rooms:edit-photos
+    # {% url 'rooms:delete-photo' room.pk photo.pk %}
+    path("<int:room_pk>/photos/<int:photo_pk>/delete/", views.delete_photo, name="delete-photo"),
+    path("search/", views.SearchView.as_view(), name="search"),  # rooms:search
     # path("search/", views.search, name="search"),
 ]

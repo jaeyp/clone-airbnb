@@ -4,11 +4,11 @@ from . import views
 app_name = "users"
 
 urlpatterns = [
-    path("login/", views.LoginView.as_view(), name="login"),  # users:login
+    path("login/", views.LoginView.as_view(), name="login"),  # {% url 'users:login' %}
     path("logout/", views.log_out, name="logout"),  # users:logout
     path("signup/", views.SignUpView.as_view(), name="signup"),  # users:signup
     path("verify/<str:key>/", views.complete_verification, name="complete-verification"),
-    path("<int:pk>/", views.UserProfileView.as_view(), name="profile"),  # users:profile
+    path("<int:pk>/", views.UserProfileView.as_view(), name="profile"),  # {% url 'users:profile' user.pk %}
     path("update-profile/", views.UserProfileUpdateView.as_view(), name="update"),
     path("update-password/", views.PasswordUpdateView.as_view(), name="password"),
     # TODO: integrate three social logins (github, google, facebook)

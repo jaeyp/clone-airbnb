@@ -1,6 +1,8 @@
 from django.utils import timezone
 from django.urls import reverse
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Function Based Views in manual way
 # from math import ceil
@@ -149,7 +151,7 @@ class RoomDetailView(DetailView):
     """
 
     model = models.Room
-    pk_url_kwarg = "id"  # To use 'id' instead of 'pk'
+    # pk_url_kwarg = "id"  # To use 'id' instead of 'pk'
 
 
 def room_detail(request, id):
@@ -545,8 +547,57 @@ class RoomEditView(user_mixins.LoggedInOnlyView, UpdateView):
 
     # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_object
     def get_object(self, queryset=None):
+        """ Overriding get_object()
+
+            Only host can edit his room """
         room = super().get_object(queryset=queryset)
         print(room.host.pk, self.request.user.pk)
         if room.host.pk != self.request.user.pk:
             raise Http404()
         return room
+
+
+class RoomPhotosEditView(user_mixins.LoggedInOnlyView, RoomDetailView):
+
+    model = models.Room
+    template_name = "rooms/edit_photos.html"
+    # def get(self, requeset, *args, **kwargs):
+    #   pass
+
+    # http://ccbv.co.uk/projects/Django/2.2/django.views.generic.edit/UpdateView/#get_object
+    def get_object(self, queryset=None):
+        """ Overriding get_object()
+
+            Only host can edit his room photos """
+        room = super().get_object(queryset=queryset)
+        print(room.host.pk, self.request.user.pk)
+        if room.host.pk != self.request.user.pk:
+            raise Http404()
+        return room
+
+
+# login_required decorator
+# https://docs.djangoproject.com/en/2.2/topics/auth/default/#the-login-required-decorator
+# If the user isn’t logged in, redirect to settings.LOGIN_URL, passing the current absolute path in the query string.
+@login_required
+def delete_photo(request, room_pk, photo_pk):
+
+    """ delete_photo:
+        Function Based delete_photo View (FBV) """
+
+    print(f"Shoud delete {photo_pk} from {room_pk}")
+
+    user = request.user
+    try:
+        room = models.Room.objects.get(pk=room_pk)
+        if room.host.pk != user.pk:
+            messages.error(request, "Can't delete that photo")
+        else:
+            models.Photo.objects.filter(pk=photo_pk).delete()
+            # or
+            # photo = models.Photo.objects.filter(pk=photo_pk)
+            # photo.delete()
+            messages.success(request, "Photo deleted")
+        return redirect(reverse("rooms:edit-photos", kwargs={"pk": room_pk}))
+    except models.Room.DoesNotExist:
+        return redirect(reverse("core:home"))
