@@ -61,6 +61,7 @@ Add "django_seed" to INSTALLED_APPS in config/settings.py
 ~$ pipenv install django-dotenv
 
 5. Install django-import-export in order to import and export models
+# https://github.com/django-import-export/django-import-export
 ~$ pipenv install django-import-export
 Add "import_export" to INSTALLED_APPS in config/settings.py
 
