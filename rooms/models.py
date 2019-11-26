@@ -205,6 +205,12 @@ class Room(AbsctractTimeStampedModel):
         reviews = self.reviews.all()[2:4]
         return reviews
 
+    def get_reservations(self):
+
+        reservations = self.reservations.all()
+        # print(list(reservations))
+        return reservations
+
     def get_calendars(self):
         now = timezone.now()
         # calculate next month
@@ -215,8 +221,8 @@ class Room(AbsctractTimeStampedModel):
             next_year = this_year + 1
         # or use deltatime
 
-        this_month_cal = Calendar(this_year, this_month)
-        next_month_cal = Calendar(next_year, next_month)
+        this_month_cal = Calendar(this_year, this_month, self.pk)
+        next_month_cal = Calendar(next_year, next_month, self.pk)
         return [this_month_cal, next_month_cal]
 
     # It's deprecated by prularize
