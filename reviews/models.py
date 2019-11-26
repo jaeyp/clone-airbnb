@@ -15,6 +15,9 @@ class Review(AbsctractTimeStampedModel):
     location = models.IntegerField()
     check_in = models.IntegerField()
     value = models.IntegerField()
+    # Tips. ForeignKey.related_name
+    # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.ForeignKey.related_name
+    # it allows for the related object to refer to this object. like "self.reviews.all()" in rooms/models
     user = models.ForeignKey("users.User", related_name="reviews", on_delete=models.CASCADE)
     room = models.ForeignKey("rooms.Room", related_name="reviews", on_delete=models.CASCADE)
     # TODO: adding review date => use 'created'
