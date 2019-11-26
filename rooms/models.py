@@ -1,5 +1,7 @@
 # 1. import python packages
 # e.g. import os
+from django.utils import timezone
+
 # 2. import django packages
 from django.db import models
 from django.urls import reverse
@@ -10,6 +12,7 @@ from django_countries.fields import CountryField
 # 4. import project own packages
 from core.models import AbsctractTimeStampedModel
 from users.models import User
+from util.cal import Calendar
 
 # Create your models here.
 
@@ -201,6 +204,20 @@ class Room(AbsctractTimeStampedModel):
 
         reviews = self.reviews.all()[2:4]
         return reviews
+
+    def get_calendars(self):
+        now = timezone.now()
+        # calculate next month
+        next_year = this_year = now.year
+        this_month = now.month
+        next_month = this_month % 12 + 1
+        if next_month == 1:
+            next_year = this_year + 1
+        # or use deltatime
+
+        this_month_cal = Calendar(this_year, this_month)
+        next_month_cal = Calendar(next_year, next_month)
+        return [this_month_cal, next_month_cal]
 
     # It's deprecated by prularize
     # https://docs.djangoproject.com/en/2.2/ref/templates/builtins/#pluralize
