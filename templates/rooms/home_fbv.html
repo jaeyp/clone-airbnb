@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+Home for FBV
+{% endblock page_title %}
+
+<!-- Page Content -->
+{% block content %}
+
+<!-- Use Paginator-->
+{% if use_paginator %}
+
+<!-- Room List -->
+{% for room in page.object_list %}
+<h1>{{room.name}} / ${{room.price}}</h1>
+{% endfor %}
+
+<!-- Page Navigator -->
+<h5>
+    {% if page.has_previous %}
+    <a href="?page=1">&lt;&lt;</a>
+    <a href="?page={{page.number|add:-1}}">&lt;</a>
+    {% else %}
+    &lt;&lt;
+    &lt;
+    {% endif %}
+
+    Page {{page.number}} of {{page.paginator.num_pages}}
+    |
+    {% for page in page.paginator.page_range %}
+    <a href="?page={{page}}">{{page}}</a>
+    {% endfor %}
+
+    {% if page.has_next %}
+    <a href="?page={{page.number|add:1}}">&gt;</a>
+    <a href="?page={{page.paginator.num_pages}}">&gt;&gt;</a>
+    {% else %}
+    &gt;
+    &gt;&gt;
+    {% endif %}
+</h5>
+
+<!-- No Paginator (manual way) -->
+{% else %}
+
+<!-- Room List -->
+{% for room in rooms %}
+<h1>{{room.name}} / ${{room.price}}</h1>
+{% endfor %}
+
+<!-- Page Navigator -->
+<h5>
+    {% if page > 1 %}
+    <a href="?page=1">&lt;&lt;</a>
+    <a href="?page={{page|add:-1}}">&lt;</a>
+    {% else %}
+    &lt;&lt;
+    &lt;
+    {% endif %}
+
+    Page {{page}} of {{total_page}}
+    |
+    {% for page in page_range %}
+    <a href="?page={{page}}">{{page}}</a>
+    {% endfor %}
+
+    {% if page < total_page %}
+    <a href="?page={{page|add:1}}">&gt;</a>
+    <a href="?page={{total_page}}">&gt;&gt;</a>
+    {% else %}
+    &gt;
+    &gt;&gt;
+    {% endif %}
+</h5>
+
+{% endif %}
+
+{% endblock content %}

@@ -12,4 +12,4 @@ app_name = "core"
 """
 # if you don't want to use the given template name from CBV,
 # set template_name as an argument of as_view(), or inside HomeView class
-urlpatterns = [path("", room_views.HomeView.as_view(template_name="rooms/home4cbv.html"), name="home")]
+urlpatterns = [path("", room_views.HomeView.as_view(template_name="rooms/home.html"), name="home")]

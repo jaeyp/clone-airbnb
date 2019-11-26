@@ -2,78 +2,102 @@
 
 <!-- Page Name -->
 {% block page_title %}
-Home for FBV
+    Home for CBV
 {% endblock page_title %}
 
 <!-- Page Content -->
 {% block content %}
 
-<!-- Use Paginator-->
-{% if use_paginator %}
+    <!-- {{now}} -->
 
-<!-- Room List -->
-{% for room in page.object_list %}
-<h1>{{room.name}} / ${{room.price}}</h1>
-{% endfor %}
+    <!-- Tips. html snippet: div tag with class
+        type ".container.mx-auto" and tab
+        or just type "." and tab
+    -->
+    <div class="container mx-auto">
+        <!-- Tips. To get high definition image, remove width & quality part ("&w=1956&q=80") of image address copied from unsplash.com-->
+        <div class="flex flex-wrap -mx-40 mt-32 px-2">
+            <div class="text-2xl font-bold text-gray-800">Airbnb Plus places to stay</div>
+        </div>
+        <div class="flex flex-wrap -mx-40 mb-4 px-2">
+            <div class="text-base text-gray-600">A selection of places to stay verified for quality and design</div>
+        </div>
+        <div class="px-2">
+            <!-- set "flex items-center justify-center" for button positioning in div-->
+            <div class="flex items-center justify-center rounded-lg bg-gray-800 h-25vh -mx-40 mb-16 bg-cover bg-center" style="background-image: url(https://images.unsplash.com/photo-1519974719765-e6559eac2575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)">
+                <button class="bg-white font-medium text-xs mt-16 px-8 py-3 rounded hover:bg-gray-100 focus:outline-none">EXPLORER STAYS <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        
+        <!-- Room List -->
+        <div class="flex flex-wrap -mx-40 px-2 mb-4">
+            <div class="text-2xl font-bold text-gray-800">Places to stay around the world</div>
+        </div>
+        <div class="flex flex-wrap -mx-40"><!-- Check this. minor margin with tailwindCSS: "-mx-40" -->
+            {% for room in object_list %}
+                {% comment %}
+                <a href="/rooms/{{room.pk}}">
+                    {{room.name}} / ${{room.price}}
+                </a>
+                This is bad since we need to remember url path. instead, use URL tag as below.
+                URL tag: {% url 'url_path:url_name' arg1 arg2 .. %}
+                {% endcomment %}
+                <!-- with room=room : pass 'room' object to room_card.html-->
+                {% include 'mixins/room_card.html' with room=room %}
+            {% endfor %}
+        </div>
 
-<!-- Page Navigator -->
-<h5>
-    {% if page.has_previous %}
-    <a href="?page=1">&lt;&lt;</a>
-    <a href="?page={{page.number|add:-1}}">&lt;</a>
-    {% else %}
-    &lt;&lt;
-    &lt;
-    {% endif %}
+        <!-- Page Navigator -->
+        <div class="flex items-center justify-center mb-10">
+            {% if page_obj.has_previous %}
+                <a href="?page={{page_obj.number|add:-1}}" class="text-teal-600">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            {% else %}
+                <i class="fas fa-chevron-left text-teal-100"></i>
+            {% endif %}
 
-    Page {{page.number}} of {{page.paginator.num_pages}}
-    |
-    {% for page in page.paginator.page_range %}
-    <a href="?page={{page}}">{{page}}</a>
-    {% endfor %}
+            <span class="ml-3 font-semibold text-gray-600">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
+            <span class="mx-2 text-teal-600">&#10073;</span>
+            {% for page in page_obj.paginator.page_range %}
+                {% if page == page_obj.number %}
+                    <a href="?page={{page}}" class="mx-1 font-bold text-gray-600">{{page}}</a>
+                {% else %}
+                    <a href="?page={{page}}" class="mx-1 text-gray-600">{{page}}</a>
+                {% endif %}
+            {% endfor %}
 
-    {% if page.has_next %}
-    <a href="?page={{page.number|add:1}}">&gt;</a>
-    <a href="?page={{page.paginator.num_pages}}">&gt;&gt;</a>
-    {% else %}
-    &gt;
-    &gt;&gt;
-    {% endif %}
-</h5>
+            {% if page_obj.has_next %}
+                <a href="?page={{page_obj.number|add:1}}" class="ml-2 text-teal-600">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            {% else %}
+                <i class="ml-2 fas fa-chevron-right text-teal-100"></i>
+            {% endif %}
+        </div>
+        <!-- <h5>
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&lt;&lt;</a>
+            <a href="?page={{page_obj.number|add:-1}}">&lt;</a>
+            {% else %}
+            &lt;&lt;
+            &lt;
+            {% endif %}
 
-<!-- No Paginator (manual way) -->
-{% else %}
+            Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+            |
+            {% for page in page_obj.paginator.page_range %}
+            <a href="?page={{page}}">{{page}}</a>
+            {% endfor %}
 
-<!-- Room List -->
-{% for room in rooms %}
-<h1>{{room.name}} / ${{room.price}}</h1>
-{% endfor %}
-
-<!-- Page Navigator -->
-<h5>
-    {% if page > 1 %}
-    <a href="?page=1">&lt;&lt;</a>
-    <a href="?page={{page|add:-1}}">&lt;</a>
-    {% else %}
-    &lt;&lt;
-    &lt;
-    {% endif %}
-
-    Page {{page}} of {{total_page}}
-    |
-    {% for page in page_range %}
-    <a href="?page={{page}}">{{page}}</a>
-    {% endfor %}
-
-    {% if page < total_page %}
-    <a href="?page={{page|add:1}}">&gt;</a>
-    <a href="?page={{total_page}}">&gt;&gt;</a>
-    {% else %}
-    &gt;
-    &gt;&gt;
-    {% endif %}
-</h5>
-
-{% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{page_obj.number|add:1}}">&gt;</a>
+            <a href="?page={{page_obj.paginator.num_pages}}">&gt;&gt;</a>
+            {% else %}
+            &gt;
+            &gt;&gt;
+            {% endif %}
+        </h5> -->
+    </div>
 
 {% endblock content %}

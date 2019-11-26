@@ -54,7 +54,7 @@ class HomeView(ListView):
     """ if you don't want to use the given template name from CBV,
         set template_name as an argument of as_view(), or inside HomeView class
     """
-    # template_name = "rooms/home4cbv.html"
+    # template_name = "rooms/home.html"
 
     def get_context_data(self, **kwargs):
         """ You can define additional variables in the context
@@ -71,7 +71,7 @@ def all_rooms(request):
 
     """ all_rooms
         Function Based Home View (FBV)
-        it renders home.html page by using Paginator
+        it renders home_fbv.html page by using Paginator
         https://docs.djangoproject.com/en/2.2/topics/pagination/
     """
 
@@ -105,16 +105,16 @@ def all_rooms(request):
     except EmptyPage:
         rooms = paginator.page(1)
 
-    return render(request, "rooms/home.html", {"use_paginator": True, "page": rooms})
+    return render(request, "rooms/home_fbv.html", {"use_paginator": True, "page": rooms})
     """
 
     # 4-2-2. redirect to home page if no objects exist on that page.
     try:
         rooms = paginator.page(int(page))
-        return render(request, "rooms/home.html", {"use_paginator": True, "page": rooms})
+        return render(request, "rooms/home_fbv.html", {"use_paginator": True, "page": rooms})
     except EmptyPage:
         rooms = paginator.page(int(1))
-        return render(request, "rooms/home.html", {"use_paginator": True, "page": rooms})
+        return render(request, "rooms/home_fbv.html", {"use_paginator": True, "page": rooms})
     except Exception:
         return redirect("/")
 
@@ -136,7 +136,7 @@ def all_rooms(request):
     total_page = ceil(models.Room.objects.count() / page_size)
     return render(
         request,
-        "rooms/home.html",
+        "rooms/home_fbv.html",
         context={"rooms": all_rooms, "page": page, "total_page": total_page, "page_range": range(1, total_page + 1)},
     )
 """
@@ -171,7 +171,7 @@ def room_detail(request, pk):
     """
     try:
         room = models.Room.objects.get(pk=pk)
-        return render(request, "rooms/detail.html", context={"room": room})
+        return render(request, "rooms/detail_fbv.html", context={"room": room})
     except models.Room.DoesNotExist:
         """ DoesNotExist is different from PageNotFound error of HTTP
             So, if we doesn't catch this error type,
