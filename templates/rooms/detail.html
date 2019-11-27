@@ -151,9 +151,9 @@
                                         {% if day.is_past %}
                                             <span class="w-full text-center rounded font-semibold text-xs text-gray-400 py-1">{{day}}</span>
                                         {% elif day.booked %}
-                                            <del class="w-full text-center rounded font-semibold text-xs text-gray-500 py-1">{{day}}</del>
+                                            <del class="w-full text-center rounded font-semibold text-xs text-red-500 py-1">{{day}}</del>
                                         {% else %}
-                                            <span class="w-full text-center rounded font-semibold text-xs py-1 hover:bg-teal-400 hover:text-white cursor-pointer">{{day}}</span>
+                                            <span class="w-full text-center rounded font-bold text-xs py-1 hover:bg-teal-400 hover:text-white cursor-pointer">{{day}}</span>
                                         {% endif %}
                                             
                                     {% else %}
