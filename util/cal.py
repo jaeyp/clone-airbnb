@@ -67,7 +67,7 @@ class Calendar(calendar.Calendar):
                 # check if the day is already booked
                 booked = False
                 for r in reservations:
-                    if self.month == r.check_in.month and day >= r.check_in.day and day <= r.check_out.day:
+                    if self.month == r.check_in.month and day >= r.check_in.day and day < r.check_out.day:
                         booked = True
 
                 new_day = Day(day, is_past, booked)
