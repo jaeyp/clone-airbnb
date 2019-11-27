@@ -1,9 +1,15 @@
 from django import template
 
+# Custom Template Tags & Filters
+# https://docs.djangoproject.com/en/2.2/howto/custom-template-tags/
 register = template.Library()
 
 
-@register.filter(name="prev_page")
+""" Custom Filters """
+# https://docs.djangoproject.com/en/2.2/howto/custom-template-tags/#writing-custom-template-filters
+
+# @register.filter(name="prev_page")
+@register.filter  # we can skip to set filter name in case function and filter has the same name
 def prev_page(value):
 
     split = value.split("&")
@@ -33,3 +39,7 @@ def next_page(value):
             page_num = str(int(s.replace("page=", "")) + 1)
             value = value.replace(s, "page=" + page_num)
     return value
+
+
+""" Custom Tags """
+# https://docs.djangoproject.com/en/2.2/howto/custom-template-tags/#writing-custom-template-tags
