@@ -9,6 +9,8 @@ class AbsctractTimeStampedModel(models.Model):
         This model deribes models.Model and extends it by adding TimeStamp features
         This model doesn't go to database
         This model will be used to craete other models which will go to database
+
+        To save create & update time for a class object
     """
 
     # auto_now_add=True
@@ -19,6 +21,4 @@ class AbsctractTimeStampedModel(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        abstract = True     # This is an abstract model to extend other models
-
-
+        abstract = True  # This is an abstract model to extend other models
