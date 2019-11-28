@@ -1,4 +1,6 @@
+import datetime
 from django.db import models
+from util import debug
 
 """ Tips.
     We use django.utils for timezone instead of python.utils
@@ -8,6 +10,25 @@ from django.utils import timezone
 from core.models import AbsctractTimeStampedModel
 
 # Create your models here.
+
+
+class BookedDay(AbsctractTimeStampedModel):
+
+    day = models.DateField()
+    # Each booked day refer to a specific reservation
+    reservation = models.ForeignKey("Reservation", on_delete=models.CASCADE)
+
+    # Model Meta options: https://docs.djangoproject.com/en/2.2/ref/models/options/
+    class Meta:
+        # verbose_name: A human-readable name for the object, singular
+        # If this isn’t given, Django will use a munged version of the class name: CamelCase becomes camel case.
+        verbose_name = "Booked Day"
+        # verbose_name_plural: The plural name for the object:
+        # If this isn’t given, Django will use verbose_name + "s".
+        verbose_name_plural = "Booked Days"
+
+    def __str__(self):
+        return str(self.day)
 
 
 class Reservation(AbsctractTimeStampedModel):
@@ -47,3 +68,34 @@ class Reservation(AbsctractTimeStampedModel):
         return now > self.check_out
 
     is_finished.boolean = True
+
+    def save(self, *args, **kwargs):
+        """ Overriding save()
+            To create new booked days only when new reservation is created.
+        """
+        if self.pk is None:  # for a new reservation
+            # create new booked days
+            start = self.check_in
+            end = self.check_out
+            difference = end - start  # datetime difference!  it's not an integer!
+            existing_booked_day = BookedDay.objects.filter(
+                # In Django Model QuerySet Objects, Double Underscore ( __ ) Means "Field Lookups".
+                # day__range: field-name__lookup-type-keywordm"
+                # Simply, just replace and think "__" is "`s" in any situations in Django
+                # like day__range=(start, end): day's range is between start and end
+                day__range=(start, end)  # day__range: find BookedDay.day between start and end
+            ).exists()  # if BookedDay exists between start & end day or not
+
+            if existing_booked_day is False:
+                # First, Save a new Reservation
+                super().save(*args, **kwargs)
+
+                # Then, Create a new BookedDay for the Reservation
+                for i in range(difference.days):
+                    day = start + datetime.timedelta(days=i)
+                    debug.info(f"{day} booked")
+                    # According to relation, BookedDay wouldn't be able to be created if reservation wasn't saved
+                    BookedDay.objects.create(day=day, reservation=self)
+        else:  # for an existing reservation
+            # do as usual
+            return super().save(*args, **kwargs)

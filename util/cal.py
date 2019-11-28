@@ -7,8 +7,10 @@ import calendar
 
 
 class Day:
-    def __init__(self, number, is_past, booked=False):
+    def __init__(self, number, month, year, is_past, booked=False):
         self.number = number
+        self.month = month
+        self.year = year
         self.is_past = is_past
         self.booked = booked
 
@@ -48,29 +50,32 @@ class Calendar(calendar.Calendar):
         days_n_weeks = self.monthdays2calendar(self.year, self.month)
         days = []
 
+        # TODO: Booked Days - find a better way.
         # get room reservations
-        room = room_models.Room.objects.get(pk=self.room_pk)
+        """ room = room_models.Room.objects.get(pk=self.room_pk)
         reservations = room.get_reservations()  # .values_list("check_in", "check_out")
         print(reservations)
         for r in reservations:
             print(r.check_in.day, r.check_out.day)
+            print(r.check_out - r.check_in)  # difference """
 
         print(days_n_weeks)
         for week in days_n_weeks:
             # for day, weekday in week:  # unpacking tuple
-            for day, _ in week:  # we don't care of 'weekday'
+            for day, _ in week:  # we don't care of 'weekday', so simply use '_' instead of full name
                 now = timezone.now()
                 is_past = (self.month == now.month and day <= now.day) or (
                     self.month < now.month and self.year <= now.year
                 )
 
+                # TODO: Booked Days - find a better way. this has high complexity
                 # check if the day is already booked
                 booked = False
-                for r in reservations:
+                """ for r in reservations:
                     if self.month == r.check_in.month and day >= r.check_in.day and day < r.check_out.day:
-                        booked = True
+                        booked = True """
 
-                new_day = Day(day, is_past, booked)
+                new_day = Day(number=day, month=self.month, year=self.year, is_past=is_past, booked=booked)
                 days.append(new_day)
         return days
 
