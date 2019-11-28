@@ -147,6 +147,7 @@
                             </div>
                             <div class="cal-grid">
                                 {% for day in calendar.get_calendar_days %}
+                                    <!-- template tags: is_booked -->
                                     {% is_booked room day as is_booked_bool %}
                                     {% if day.number != 0 %}
                                         

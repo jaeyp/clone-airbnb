@@ -20,7 +20,7 @@ def is_booked(room, day):
         # So, .get(reservation__room=my_room) means "look up reservations in room is my_room"
         # Simply, just replace and think "__" is "`s" in any situations in Django
         # like reservation__room=my_room: reservation's room is my_room
-        reservation_models.BookedDay.objects.get(day=date, reservation__room=room)
+        reservation_models.BookedDay.objects.get(day=date, reservation__room=room)  # check if the day is booked
         return True  # day is booked
     except reservation_models.BookedDay.DoesNotExist:
         return False  # day is not booked yet
