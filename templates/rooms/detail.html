@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% load is_booked %}
+{% load static %}
+{% load reservation_tags %}
 
 <!-- Page Name -->
 {% block page_title %}
@@ -17,7 +18,7 @@
                 &#8901; 
             <span class="text-sm font-medium text-gray-600">{{room.city}}.{{room.country}}</span>
         </div>
-    </div>        
+    </div>
 
     
     {% comment %}
@@ -132,10 +133,14 @@
         <!-- Room action - edit, delete, booking ... -->
         <div class="w-3/12 px-4">
             
-            {% if room.host == user %}                
+            {% if room.host == user %}
                 <a href="{% url 'rooms:edit' room.pk %}" class="btn-link bg-red-500 text-white block rounded-lg">Edit Room</a>
             {% else %}
                 {% if not request.session.is_hosting %}
+                    <div id="btnCheck" class="btn-link bg-red-500 text-white block rounded-lg cursor-pointer">Check availability</div>
+                    
+                    {% comment %}
+                        
                     <!-- this month and next month-->
                     {% for calendar in room.get_calendars %}
                         <div class="mb-10">
@@ -157,6 +162,7 @@
                                             <!-- <del class="w-full text-center rounded font-semibold text-xs text-red-500 py-1">{{day}}</del> -->
                                             <span class="w-full text-center rounded font-semibold text-xs text-gray-500 py-1 line-through">{{day}}</span>
                                         {% else %}
+                                            <!-- template tags: set_period day-->
                                             <span class="w-full text-center rounded font-bold text-xs py-1 hover:bg-teal-400 hover:text-white cursor-pointer">{{day}}</span>
                                         {% endif %}
                                             
@@ -167,6 +173,8 @@
                             </div>
                         </div>
                     {% endfor %}
+                        
+                    {% endcomment %}
                         
                 {% endif %}
             {% endif %}
@@ -196,37 +204,228 @@
             </div>
         </div>
     </div>
-<!-- <div>
-    <h1>{{room.name}}</h1>
-    <h3>{{room.description}}</h3>
-</div>
-<div>
-    <h2>By: <a href="{{room.host.get_absolute_url}}">{{room.host.username}}</a></h2>
 
-    {% if room.host.superhost %}
-    (superhost)
-    {% endif %}
+    <!-- 
+    <div>
+        <h1>{{room.name}}</h1>
+        <h3>{{room.description}}</h3>
+    </div>
+    <div>
+        <h2>By: <a href="{{room.host.get_absolute_url}}">{{room.host.username}}</a></h2>
+    
+        {% if room.host.superhost %}
+        (superhost)
+        {% endif %}
+    
+        <h3>Amenities</h3>
+        <ul>
+            {% for a in room.amenities.all %}
+            <li>{{a}}</li>
+            {% endfor %}
+        </ul>
+    
+        <h3>Facilities</h3>
+        <ul>
+            {% for f in room.facilities.all %}
+            <li>{{f}}</li>
+            {% endfor %}
+        </ul>
+    
+        <h3>House Rules</h3>
+        <ul>
+            {% for r in room.house_rules.all %}
+            <li>{{r}}</li>
+            {% endfor %}
+        </ul>
+    </div> -->
 
-    <h3>Amenities</h3>
-    <ul>
-        {% for a in room.amenities.all %}
-        <li>{{a}}</li>
-        {% endfor %}
-    </ul>
+    <!-- Modal -->
+    <div id="myModal" class="modal">
 
-    <h3>Facilities</h3>
-    <ul>
-        {% for f in room.facilities.all %}
-        <li>{{f}}</li>
-        {% endfor %}
-    </ul>
-
-    <h3>House Rules</h3>
-    <ul>
-        {% for r in room.house_rules.all %}
-        <li>{{r}}</li>
-        {% endfor %}
-    </ul>
-</div> -->
-
+        <!-- Modal content -->
+        <div class="modal-content w-full h-50vh">
+            <div class="container mx-auto">
+                <i id="close" class="text-2xl my-4 text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times"></i>
+                <div class="container mx-auto flex justify-around">
+                    <!-- Booking Info -->
+                    <div class="w-1/2">
+                        <!-- Room Info -->
+                        <div class="flex items-center w-11/12 my-4">
+                            <div class="w-24 h-20 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.get_first_photo}})"></div>
+                            <div class="flex flex-col w-8/12 mx-4">
+                                <div class="font-bold text-lg">{{room.name}}</div>
+                                <span class="text-sm text-gray-600 block truncate">{{room.city}} &#183; {{room.country.name}}</span>
+                            </div>
+                        </div>
+                        <!-- Messages -->
+                        <span class="w-full text-sm text-gray-600">Add your travel dates for exact pricing.</span>
+                        <!-- Check-in and Checkout-->
+                        <div class="flex items-center border border-gray-600 rounded-lg w-9/12 h-12 my-4">
+                            <div class="flex justify-between items-center">
+                                <input type="text" id="checkin" class="w-1/2 font-bold focus:outline-none ml-4" placeholder="Check-in" readonly/>
+                                <i id="clear-checkin" class="text-base text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times mr-4"></i>
+                            </div>
+                            <div class="border border-gray-600 w-px h-12"></div>
+                            <div class="flex justify-between items-center">
+                                <input type="text" id="checkout" class="w-1/2 font-bold focus:outline-none ml-4" placeholder="Checkout" readonly/>
+                                <i id="clear-checkout" class="text-base text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times mr-4"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="w-1/2 items-center border border-gray-600 rounded-lg w-9/12 h-12 mb-4 px-4 focus:border-black focus:outline-none placeholder-gray-600" placeholder="Guests"/>
+                        <!-- Notice -->
+                        <div class="flex flex-wrap items-center w-full">
+                            <img src="{% static 'img/icon-uc-light-bulb.gif' %}" alt="" class="w-12">
+                            <div class="text-base font-bold text-gray-800 ml-4">This place is getting a lot of attention.</div>
+                        </div>
+                    </div>
+                    <!-- Calendar -->
+                    <div class="flex flex-wrap justify-around w-1/2">
+                        {% for calendar in room.get_calendars %}
+                            <div class="w-5/12 mb-10">
+                                <span class="text-center font-bold text-base block mb-8">{{calendar.get_month}}</span>
+                                <div class="cal-grid mb-2">
+                                    {% for day in calendar.days_of_week %}
+                                        <span class="font-semibold text-xs text-gray-600">{{day}}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="cal-grid">
+                                    {% for day in calendar.get_calendar_days %}
+                                        <!-- template tags: is_booked -->
+                                        {% is_booked room day as is_booked_bool %}
+                                        {% if day.number != 0 %}
+                                            
+                                            {% if day.is_past %}
+                                                <span class="w-full text-center rounded-full font-semibold text-xs text-gray-400 py-2">{{day}}</span>
+                                            {% elif is_booked_bool %}
+                                                <!-- <del class="w-full text-center rounded font-semibold text-xs text-red-500 py-1">{{day}}</del> -->
+                                                <span class="w-full text-center rounded-full font-semibold text-xs text-gray-500 py-2 line-through">{{day}}</span>
+                                            {% else %}
+                                                <!-- template tags: set_period day-->
+                                                <span id="d-{{day}}" onclick="check({{calendar.year}}, {{calendar.month}}, {{day}})" class="w-full text-center rounded-full font-bold text-xs py-2 hover:bg-teal-400 hover:text-white cursor-pointer">{{day}}</span>
+                                            {% endif %}
+                                                
+                                        {% else %}
+                                            <span></span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="flex flex-wrap justify-end items-center w-full">
+                            <span id="price" class="font-bold text-2xl">${{room.price}}</span>
+                            <span id="nights" class="text-lg mx-2">/ night</span>
+                            <div id="btnCheck" class="btn-link w-24 bg-red-500 text-white block rounded-lg cursor-pointer ml-4 mr-8">Reserve</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 {% endblock content %}
+
+{% block javascript %}
+<script>
+    // Get the modal
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("btnCheck");
+    
+    // Get the <i> element that closes the modal
+    var close = document.getElementById("close");
+    var clear_checkin = document.getElementById("clear-checkin");
+    var clear_checkout = document.getElementById("clear-checkout");
+
+    var checkin = document.getElementById("checkin");
+    var checkout = document.getElementById("checkout")
+
+    //var tmp_checkin = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
+    //var tmp_checkout = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
+    class BookingDays {
+        constructor() {
+            this.year = 0;
+            this.month = 0;
+            this.day = 0;
+            this.value = 0;
+            this.obj = undefined;
+        }
+
+        set(y, m, d) {
+            this.year = y;
+            this.month = m;
+            this.day = d;
+            this.value = y*10000+m*100+d;
+            this.obj = document.getElementById(`d-${d}`);
+            //alert(this.value);
+        }
+        clear() {
+            if (this.obj != undefined) {
+                this.obj.style.backgroundColor = "white"
+                this.obj.style.color = "black"
+                this.year = 0;
+                this.month = 0;
+                this.day = 0;
+                this.value = 0;
+                this.obj = undefined;
+            }
+        }
+        getValue() {
+            return this.value;
+        }
+        getEl() {
+            return this.obj;
+        }
+    }
+
+    var book_checkin = new BookingDays();
+    var book_checkout = new BookingDays();
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+        checkin.value = "";
+        checkout.value = "";
+        book_checkin.clear();
+        book_checkout.clear();
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    close.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    clear_checkin.onclick = function() {
+        checkin.value = "";
+        book_checkin.clear();
+    }
+    clear_checkout.onclick = function() {
+        checkout.value = "";
+        book_checkout.clear();
+    }
+
+    function check(year, month, day) {
+        if(book_checkin.getValue() == 0) {
+            book_checkin.set(year, month, day);
+            el = book_checkin.getEl();
+            checkin.value = `${year}-${month}-${day}`;
+            el.style.backgroundColor = "black"
+            el.style.color = "white"
+        } 
+        else if(book_checkout.getValue() == 0 && (year*10000+month*100+day) > book_checkin.getValue()) {
+            book_checkout.set(year, month, day);
+            el = book_checkout.getEl();
+            checkout.value = `${year}-${month}-${day}`;
+            el.style.backgroundColor = "black"
+            el.style.color = "white"
+        }
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+{% endblock javascript %}
