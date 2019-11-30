@@ -36,15 +36,18 @@ class ReservationDetailView(View):
     """ Reservation Detail View Definition
     """
 
-    def get(self, pk):
+    # def get(self, pk):  # TypeError - get() got multiple values for argument 'pk'
+    def get(self, request, pk):
         """ Move this code to CustomReservationManager
             try:
                 reservation = models.Reservation.objects.get(pk=pk)
             except models.Reservation.DoesNotExist:
                 pass
         """
+        debug.info(pk)
 
         # and use .get_or_none() instead
         reservation = models.Reservation.objects.get_or_none(pk=pk)
         if not reservation:  # redirect to home if the reservation pk does not exist
             return redirect(reverse("core:home"))
+        return render(self.request, "reservations/detail.html", {"reservation": reservation})
