@@ -8,6 +8,7 @@ from util import debug
 """
 from django.utils import timezone
 from core.models import AbsctractTimeStampedModel
+from . import manager
 
 # Create your models here.
 
@@ -53,6 +54,9 @@ class Reservation(AbsctractTimeStampedModel):
     # it allows for the related object to refer to this object. like "self.reservations.all()" in rooms/models
     guest = models.ForeignKey("users.User", related_name="reservations", on_delete=models.CASCADE)
     room = models.ForeignKey("rooms.Room", related_name="reservations", on_delete=models.CASCADE)
+
+    # Change default Mnanger (models.Manager to CustomReservationManager)
+    objects = manager.CustomReservationManager()
 
     def __str__(self):
         return f"{self.room} - {self.check_in}"

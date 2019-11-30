@@ -247,6 +247,7 @@
             <div class="container mx-auto">
                 <i id="close" class="text-2xl my-4 text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times"></i>
                 <div class="container mx-auto flex justify-around">
+
                     <!-- Booking Info -->
                     <div class="w-1/2">
                         <!-- Room Info -->
@@ -262,22 +263,24 @@
                         <!-- Check-in and Checkout-->
                         <div class="flex items-center border border-gray-600 rounded-lg w-9/12 h-12 my-4">
                             <div class="flex justify-between items-center">
-                                <input type="text" id="checkin" class="w-1/2 font-bold focus:outline-none ml-4" placeholder="Check-in" readonly/>
+                                <input type="text" id="checkin" class="w-1/2 font-semibold focus:outline-none ml-4" placeholder="Check-in" readonly/>
                                 <i id="clear-checkin" class="text-base text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times mr-4"></i>
                             </div>
                             <div class="border border-gray-600 w-px h-12"></div>
                             <div class="flex justify-between items-center">
-                                <input type="text" id="checkout" class="w-1/2 font-bold focus:outline-none ml-4" placeholder="Checkout" readonly/>
+                                <input type="text" id="checkout" class="w-1/2 font-semibold focus:outline-none ml-4" placeholder="Checkout" readonly/>
                                 <i id="clear-checkout" class="text-base text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times mr-4"></i>
                             </div>
                         </div>
-                        <input type="text" class="w-1/2 items-center border border-gray-600 rounded-lg w-9/12 h-12 mb-4 px-4 focus:border-black focus:outline-none placeholder-gray-600" placeholder="Guests"/>
+                        <input type="text" class="items-center border border-gray-600 rounded-lg font-semibold w-9/12 h-12 mb-4 px-4 focus:border-black focus:outline-none placeholder-gray-600" placeholder="Guests"/>
                         <!-- Notice -->
                         <div class="flex flex-wrap items-center w-full">
                             <img src="{% static 'img/icon-uc-light-bulb.gif' %}" alt="" class="w-12">
                             <div class="text-base font-bold text-gray-800 ml-4">This place is getting a lot of attention.</div>
                         </div>
                     </div>
+                    <!-- End Booking Info -->
+
                     <!-- Calendar -->
                     <div class="flex flex-wrap justify-around w-1/2">
                         {% for calendar in room.get_calendars %}
@@ -314,9 +317,13 @@
                         <div class="flex flex-wrap justify-end items-center w-full">
                             <span id="price" class="font-bold text-2xl">${{room.price}}</span>
                             <span id="nights" class="text-lg mx-2">/ night</span>
-                            <div id="btnCheck" class="btn-link w-24 bg-red-500 text-white block rounded-lg cursor-pointer ml-4 mr-8">Reserve</div>
+                            <div id="btnBook" class="btn-link w-24 bg-red-500 text-white block rounded-lg cursor-pointer ml-4 mr-8">Reserve</div>
+                            {% comment %}
+                                <a href="{% url 'reservations:create' room.pk 2019 12 12 %}" id="btnCheck" class="btn-link w-24 bg-red-500 text-white block rounded-lg cursor-pointer ml-4 mr-8">Reserve</a>
+                            {% endcomment %}
                         </div>
                     </div>
+                    <!-- End Calendar -->
                 </div>
             </div>
         </div>
@@ -325,12 +332,13 @@
 {% endblock content %}
 
 {% block javascript %}
-<script>
+<script type="text/javascript">
     // Get the modal
     var modal = document.getElementById("myModal");
 
     // Get the button that opens the modal
-    var btn = document.getElementById("btnCheck");
+    var btn_check = document.getElementById("btnCheck");
+    var btn_book = document.getElementById("btnBook");
     
     // Get the <i> element that closes the modal
     var close = document.getElementById("close");
@@ -343,38 +351,61 @@
     //var tmp_checkin = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
     //var tmp_checkout = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
     class BookingDays {
-        constructor() {
-            this.year = 0;
-            this.month = 0;
-            this.day = 0;
-            this.value = 0;
-            this.obj = undefined;
+        constructor(y=0,m=0,d=0,n=0,o=undefined) {
+            this._year = y;
+            this._month = m;
+            this._day = d;
+            this._number = n;
+            this._obj = o;
         }
-
         set(y, m, d) {
-            this.year = y;
-            this.month = m;
-            this.day = d;
-            this.value = y*10000+m*100+d;
-            this.obj = document.getElementById(`d-${d}`);
+            this._year = y;
+            this._month = m;
+            this._day = d;
+            this._number = y*10000+m*100+d;
+            this._obj = document.getElementById(`d-${d}`);
             //alert(this.value);
         }
         clear() {
-            if (this.obj != undefined) {
-                this.obj.style.backgroundColor = "white"
-                this.obj.style.color = "black"
-                this.year = 0;
-                this.month = 0;
-                this.day = 0;
-                this.value = 0;
-                this.obj = undefined;
+            if (this._obj != undefined) {
+                this._obj.style.backgroundColor = "white"
+                this._obj.style.color = "black"
+                this._year = 0;
+                this._month = 0;
+                this._day = 0;
+                this._number = 0;
+                this._obj = undefined;
             }
         }
-        getValue() {
-            return this.value;
+        get year() {
+            return this._year;
         }
-        getEl() {
-            return this.obj;
+        set year(y) {
+            this._year = y;
+        }
+        get month() {
+            return this._month;
+        }
+        set month(m) {
+            this._month = m;
+        }
+        get day() {
+            return this._day;
+        }
+        set day(d) {
+            this._day = d;
+        }
+        get number() {
+            return this._number;
+        }
+        set number(n) {
+            this._number = n;
+        }
+        get obj() {
+            return this._obj;
+        }
+        set obj(o) {
+            this._obj = o;
         }
     }
 
@@ -382,12 +413,27 @@
     var book_checkout = new BookingDays();
 
     // When the user clicks the button, open the modal 
-    btn.onclick = function() {
+    btn_check.onclick = function() {
         checkin.value = "";
         checkout.value = "";
         book_checkin.clear();
         book_checkout.clear();
         modal.style.display = "block";
+    }
+
+    btn_book.onclick = function() {
+        // Getting javascript variable's value in Django url template tag
+        {% comment %}
+            window.location = "{% url 'your_view_name' 1234 %}".replace(/1234/, tmp.toString());
+        {% endcomment %}
+        // why 9999, 8888,... ?
+        // we need to set unique numbers to avoid wrong replacements. those number can not be duplicated by real date values.
+        let loc = "{% url 'reservations:create' room.pk 9999 8888 7777 6666 %}"
+            .replace(/9999/, book_checkin.year)
+            .replace(/8888/, book_checkin.month)
+            .replace(/7777/, book_checkin.day)
+            .replace(/6666/, book_checkout.number - book_checkin.number);
+        window.location = loc
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -405,19 +451,19 @@
     }
 
     function check(year, month, day) {
-        if(book_checkin.getValue() == 0) {
+        if(book_checkin.number == 0) {
             book_checkin.set(year, month, day);
-            el = book_checkin.getEl();
+            o = book_checkin.obj;
             checkin.value = `${year}-${month}-${day}`;
-            el.style.backgroundColor = "black"
-            el.style.color = "white"
+            o.style.backgroundColor = "black"
+            o.style.color = "white"
         } 
-        else if(book_checkout.getValue() == 0 && (year*10000+month*100+day) > book_checkin.getValue()) {
+        else if(book_checkout.number == 0 && (year*10000+month*100+day) > book_checkin.number) {
             book_checkout.set(year, month, day);
-            el = book_checkout.getEl();
+            o = book_checkout.obj;
             checkout.value = `${year}-${month}-${day}`;
-            el.style.backgroundColor = "black"
-            el.style.color = "white"
+            o.style.backgroundColor = "black"
+            o.style.color = "white"
         }
     }
 
