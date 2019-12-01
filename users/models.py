@@ -59,6 +59,8 @@ class User(AbstractUser):
     birthdate = models.DateField(null=True, blank=True)
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, null=True, blank=True, default=LANGUAGE_ENGLISH)
     currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD)
+    # TODO: does we need host field? or we just assume that user having room listing is a host?
+    # host = models.BooleanField(default=False)  # host user
     superhost = models.BooleanField(default=False)  # certified host user by Airbnb
     email_verified = models.BooleanField(default=False)
     verification_code = models.CharField(
