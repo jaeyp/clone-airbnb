@@ -41,10 +41,10 @@ Reservation Detail
 
             <div class="py-10 px-5">
                 {% if reservation.status == 'pending' %}
-                    <a href="#" class="btn-link bg-red-500 text-white font-semibold px-3">Cancel Reservation</a>
-                    {% if reservation.room.host == user %}
-                        <a href="#" class="btn-link bg-teal-600 text-white font-semibold px-3">Confirm Reservation</a>
+                    {% if reservation.room.host != user %}
+                        <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="btn-link bg-teal-600 text-white font-semibold px-3">Confirm Reservation</a>
                     {% endif %}
+                    <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="btn-link bg-red-500 text-white font-semibold px-3">Cancel Reservation</a>
                 {% endif %}
             </div>
         </div>

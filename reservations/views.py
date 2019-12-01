@@ -85,3 +85,24 @@ class ReservationDetailView(View):
         ):
             raise Http404()
         return render(self.request, "reservations/detail.html", {"reservation": reservation})
+
+
+def edit(request, pk, command):
+    reservation = models.Reservation.objects.get_or_none(pk=pk)
+
+    # raise Http404
+    # if the reservation pk does not exist
+    # or user is neither a guest nor a host
+    if not reservation or (reservation.guest != request.user and reservation.room.home != request.user):
+        raise Http404()
+
+    if command == "confirm":
+        reservation.status = models.Reservation.STATUS_CONFIRMED
+    elif command == "cancel":
+        reservation.status = models.Reservation.STATUS_CANCELED
+        # if reservation is canceled, delete all the booked days related to the reservation
+        models.BookedDay.objects.filter(reservation=reservation).delete()
+
+    reservation.save()
+    messages.success(request, "Reservation Updated")
+    return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
