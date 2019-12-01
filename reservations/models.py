@@ -38,7 +38,8 @@ class Reservation(AbsctractTimeStampedModel):
 
     STATUS_PENDING = "pending"
     STATUS_CONFIRMED = "confirmed"
-    STATUS_CANCELED = "canceled"
+    STATUS_CANCELED = "canceled"  # by guest
+    # TODO: declined (by host), accepted (instead of confirmed)
 
     # Check Model.get_FOO_display()
     # https://docs.djangoproject.com/en/2.2/ref/models/instances/#extra-instance-methods
