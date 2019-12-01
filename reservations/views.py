@@ -1,5 +1,6 @@
 import datetime
-from django.views.generic import View
+from django.http import Http404
+from django.views.generic import View, DetailView
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from rooms import models as room_models
@@ -27,7 +28,18 @@ def create(request, room_pk, year, month, day, days):
         reservation = models.Reservation.objects.create(
             guest=request.user, room=room, check_in=date_obj, check_out=date_obj + datetime.timedelta(days=days),
         )
+        debug.info(reservation.pk)
+        # return redirect(reverse("core:home"))
+        # return redirect(reverse("reservations:review", kwargs={"pk": reservation.pk}))
         return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
+
+
+class ReservationReviewView(DetailView):
+    """ Reservation Review View Definition
+    """
+
+    model = models.Reservation
+    template_name = "reservations/review.html"
 
 
 # why not DetailView here?
@@ -36,18 +48,40 @@ class ReservationDetailView(View):
     """ Reservation Detail View Definition
     """
 
-    # def get(self, pk):  # TypeError - get() got multiple values for argument 'pk'
-    def get(self, request, pk):
-        """ Move this code to CustomReservationManager
+    """ TypeError - get() got multiple values for argument 'pk'
+        # wrong way
+        def get(self, pk):
+
+        # right way
+        def get(self, request, pk):
+            or
+        def get(self, *args, **kwargs):
+            pk = kwargs.get("pk")
+    """
+
+    def get(self, *args, **kwargs):
+        pk = kwargs.get("pk")
+        """ Overriding get() by using a custom manager (CustomReservationManager)
+            in order to filter a request accessing a reservation which doen't exist
+        """
+        debug.info(pk)
+
+        # Move this code to CustomReservationManager
+        """
             try:
                 reservation = models.Reservation.objects.get(pk=pk)
             except models.Reservation.DoesNotExist:
                 pass
         """
-        debug.info(pk)
-
         # and use .get_or_none() instead
         reservation = models.Reservation.objects.get_or_none(pk=pk)
-        if not reservation:  # redirect to home if the reservation pk does not exist
-            return redirect(reverse("core:home"))
+
+        # raise Http404
+        # if the reservation pk does not exist
+        # or user is neither a guest nor a host
+        if not reservation or (
+            reservation.guest != self.request.user  # not a guest
+            and reservation.room.home != self.request.user  # not a host
+        ):
+            raise Http404()
         return render(self.request, "reservations/detail.html", {"reservation": reservation})

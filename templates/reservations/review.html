@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load reservation_tags %}
+
+<!-- Page Name -->
+{% block page_title %}
+Reservation Review
+{% endblock page_title %}
+
+<!-- Page Content -->
+{% block content %}
+{{reservation.status}}
+{{reservation.check_in}}
+{{reservation.check_out}}
+<a href="#" class="btn-link bg-red-500 text-white block rounded-lg">Agree and continue</a>
+{% endblock content %}
+
+{% block javascript %}
+<script type="text/javascript">
+</script>
+{% endblock javascript %}

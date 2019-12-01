@@ -40,6 +40,8 @@ class Reservation(AbsctractTimeStampedModel):
     STATUS_CONFIRMED = "confirmed"
     STATUS_CANCELED = "canceled"
 
+    # Check Model.get_FOO_display()
+    # https://docs.djangoproject.com/en/2.2/ref/models/instances/#extra-instance-methods
     STATUS_CHOICES = (
         (STATUS_PENDING, "Pending"),
         (STATUS_CONFIRMED, "Confirmed"),
