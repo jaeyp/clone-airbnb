@@ -41,7 +41,7 @@ Reservation Detail
 
             <div class="py-10 px-5">
                 {% if reservation.status == 'pending' %}
-                    {% if reservation.room.host != user %}
+                    {% if reservation.room.host == user %}
                         <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="btn-link bg-teal-600 text-white font-semibold px-3">Confirm Reservation</a>
                     {% endif %}
                     <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="btn-link bg-red-500 text-white font-semibold px-3">Cancel Reservation</a>
