@@ -125,7 +125,16 @@ textarea {
 }
 
 /* The Modal (background) */
+@keyframes modalFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .modal {
+  animation: modalFadeIn 1s ease-in-out forwards;
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
