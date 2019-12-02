@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from core.models import AbsctractTimeStampedModel
 
 # Create your models here.
@@ -26,18 +27,33 @@ class Review(AbsctractTimeStampedModel):
     )
 
     review = models.TextField()
-    # accuracy = models.IntegerField()
-    # communication = models.IntegerField()
-    # cleanliness = models.IntegerField()
-    # location = models.IntegerField()
-    # check_in = models.IntegerField()
-    # value = models.IntegerField()
-    accuracy = models.IntegerField(choices=RATE_CHOICES, default=RATE_3)
-    communication = models.IntegerField(choices=RATE_CHOICES, default=RATE_3)
-    cleanliness = models.IntegerField(choices=RATE_CHOICES, default=RATE_3)
-    location = models.IntegerField(choices=RATE_CHOICES, default=RATE_3)
-    check_in = models.IntegerField(choices=RATE_CHOICES, default=RATE_3)
-    value = models.IntegerField(choices=RATE_CHOICES, default=RATE_3)
+
+    """ validators
+        https://docs.djangoproject.com/en/2.2/ref/validators/
+        You should validate field in forms, but also validate it in models
+        because 'min_value' and 'max_value' arguments here gives you front-end side validation
+        while 'validators=[MinValueValidator(1), MaxValueValidator(5)]' in models gives you back-end side validation.
+
+        In this case, we don't need to set validators here since we set 'choices=RATE_CHOICES'
+    """
+    accuracy = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATE_CHOICES, default=RATE_3
+    )
+    communication = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATE_CHOICES, default=RATE_3
+    )
+    cleanliness = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATE_CHOICES, default=RATE_3
+    )
+    location = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATE_CHOICES, default=RATE_3
+    )
+    check_in = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATE_CHOICES, default=RATE_3
+    )
+    value = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATE_CHOICES, default=RATE_3
+    )
 
     # Tips. ForeignKey.related_name
     # https://docs.djangoproject.com/en/2.2/ref/models/fields/#django.db.models.ForeignKey.related_name
