@@ -4,6 +4,7 @@ from django.views.generic import View, DetailView
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from rooms import models as room_models
+from reviews import forms as review_forms
 from . import models
 from util import debug
 
@@ -61,12 +62,12 @@ class ReservationDetailView(View):
 
     def get(self, *args, **kwargs):
         pk = kwargs.get("pk")
-        """ Overriding get() by using a custom manager (CustomReservationManager)
+        """ Overriding get() by using a custom manager (CustomModelManager)
             in order to filter a request accessing a reservation which doen't exist
         """
         debug.info(pk)
 
-        # Move this code to CustomReservationManager
+        # Move this code to CustomModelManager
         """
             try:
                 reservation = models.Reservation.objects.get(pk=pk)
@@ -84,7 +85,10 @@ class ReservationDetailView(View):
             and reservation.room.home != self.request.user  # not a host
         ):
             raise Http404()
-        return render(self.request, "reservations/detail.html", {"reservation": reservation})
+
+        # set reviews/form for reservations/template (detail.html)
+        form = review_forms.CreateReviewForm()
+        return render(self.request, "reservations/detail.html", {"reservation": reservation, "form": form})
 
 
 def edit(request, pk, command):

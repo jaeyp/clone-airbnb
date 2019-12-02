@@ -39,12 +39,23 @@ Reservation Detail
                 </div>
             </div>
 
-            <div class="py-10 px-5">
-                {% if reservation.status == 'pending' %}
-                    {% if reservation.room.host == user %}
-                        <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="btn-link bg-teal-600 text-white font-semibold px-3">Confirm Reservation</a>
-                    {% endif %}
-                    <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="btn-link bg-red-500 text-white font-semibold px-3">Cancel Reservation</a>
+            <div class="py-10 px-5 w-full">
+                {% if reservation.status == 'confirmed' and reservation.is_finished %}
+                    <span class="font-semibold text-xl text-center w-full block mb-5">Write your review</span>
+                    <form action="{% url 'reviews:create' reservation.room.pk %}" method="POST" class="w-1/2 mx-auto flex flex-col">
+                        {% csrf_token %}
+                        {{ form }} <!-- CreateReviewForm -->
+                        {% comment - if you can have own designed form %}
+                            {% include 'mixins/review/form.html' with form=form cta="Review Room" %}  
+                        {% endcomment %}
+                        
+                        <button class="btn-link bg-red-500 text-white font-semibold px-3">Submit Review</button>
+                    </form>
+                {% elif reservation.status == 'pending' %}
+                        {% if reservation.room.host == user %}
+                            <a href="{% url 'reservations:edit' reservation.pk 'confirm' %}" class="btn-link bg-teal-600 text-white font-semibold px-3">Confirm Reservation</a>
+                        {% endif %}
+                        <a href="{% url 'reservations:edit' reservation.pk 'cancel' %}" class="btn-link bg-red-500 text-white font-semibold px-3">Cancel Reservation</a>
                 {% endif %}
             </div>
         </div>

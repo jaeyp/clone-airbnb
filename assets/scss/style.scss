@@ -155,4 +155,16 @@ textarea {
   border: 1px solid #888;
 }
 
+/* Room Review */
+label {
+  // for review form labels in reservations/detail.html since we didn't define view class and template for review form.
+  // we're using a review form directly without its template in detail.html
+  // In reservations/detail.html, check {{ form }} <!-- CreateReviewForm -->
+  // also, in ReservationDetailView, check form = review_forms.CreateReviewForm()
+  @apply font-medium text-gray-700;
+}
+.reviewField {
+  @apply border border-gray-600 rounded mt-1 mb-5;
+}
+
 @tailwind utilities;

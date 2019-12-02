@@ -8,7 +8,8 @@ from util import debug
 """
 from django.utils import timezone
 from core.models import AbsctractTimeStampedModel
-from . import manager
+
+# from . import manager  # moved to core/managers.py
 
 # Create your models here.
 
@@ -58,8 +59,8 @@ class Reservation(AbsctractTimeStampedModel):
     guest = models.ForeignKey("users.User", related_name="reservations", on_delete=models.CASCADE)
     room = models.ForeignKey("rooms.Room", related_name="reservations", on_delete=models.CASCADE)
 
-    # Change default Mnanger (models.Manager to CustomReservationManager)
-    objects = manager.CustomReservationManager()
+    # Change default Mnanger (models.Manager to CustomModelManager)
+    # objects = managers.CustomModelManager()  # moved to core/managers.py
 
     def __str__(self):
         return f"{self.room} - {self.check_in}"
@@ -68,13 +69,17 @@ class Reservation(AbsctractTimeStampedModel):
         now = timezone.now().date()
         return now >= self.check_in and now <= self.check_out
 
-    in_progress.boolean = True  # display x/o icon intead of False/True
+    in_progress.boolean = True  # this display x/o icon in admin page intead of False/True
 
     def is_finished(self):
         now = timezone.now().date()
-        return now > self.check_out
+        is_finished = now > self.check_out
+        if is_finished:
+            # schedule is done, delete related booked days
+            BookedDay.objects.filter(reservation=self).delete()
+        return is_finished
 
-    is_finished.boolean = True
+    is_finished.boolean = True  # this display x/o icon in admin page intead of False/True
 
     def save(self, *args, **kwargs):
         """ Overriding save()
