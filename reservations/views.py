@@ -15,9 +15,35 @@ class CreateError(Exception):
     pass
 
 
-def create(request, room_pk, year, month, day, days):
+""" def create(request, room_pk, year, month, day, days):
     debug.info(f"{room_pk} {year} {month} {day} {days}")
     try:
+        date_obj = datetime.datetime(year, month, day)
+        room = room_models.Room.objects.get(pk=room_pk)
+        models.BookedDay.objects.get(day=date_obj, reservation__room=room)
+        raise CreateError()
+    except (room_models.Room.DoesNotExist, CreateError):
+        messages.error(request, "Can't Reserve That Room")
+        return redirect(reverse("core:home"))
+    except models.BookedDay.DoesNotExist:
+        reservation = models.Reservation.objects.create(
+            guest=request.user, room=room, check_in=date_obj, check_out=date_obj + datetime.timedelta(days=days),
+        )
+        debug.info(reservation.pk)
+        # return redirect(reverse("core:home"))
+        # return redirect(reverse("reservations:review", kwargs={"pk": reservation.pk}))
+        return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk})) """
+
+
+def create(request, room_pk):
+    try:
+        # room_pk = request.GET.get("pk", None)
+        year = int(request.GET.get("year", None))
+        month = int(request.GET.get("month", None))
+        day = int(request.GET.get("day", None))
+        days = int(request.GET.get("days", None))
+        debug.info(f"{room_pk} {year} {month} {day} {days}")
+
         date_obj = datetime.datetime(year, month, day)
         room = room_models.Room.objects.get(pk=room_pk)
         models.BookedDay.objects.get(day=date_obj, reservation__room=room)

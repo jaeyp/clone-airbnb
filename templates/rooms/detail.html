@@ -426,6 +426,9 @@
         {% comment %}
             window.location = "{% url 'your_view_name' 1234 %}".replace(/1234/, tmp.toString());
         {% endcomment %}
+        {% comment %}
+        // This works with def create(request, room_pk, year, month, day, days): in reservations/views.py
+        // plus, path("create/<int:room_pk>/<int:year>-<int:month>-<int:day>-<int:days>/", views.create, name="create",), in reservations/urls.py
         // why 9999, 8888,... ? (magic numbers)
         // we need to set unique numbers to avoid wrong replacements. those number can not be duplicated by real date values.
         let loc = "{% url 'reservations:create' room.pk 9999 8888 7777 6666 %}"
@@ -434,6 +437,18 @@
             .replace(/7777/, book_checkin.day)
             .replace(/6666/, book_checkout.number - book_checkin.number);
         window.location = loc
+        {% endcomment %}
+
+        {% comment %}
+            fetch(`{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${book_checkout.number-book_checkin.number}`).then(() => window.location.reload())
+            fetch(`{% url 'reservations:create' %}?room_pk={{room.pk}}&year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${book_checkout.number-book_checkin.number}`)
+            fetch(`{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${book_checkout.number-book_checkin.number}`).then(() => window.location.reload())
+        {% endcomment %}
+        // This works with def create(request, room_pk): in reservations/views.py
+        // plus, path("create/<int:room_pk>/", views.create, name="create",), in reservations/urls.py
+        let loc = `{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${book_checkout.number-book_checkin.number}`;
+        window.location = loc;
+        
     }
 
     // When the user clicks on <span> (x), close the modal
