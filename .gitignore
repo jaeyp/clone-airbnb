@@ -131,3 +131,6 @@ dmypy.json
 uploads/
 node_modules/
 static/
+
+# i18n files
+locale/

@@ -99,6 +99,28 @@ or
 ~$ gulp
 
 
+[Support Translations (i18n) - internationalization / localization ]
+1. Create locale folder at project root
+
+2. Set local path in config/settings.py 
+LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
+
+3-1. Install gettext (for supporting i18n)
+https://mlocati.github.io/articles/gettext-iconv-windows.html
+3-2. if it isn't added, Add "C:\Program Files\gettext-iconv\bin" in System Environment Variables (NOT user variable) and reboot
+3-3. else reboot
+
+4-1. Add {% load i18n %} on the top of template files
+4-2. Change "text", which you want to translate, to {% trans "text" %} in template files
+
+5. Make translation file
+# in pipenv
+~$ django-admin makemessages --locale=kr
+
+6. Edit translation text (msgstr) in django.po
+
+7. build translation messages
+~$ django-admin compilemessages
 
 
 --------------------------------------

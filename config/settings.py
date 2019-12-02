@@ -205,3 +205,7 @@ FACEBOOK_USERINFO_ENDPOINT = "https://graph.facebook.com/me"
 # To support login_required decorator
 # https://docs.djangoproject.com/en/2.2/topics/auth/default/#the-login-required-decorator
 LOGIN_URL = "/users/login"
+
+
+# Locale
+LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
