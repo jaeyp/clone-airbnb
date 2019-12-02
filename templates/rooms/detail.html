@@ -426,7 +426,7 @@
         {% comment %}
             window.location = "{% url 'your_view_name' 1234 %}".replace(/1234/, tmp.toString());
         {% endcomment %}
-        // why 9999, 8888,... ?
+        // why 9999, 8888,... ? (magic numbers)
         // we need to set unique numbers to avoid wrong replacements. those number can not be duplicated by real date values.
         let loc = "{% url 'reservations:create' room.pk 9999 8888 7777 6666 %}"
             .replace(/9999/, book_checkin.year)
