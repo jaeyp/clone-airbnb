@@ -180,7 +180,8 @@ class SignUpForm(forms.ModelForm):
     class Meta:
         model = models.User
         fields = ("first_name", "last_name", "email")
-        widgets = {  # you can also add validation by setting 'min' and 'max' attrs
+        widgets = {
+            # you can also add validation by setting 'min' and 'max' attrs
             "first_name": forms.TextInput(attrs={"placeholder": "First name"}),
             "last_name": forms.TextInput(attrs={"placeholder": "Last name"}),
             "email": forms.TextInput(attrs={"placeholder": "Email address"}),
