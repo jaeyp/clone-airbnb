@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 <!-- <div class="flex items-center w-2/5"> -->
 <div class="flex items-center w-8/12 sm:w-7/12 md:w-6/12 lg:w-5/12 xl:w-4/12">
     <a href="{% url 'core:home' %}" class="mr-0 md:mr-6 lg:mr-6 xl:mr-6 invisible xl:visible lg:visible md:visible">
@@ -86,24 +86,24 @@
                 <a href="{{ object.get_absolute_url }}">{{ object.name }}</a>
         {% endcomment %}
         {% if request.session.is_hosting %}
-            <li class="nav-link"><a href="{% url 'rooms:create' %}">Create Room</a></li>
+            <li class="nav-link"><a href="{% url 'rooms:create' %}">{% trans 'Add Listing' %}</a></li>
         {% endif %}
         <li class="nav-link">
             <a href="{% url 'users:switch-hosting' %}">
                 <!-- Host/Guset mode -->
                 {% if request.session.is_hosting %}
-                    Host
+                    {% trans 'Stop hosting' %}
                 {% else %}
-                    Guest
+                    {% trans 'Start hosting' %}
                 {% endif %}
             </a>
         </li>
-        <li class="nav-link"><a href="{{user.get_absolute_url}}">Profile</a></li>
-        <li class="nav-link"><a href="{% url 'users:logout' %}">Log out</a></li>
+        <li class="nav-link"><a href="{{user.get_absolute_url}}">{% trans 'Profile' %}</a></li>
+        <li class="nav-link"><a href="{% url 'users:logout' %}">{% trans 'Log out' %}</a></li>
     {% else %}
         <!-- <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:signup' %}">Sign up</a></li>
         <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:login' %}">Log in</a></li> -->
-        <li class="nav-link"><a href="{% url 'users:signup' %}">Sign up</a></li>
-        <li class="nav-link"><a href="{% url 'users:login' %}">Log in</a></li>
+        <li class="nav-link"><a href="{% url 'users:signup' %}">{% trans 'Sign up' %}</a></li>
+        <li class="nav-link"><a href="{% url 'users:login' %}">{% trans 'Log in' %}</a></li>
     {% endif %}
 </mr-3 ul>
