@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class CustomReservationManager(models.Manager):
+class CustomModelManager(models.Manager):
     """ Custom managers - extending default manager (models.Manager)
         https://docs.djangoproject.com/en/2.2/topics/db/managers/#custom-managers
     """
