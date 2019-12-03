@@ -1,4 +1,8 @@
 import uuid
+
+# gettext_lazy(): using lazy execution for translation
+# https://docs.djangoproject.com/en/2.2/topics/i18n/translation/#standard-translation
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -26,7 +30,12 @@ class User(AbstractUser):
     GENDER_FEMALE = "female"
     GENDER_OTHER = "other"
 
-    GENDER_CHOICES = (("", "Select gender"), (GENDER_MALE, "Male"), (GENDER_FEMALE, "Female"), (GENDER_OTHER, "Other"))
+    GENDER_CHOICES = (
+        ("", _("Select gender")),
+        (GENDER_MALE, _("Male")),
+        (GENDER_FEMALE, _("Female")),
+        (GENDER_OTHER, _("Other")),
+    )
 
     LANGUAGE_ENGLISH = "en"
     LANGUAGE_KOREAN = "ko"
@@ -53,20 +62,28 @@ class User(AbstractUser):
 
     # [null vs blank]
     # null is purely database-related (for DB), whereas blank is validation-related (for Form)
-    avatar = models.ImageField(upload_to="avatars", default="", null=True, blank=True)  # path: /uploads/avatars
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=10, null=True, blank=True)
-    bio = models.TextField(default="", blank=True)
-    birthdate = models.DateField(null=True, blank=True)
-    language = models.CharField(choices=LANGUAGE_CHOICES, max_length=2, null=True, blank=True, default=LANGUAGE_ENGLISH)
-    currency = models.CharField(choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD)
+    avatar = models.ImageField(
+        _("avatar"), upload_to="avatars", default="", null=True, blank=True
+    )  # path: /uploads/avatars
+    gender = models.CharField(_("gender"), choices=GENDER_CHOICES, max_length=10, null=True, blank=True)
+    bio = models.TextField(_("bio"), default="", blank=True)
+    birthdate = models.DateField(_("birthdate"), null=True, blank=True)
+    language = models.CharField(
+        _("language"), choices=LANGUAGE_CHOICES, max_length=2, null=True, blank=True, default=LANGUAGE_ENGLISH
+    )
+    currency = models.CharField(
+        _("currency"), choices=CURRENCY_CHOICES, max_length=3, null=True, blank=True, default=CURRENCY_CAD
+    )
     # TODO: does we need host field? or we just assume that user having room listing is a host?
     # host = models.BooleanField(default=False)  # host user
-    superhost = models.BooleanField(default=False)  # certified host user by Airbnb
+    superhost = models.BooleanField(_("superhost"), default=False)  # certified host user by Airbnb
     email_verified = models.BooleanField(default=False)
     verification_code = models.CharField(
         max_length=120, default="", blank=True
     )  # random secret code for email varification
-    login_method = models.CharField(choices=LOGIN_CHOICES, max_length=20, null=True, blank=True, default=LOGIN_EMAIL)
+    login_method = models.CharField(
+        _("login method"), choices=LOGIN_CHOICES, max_length=20, null=True, blank=True, default=LOGIN_EMAIL
+    )
 
     def get_absolute_url(self):
         # print(f"users:profile with {self.pk}")

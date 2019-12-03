@@ -1,5 +1,7 @@
 import requests
 from django.utils import translation
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse
 from django.views import View
 from django.views.generic import FormView, DetailView, UpdateView
@@ -65,7 +67,8 @@ class LoginView(mixins.LoggedOutOnlyView, FormView):
             user.login_method = models.User.LOGIN_EMAIL
             user.save()
             login(self.request, user)
-            messages.success(self.request, f"Welcome, {user.first_name}!")
+            welcome = _("Welcome")
+            messages.success(self.request, f"{welcome}, {user.first_name}!")
 
         # The default form_valid() simply redirects to the success_url.
         return super().form_valid(form)
@@ -81,7 +84,8 @@ class LoginView(mixins.LoggedOutOnlyView, FormView):
 
 def log_out(request):
     user = request.user
-    messages.success(request, f"See you later, {user.first_name}!")
+    seeyou = gettext("See you later")
+    messages.success(request, f"{seeyou}, {user.first_name}!")
     logout(request)
     return redirect(reverse("core:home"))
 
@@ -200,7 +204,8 @@ def github_callback(request):
                         user.save()
 
                     login(request, user)
-                    messages.success(request, f"Welcome, {user.first_name}!")
+                    welcome = _("Welcome")
+                    messages.success(request, f"{welcome}, {user.first_name}!")
                     return redirect(reverse("core:home"))
                 else:
                     raise GithubException("Can't get user profile")
@@ -285,7 +290,8 @@ def google_callback(request):
                         user.save()
 
                     login(request, user)
-                    messages.success(request, f"Welcome, {user.first_name}!")
+                    welcome = _("Welcome")
+                    messages.success(request, f"{welcome}, {user.first_name}!")
                     return redirect(reverse("core:home"))
                 else:
                     raise GoogleException("Can't get user profile")
@@ -366,7 +372,8 @@ def facebook_callback(request):
                         user.save()
 
                     login(request, user)
-                    messages.success(request, f"Welcome, {user.first_name}!")
+                    welcome = _("Welcome")
+                    messages.success(request, f"{welcome}, {user.first_name}!")
                     return redirect(reverse("core:home"))
                 else:
                     raise FacebookException("Can't get user profile")

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load i18n %}
 <!-- Page Name -->
 {% block page_title %}
     Home for CBV
@@ -57,15 +57,21 @@
                 <i class="fas fa-chevron-left text-teal-100"></i>
             {% endif %}
 
-            <span class="ml-3 font-semibold text-gray-600">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
-            <span class="mx-2 text-teal-600">&#10073;</span>
-            {% for page in page_obj.paginator.page_range %}
-                {% if page == page_obj.number %}
-                    <a href="?page={{page}}" class="mx-1 font-bold text-gray-600">{{page}}</a>
-                {% else %}
-                    <a href="?page={{page}}" class="mx-1 text-gray-600">{{page}}</a>
-                {% endif %}
-            {% endfor %}
+            <span class="ml-3 font-semibold text-gray-600">
+                <!-- https://docs.djangoproject.com/en/2.2/topics/i18n/translation/#blocktrans-template-tag -->
+                {% blocktrans with current_page=page_obj.number total_pages=page_obj.paginator.num_pages %}Page {{current_page}} of {{total_pages}}{% endblocktrans %}
+            </span>
+            
+            {% comment %}
+                <span class="mx-2 text-teal-600">&#10073;</span>
+                {% for page in page_obj.paginator.page_range %}
+                    {% if page == page_obj.number %}
+                        <a href="?page={{page}}" class="mx-1 font-bold text-gray-600">{{page}}</a>
+                    {% else %}
+                        <a href="?page={{page}}" class="mx-1 text-gray-600">{{page}}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endcomment %}
 
             {% if page_obj.has_next %}
                 <a href="?page={{page_obj.number|add:1}}" class="ml-2 text-teal-600">

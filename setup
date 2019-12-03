@@ -122,6 +122,7 @@ https://mlocati.github.io/articles/gettext-iconv-windows.html
 7. build translation messages
 ~$ django-admin compilemessages
 
+8. whenever you add new trans context, repeat 5-7 !!
 
 --------------------------------------
 Tips. Create python shell
