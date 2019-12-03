@@ -55,7 +55,7 @@
         </div> -->
     {% endblock search-bar %}
 </div>
-<ul class="flex items-center text-xs sm:text-sm md:text-sm lg:text-base xl:text-base font-thin sm:font-normal md:text-medium lg:text-medium xl:font-medium h-full">
+<ul class="flex items-center text-xs sm:text-sm md:text-sm lg:text-sm xl:text-sm font-thin sm:font-normal md:text-medium lg:text-medium xl:font-medium h-full text-gray-900">
     <!-- Q. How can we access `user` (user.is_authenticated) here?
         `context_processors` are function that add model information to templates.
         A `context processor` has a very simple interface: 
@@ -87,11 +87,6 @@
         {% endcomment %}
         {% if request.session.is_hosting %}
             <li class="nav-link"><a href="{% url 'rooms:create' %}">{% trans 'Add Listing' %}</a></li>
-        {% else %}
-            {% comment %}
-                <li class="nav-link"><a href="{% url 'reservations:list' user.pk %}">{% trans 'Trips' %}</a></li>
-            {% endcomment %}
-            <li class="nav-link"><a href="#">{% trans 'Trips' %}</a></li>
         {% endif %}
         <li class="nav-link">
             <a href="{% url 'users:switch-hosting' %}">
@@ -103,9 +98,16 @@
                 {% endif %}
             </a>
         </li>
+        {% comment %}
+            <li class="nav-link"><a href="{% url 'reservations:list' user.pk %}">{% trans 'Trips' %}</a></li>
+        {% endcomment %}
+        <li class="nav-link"><a href="#">{% trans 'Saved' %}</a></li>
+        <li class="nav-link"><a href="#">{% trans 'Trips' %}</a></li>
+        <li class="nav-link"><a href="#">{% trans 'Messages' %}</a></li>
         <li class="nav-link"><a href="{{user.get_absolute_url}}">{% trans 'Profile' %}</a></li>
         <li class="nav-link"><a href="{% url 'users:logout' %}">{% trans 'Log out' %}</a></li>
     {% else %}
+        <li class="nav-link"><a href="#">{% trans 'Messages' %}</a></li>
         <!-- <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:signup' %}">Sign up</a></li>
         <li class="ml-6 border-b-2 border-white hover:border-gray-600 h-full flex items-center"><a class="py-10 px-2" href="{% url 'users:login' %}">Log in</a></li> -->
         <li class="nav-link"><a href="{% url 'users:signup' %}">{% trans 'Sign up' %}</a></li>
