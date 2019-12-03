@@ -104,6 +104,18 @@
         <li class="nav-link"><a href="#">{% trans 'Saved' %}</a></li>
         <li class="nav-link"><a href="#">{% trans 'Trips' %}</a></li>
         <li class="nav-link"><a href="#">{% trans 'Messages' %}</a></li>
+        
+        {% comment %}
+            <li class="nav-link"><a href="#">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% if LANGUAGE_CODE == 'en' %}
+                English
+            {% elif LANGUAGE_CODE == 'ko' %}
+                한국어
+            {% endif %}
+            </a></li>
+        {% endcomment %}
+        
         <li class="nav-link"><a href="{{user.get_absolute_url}}">{% trans 'Profile' %}</a></li>
         <li class="nav-link"><a href="{% url 'users:logout' %}">{% trans 'Log out' %}</a></li>
     {% else %}
