@@ -124,6 +124,10 @@ https://mlocati.github.io/articles/gettext-iconv-windows.html
 
 8. whenever you add new trans context, repeat 5-7 !!
 
+Errors.
+Q. PermissionError: [WinError 5] Access is denied: ../django.pot' or any uncertain error occur
+A. exit current pipenv shell and restart pipenv shell and repeat 5-7
+
 --------------------------------------
 Tips. Create python shell
 Command Pallete (Ctrl+Shift+P) -> Python: Create Terminal

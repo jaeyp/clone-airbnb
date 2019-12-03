@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n %}
 {% load reservation_tags %}
 
 <!-- Page Name -->
@@ -346,7 +346,7 @@
     var clear_checkout = document.getElementById("clear-checkout");
 
     var checkin = document.getElementById("checkin");
-    var checkout = document.getElementById("checkout")
+    var checkout = document.getElementById("checkout");
 
     //var tmp_checkin = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
     //var tmp_checkout = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
