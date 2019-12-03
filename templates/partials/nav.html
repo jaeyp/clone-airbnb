@@ -87,6 +87,11 @@
         {% endcomment %}
         {% if request.session.is_hosting %}
             <li class="nav-link"><a href="{% url 'rooms:create' %}">{% trans 'Add Listing' %}</a></li>
+        {% else %}
+            {% comment %}
+                <li class="nav-link"><a href="{% url 'reservations:list' user.pk %}">{% trans 'Trips' %}</a></li>
+            {% endcomment %}
+            <li class="nav-link"><a href="#">{% trans 'Trips' %}</a></li>
         {% endif %}
         <li class="nav-link">
             <a href="{% url 'users:switch-hosting' %}">
