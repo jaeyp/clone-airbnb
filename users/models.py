@@ -13,6 +13,8 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 
+from core import managers as core_managers
+
 
 # Create your models here.
 
@@ -84,6 +86,9 @@ class User(AbstractUser):
     login_method = models.CharField(
         _("login method"), choices=LOGIN_CHOICES, max_length=20, null=True, blank=True, default=LOGIN_EMAIL
     )
+
+    # Change default Mnanger for having get_or_none() (models.Manager to core.managers.CustomModelManager)
+    objects = core_managers.CustomModelManager()
 
     def get_absolute_url(self):
         # print(f"users:profile with {self.pk}")
