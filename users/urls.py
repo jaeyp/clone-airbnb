@@ -12,6 +12,7 @@ urlpatterns = [
     path("update-profile/", views.UserProfileUpdateView.as_view(), name="update"),
     path("update-password/", views.PasswordUpdateView.as_view(), name="password"),
     path("switch-hosting/", views.switch_hosting, name="switch-hosting"),
+    path("switch-language/", views.switch_language, name="switch-language"),
     # TODO: integrate three social logins (github, google, facebook)
     # path("login/social/<str:key>", views.social_login, name="social-login"),
     path("login/github/", views.github_login, name="github-login"),  # users:github-login

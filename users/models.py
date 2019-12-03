@@ -29,7 +29,7 @@ class User(AbstractUser):
     GENDER_CHOICES = (("", "Select gender"), (GENDER_MALE, "Male"), (GENDER_FEMALE, "Female"), (GENDER_OTHER, "Other"))
 
     LANGUAGE_ENGLISH = "en"
-    LANGUAGE_KOREAN = "kr"
+    LANGUAGE_KOREAN = "ko"
 
     LANGUAGE_CHOICES = (("", "Select language"), (LANGUAGE_ENGLISH, "English"), (LANGUAGE_KOREAN, "Korean"))
 

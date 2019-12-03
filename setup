@@ -115,7 +115,7 @@ https://mlocati.github.io/articles/gettext-iconv-windows.html
 
 5. Make translation file
 # in pipenv
-~$ django-admin makemessages --locale=kr
+~$ django-admin makemessages --locale=ko
 
 6. Edit translation text (msgstr) in django.po
 
