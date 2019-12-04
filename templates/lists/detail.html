@@ -1,0 +1,45 @@
+<!-- base template having header & footer -->
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+    {{user.first_name}}'s Profile
+{% endblock page_title %}
+
+<!-- Tips. You can hide search-bar with empty block like this. -->
+{% block search-bar %}
+{% endblock search-bar %}
+
+<!-- Page Content -->
+{% block content %}
+
+    <div class="container mx-auto">
+
+        {% comment %}
+            Django ORM (QuerySets)
+            - What is "user.wishlists.all" here?
+            - How can we access it here?
+
+            user has one to many relation with Wishlist class in lists/model.py
+            then, here in template, we can access user's all wishlists through user.wishlists.all
+        {% endcomment %}
+            
+        {% for list in user.wishlists.all %}
+
+            <!-- title -->
+            <div class="flex flex-wrap px-2 mb-4">
+                <div class="text-xl font-bold text-gray-800 mt-10 ml-2">{{list.name}}</div>
+            </div>
+
+            <!-- room list -->
+            <div class="flex flex-wrap mb-10">
+                {% for room in list.rooms.all %}
+                    {% include 'mixins/room_card.html' with room=room %}
+                {% endfor %}
+            </div>
+            
+        {% endfor %}
+        
+    </div>
+    
+{% endblock content %}

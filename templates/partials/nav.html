@@ -101,7 +101,7 @@
         {% comment %}
             <li class="nav-link"><a href="{% url 'reservations:list' user.pk %}">{% trans 'Trips' %}</a></li>
         {% endcomment %}
-        <li class="nav-link"><a href="#">{% trans 'Saved' %}</a></li>
+        <li class="nav-link"><a href="{% url 'lists:show-favs' %}">{% trans 'Saved' %}</a></li>
         <li class="nav-link"><a href="#">{% trans 'Trips' %}</a></li>
         <li class="nav-link"><a href="#">{% trans 'Messages' %}</a></li>
         
