@@ -62,6 +62,9 @@ class Reservation(AbsctractTimeStampedModel):
     # Change default Mnanger (models.Manager to CustomModelManager)
     # objects = managers.CustomModelManager()  # moved to core/managers.py
 
+    class Meta:
+        ordering = ["check_in"]
+
     def __str__(self):
         return f"{self.room} - {self.check_in}"
 
@@ -90,13 +93,17 @@ class Reservation(AbsctractTimeStampedModel):
             start = self.check_in
             end = self.check_out
             difference = end - start  # datetime difference!  it's not an integer!
-            existing_booked_day = BookedDay.objects.filter(
-                # In Django Model QuerySet Objects, Double Underscore ( __ ) Means "Field Lookups".
-                # day__range: field-name__lookup-type-keywordm"
-                # Simply, just replace and think "__" is "`s" in any situations in Django
-                # like day__range=(start, end): day's range is between start and end
-                day__range=(start, end)  # day__range: find BookedDay.day between start and end
-            ).exists()  # if BookedDay exists between start & end day or not
+            existing_booked_day = (
+                BookedDay.objects.filter(reservation__room=(self.room))
+                .filter(
+                    # In Django Model QuerySet Objects, Double Underscore ( __ ) Means "Field Lookups".
+                    # day__range: field-name__lookup-type-keywordm"
+                    # Simply, just replace and think "__" is "`s" in any situations in Django
+                    # like day__range=(start, end): day's range is between start and end
+                    day__range=(start, end)  # day__range: find BookedDay.day between start and end
+                )
+                .exists()
+            )  # if BookedDay exists between start & end day or not
 
             if existing_booked_day is False:
                 # First, Save a new Reservation
@@ -108,6 +115,8 @@ class Reservation(AbsctractTimeStampedModel):
                     debug.info(f"{day} booked")
                     # According to relation, BookedDay wouldn't be able to be created if reservation wasn't saved
                     BookedDay.objects.create(day=day, reservation=self)
+            else:
+                print(f"booked day is existing between {start} and {end}")
         else:  # for an existing reservation
             # do as usual
             return super().save(*args, **kwargs)
