@@ -1,6 +1,6 @@
 import datetime
 from django.http import Http404
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, TemplateView
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from rooms import models as room_models
@@ -136,3 +136,8 @@ def edit(request, pk, command):
     reservation.save()
     messages.success(request, "Reservation Updated")
     return redirect(reverse("reservations:detail", kwargs={"pk": reservation.pk}))
+
+
+class TripsView(TemplateView):
+
+    template_name = "reservations/trips.html"

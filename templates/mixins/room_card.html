@@ -1,7 +1,30 @@
 <div class="w-1/4 mb-10 px-2 overflow-hidden">
+    {% if reservation %}
+    <a href="{% url 'reservations:detail' reservation.pk %}">
+    {% else %}
     <a href="{% url 'rooms:detail' room.pk %}">
+    {% endif %}
+    
         <!--image-->
+        {% if reservation %}
+        <div class="flex items-center justify-between font-medium text-sm mx-1 mb-1">
+            {% if r.is_finished%}
+            {{r.check_in}} - {{r.check_out}}
+            {% else %}
+            <span>
+                {{r.check_in}} - {{r.check_out}} 
+            </span>
+            <span class="ml-2 text-base {% if reservation.status == 'pending' %} text-yellow-600 {% elif reservation.status == 'canceled' %} text-red-600 {% else %} text-teal-600 {% endif %}">
+                {{r.status}}
+            </span>
+            {% endif %}
+                
+        </div>
+        <div class="w-full h-48 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.get_first_photo}})"></div>
+        {% else %}
         <div class="w-full h-64 bg-cover bg-center rounded-lg mb-2" style="background-image: url({{room.get_first_photo}})"></div>
+        {% endif %}
+            
         <!--host & rating-->
         <div class="flex justify-between mb-1">
             <div class="flex w-4/5">

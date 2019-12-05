@@ -1,0 +1,59 @@
+<!-- base template having header & footer -->
+{% extends 'base.html' %}
+
+<!-- Page Name -->
+{% block page_title %}
+    {{user.first_name}}'s Profile
+{% endblock page_title %}
+
+<!-- Tips. You can hide search-bar with empty block like this. -->
+{% block search-bar %}
+{% endblock search-bar %}
+
+<!-- Page Content -->
+{% block content %}
+
+    <div class="container mx-auto">
+
+        {% comment %}
+            Django ORM (QuerySets)
+            - What is "user.wishlists.all" here?
+            - How can we access it here?
+
+            user has one to many relation with Wishlist class in lists/model.py
+            then, here in template, we can access user's all wishlists through user.wishlists.all
+        {% endcomment %}
+            
+        <!-- title -->
+        <div class="flex items-center h-24">
+            <div class="text-2xl font-bold text-gray-700 ml-2">Upcoming plans</div>
+        </div>
+
+        <div class="flex flex-wrap mb-10">
+        {% for r in user.reservations.all %}
+            <!-- room list -->
+                {% if r.is_finished == False and r.status != 'canceled' %}
+                {% include 'mixins/room_card.html' with room=r.room reservation=r %}
+            {% endif %}
+                
+        {% endfor %}
+        </div>
+
+        
+        <!-- title -->
+        <div class="flex items-center h-24">
+            <div class="text-2xl font-bold text-gray-700 ml-2">Where you've been</div>
+        </div>
+        
+        <div class="flex flex-wrap mb-10">
+        {% for r in user.reservations.all %}
+            <!-- room list -->
+            {% if r.is_finished%}
+                {% include 'mixins/room_card.html' with room=r.room reservation=r %}
+            {% endif %}
+                
+        {% endfor %}
+        </div>
+    </div>
+    
+{% endblock content %}
