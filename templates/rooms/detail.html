@@ -323,7 +323,7 @@
                                                 <span class="w-full text-center rounded-full font-semibold text-xs text-gray-500 py-2 line-through">{{day}}</span>
                                             {% else %}
                                                 <!-- template tags: set_period day-->
-                                                <span id="d-{{day}}" onclick="check({{calendar.year}}, {{calendar.month}}, {{day}})" class="w-full text-center rounded-full font-bold text-xs py-2 hover:bg-teal-400 hover:text-white cursor-pointer">{{day}}</span>
+                                                <span id="d{{calendar.year}}{{calendar.month}}{{day}}" onclick="check({{calendar.year}}, {{calendar.month}}, {{day}})" class="w-full text-center rounded-full font-bold text-xs py-2 hover:bg-teal-400 hover:text-white cursor-pointer">{{day}}</span>
                                             {% endif %}
                                                 
                                         {% else %}
@@ -382,7 +382,7 @@
             this._month = m;
             this._day = d;
             this._number = y*10000+m*100+d;
-            this._obj = document.getElementById(`d-${d}`);
+            this._obj = document.getElementById(`d${y}${m}${d}`);
             //alert(this.value);
         }
         clear() {
@@ -428,6 +428,15 @@
         }
     }
 
+    const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    function dateDiffInDays(a, b) {
+        // Discard the time and time-zone information.
+        const utc1 = Date.UTC(a.year, a.month, a.day);
+        const utc2 = Date.UTC(b.year, b.month, b.day);
+
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+
     var book_checkin = new BookingDays();
     var book_checkout = new BookingDays();
 
@@ -465,7 +474,7 @@
         {% endcomment %}
         // This works with def create(request, room_pk): in reservations/views.py
         // plus, path("create/<int:room_pk>/", views.create, name="create",), in reservations/urls.py
-        let loc = `{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${book_checkout.number-book_checkin.number}`;
+        let loc = `{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${dateDiffInDays(book_checkin, book_checkout)}`;
         window.location = loc;
         
     }
