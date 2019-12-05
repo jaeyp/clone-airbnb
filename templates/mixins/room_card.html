@@ -14,7 +14,7 @@
             <span>
                 {{r.check_in}} - {{r.check_out}} 
             </span>
-            <span class="ml-2 text-base {% if reservation.status == 'pending' %} text-yellow-600 {% elif reservation.status == 'canceled' %} text-red-600 {% else %} text-teal-600 {% endif %}">
+            <span class="ml-2 outline-none px-2 rounded-lg {% if reservation.status == 'pending' %} bg-orange-300 {% elif reservation.status == 'canceled' %} text-red-600 {% else %} bg-teal-400 {% endif %}">
                 {{r.status}}
             </span>
             {% endif %}
