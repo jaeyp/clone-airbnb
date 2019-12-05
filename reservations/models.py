@@ -63,7 +63,7 @@ class Reservation(AbsctractTimeStampedModel):
     # objects = managers.CustomModelManager()  # moved to core/managers.py
 
     class Meta:
-        ordering = ["check_in"]
+        ordering = ["check_in", "check_out"]
 
     def __str__(self):
         return f"{self.room} - {self.check_in}"
