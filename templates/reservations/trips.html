@@ -32,7 +32,7 @@
         <div class="flex flex-wrap mb-10">
         {% for r in user.reservations.all %}
             <!-- room list -->
-                {% if r.is_finished == False and r.status != 'canceled' %}
+            {% if r.is_finished == False and r.status != 'canceled' %}
                 {% include 'mixins/room_card.html' with room=r.room reservation=r %}
             {% endif %}
                 
