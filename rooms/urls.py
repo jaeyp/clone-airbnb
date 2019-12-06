@@ -31,5 +31,6 @@ urlpatterns = [
     # {% url 'rooms:edit-photo' room.pk photo.pk %}
     path("<int:room_pk>/photos/<int:photo_pk>/edit/", views.RoomPhotosEditView.as_view(), name="edit-photo"),
     path("search/", views.SearchView.as_view(), name="search"),  # rooms:search
+    path("search2/", views.search2, name="search2"),  # rooms:search
     # path("search/", views.search, name="search"),
 ]

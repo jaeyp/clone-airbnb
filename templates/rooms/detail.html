@@ -20,6 +20,7 @@
                     &#8901; 
                 <span class="text-sm font-medium text-gray-600">{{room.city}}.{{room.country}}</span>
             </div>
+            {% if user.is_authenticated %}
             <div id="btnFav" class="w-20">
                 <!-- favorit room (save) -->
                 {% on_favs room as on_favs_bool %}
@@ -36,6 +37,7 @@
                     </a>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
     </div>
 
@@ -156,7 +158,12 @@
                 <a href="{% url 'rooms:edit' room.pk %}" class="btn-link bg-red-500 text-white block rounded-lg">Edit Room</a>
             {% else %}
                 {% if not request.session.is_hosting %}
-                    <div id="btnCheck" class="btn-link bg-red-500 text-white block rounded-lg cursor-pointer">Check availability</div>
+                    {% if user.is_authenticated %}
+                        <div id="btnCheck" class="btn-link bg-red-500 text-white block rounded-lg cursor-pointer">Check availability</div>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn-link bg-red-500 text-white block rounded-lg cursor-pointer">Check availability
+                        </a>
+                    {% endif %}
                     
                     {% comment %}
                         

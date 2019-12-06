@@ -1,3 +1,4 @@
+import string
 from django.utils import timezone
 from django.urls import reverse, reverse_lazy
 from django.http import Http404
@@ -190,6 +191,56 @@ def room_detail(request, pk):
                 It will help you a lot!
             """
             return redirect(reverse("core:home"))
+
+
+def search2(request):
+    # =========================================
+    # requests
+    place = request.GET.get("place", "Anywhere")  # if no city key, set city = Anywhere
+    # place = str.capitalize(place or "Anywhere")  # if city is empty, set city = Anywhere
+    place = string.capwords(place or "Anywhere")
+
+    # =========================================
+    # QuerySets Filtering
+    # 1. https://docs.djangoproject.com/en/2.2/ref/models/querysets/
+    # 2. search "Field lookups"
+    filter_args = {}
+
+    if place != "Anywhere":
+        filter_args["city__startswith"] = place
+        print(f"Filtering Result: {filter_args}")
+
+    qs_rooms = models.Room.objects.filter(**filter_args)
+    print(qs_rooms)
+
+    if place != "Anywhere" and not qs_rooms.exists():
+        del filter_args["city__startswith"]
+        # TODO: optimize below. create a new dictionary in order to convert country name to code.
+        for code, name in list(countries):
+            if name == place:
+                filter_args["country__startswith"] = code
+                break
+        if filter_args:
+            print(f"Filtering Result: {filter_args}")
+            qs_rooms = models.Room.objects.filter(**filter_args)
+            print(qs_rooms)
+
+    paginator = Paginator(qs_rooms.order_by("price"), CONST.PAGINATE_BY, orphans=CONST.PAGINATE_ORPHANS)
+    print(paginator)
+
+    page = request.GET.get("page", 1)
+    rooms = paginator.get_page(page)
+
+    # =========================================
+    # Rendering
+    # TODO: optimize below code by passing just total count instead of all_obj.
+    return render(
+        request,
+        "rooms/search2.html",
+        # set context by unpacking dictionary
+        # {**req, **opt, "rooms": rooms},
+        {"use_paginator": True, "page_obj": rooms, "all_obj": qs_rooms},
+    )
 
 
 class SearchView(View):
