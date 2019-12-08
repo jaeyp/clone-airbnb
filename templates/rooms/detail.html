@@ -18,7 +18,7 @@
                 <i class="fas fa-star text-red-500 text-sm mr-1"></i>
                 <span class="text-sm text-gray-600">{{room.get_total_rating}}</span>
                     &#8901; 
-                <span class="text-sm font-medium text-gray-600">{{room.city}}.{{room.country}}</span>
+                <span class="text-sm font-medium text-gray-600">{{room.city}} - {{room.country.name}}</span>
             </div>
             {% if user.is_authenticated %}
             <div id="btnFav" class="w-20">
@@ -60,7 +60,7 @@
     
     <!-- Wide Room View -->  
     <div class="container max-w-full">
-        <div class="h-50vh flex mb-10">
+        <a href="{% url 'rooms:gallery' room.pk %}" class="h-50vh flex mb-10">
             <div class="w-1/2">
                 {% if room.get_first_photo %}
                     <div class="zoom h-full bg-center border border-gray-900" style="background-image: url({{room.get_first_photo}});"></div>
@@ -71,7 +71,7 @@
                     <div class="zoom w-1/2 h-auto bg-center border border-gray-900" style="background-image: url({{photo.file.url}});"></div>
                 {% endfor %}
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Room Detail -->

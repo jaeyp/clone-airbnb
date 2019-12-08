@@ -194,6 +194,15 @@ class Room(AbsctractTimeStampedModel):
         except ValueError:
             return None
 
+    def get_all_photos(self):
+
+        """ Get all photos of room """
+        try:
+            photos = self.photos.all()
+            return photos
+        except ValueError:
+            return None
+
     def get_first_two_reviews(self):
 
         reviews = self.reviews.all()[:2]

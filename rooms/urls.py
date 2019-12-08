@@ -33,4 +33,6 @@ urlpatterns = [
     path("search/", views.SearchView.as_view(), name="search"),  # rooms:search
     path("search2/", views.search2, name="search2"),  # rooms:search
     # path("search/", views.search, name="search"),
+    # {% url 'rooms:gallery' room.pk %}
+    path("<int:pk>/gallery/", views.gallery, name="gallery"),
 ]

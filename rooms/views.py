@@ -640,7 +640,7 @@ def delete_photo(request, room_pk, photo_pk):
     """ delete_photo:
         Function Based delete_photo View (FBV) """
 
-    print(f"Shoud delete {photo_pk} from {room_pk}")
+    print(f"Should delete {photo_pk} from {room_pk}")
 
     user = request.user
     try:
@@ -731,3 +731,10 @@ class RoomCreateView(user_mixins.LoggedInOnlyView, FormView):
         form.save_m2m()
         messages.success(self.request, "Room Created")
         return redirect(reverse("rooms:detail", kwargs={"pk": room.pk})) """
+
+
+def gallery(request, pk):
+
+    room = models.Room.objects.get(pk=pk)
+    # qs_photos = room.photos.all()
+    return render(request, "rooms/gallery.html", {"room": room})
