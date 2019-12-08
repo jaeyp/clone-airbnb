@@ -9,7 +9,7 @@
         {% if reservation %}
         <div class="flex items-center justify-between font-medium text-sm mx-1 mb-1">
             {% if r.is_finished%}
-            {{r.check_in}} - {{r.check_out}}
+                {{r.check_in}} - {{r.check_out}}
             {% else %}
             <span>
                 {{r.check_in}} - {{r.check_out}} 
