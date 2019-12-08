@@ -307,8 +307,12 @@ cf. QuerySet 을 사용해 우리는 특정 오브젝트를 foreign key로 참�
 
 [Run Django server]
 ~$ python manage.py runserver #in pipenv shell
-
-
+OR
+~$ python manage.py runserver 0.0.0.0:8000 
+# 0.0.0.0:8000 - Broad casting (255.255.255.255): it allow other pc to be able to access server
+# You must add server-ip to ALLOWED_HOSTS in config/settings/py
+e.i. if server-ip address is 192.168.2.22
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
 
 =========================================================
  Seeding
@@ -320,3 +324,11 @@ cf. QuerySet 을 사용해 우리는 특정 오브젝트를 foreign key로 참�
 
 ~$ python manage.py seed_rooms --number 100
 ~$ python manage.py seed_users --number 100
+
+
+
+=========================================================
+ Test Account
+=========================================================
+guest@test.com / letmelogin
+host@test.com / letmelogin

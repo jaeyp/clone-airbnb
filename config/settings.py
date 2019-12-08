@@ -33,7 +33,7 @@ DEBUG = True
 # https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#message-levels
 MESSAGE_LEVEL = message_constants.DEBUG  # 10
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
 
 # Application definition
 

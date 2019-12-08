@@ -23,6 +23,15 @@
   @apply w-full text-center rounded my-2 py-2 font-medium text-base;
 }
 
+.myInput {
+  @apply w-full border p-4;
+
+  // pseudo classes
+  &:focus {
+    @apply border-black outline-none;
+  }
+}
+
 // Login, Signup
 div .input-div {
   @apply flex justify-between items-center w-full text-center text-left border border-gray-600 rounded my-2 py-2 px-4;

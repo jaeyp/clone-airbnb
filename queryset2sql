@@ -1,0 +1,40 @@
+conversations/views.py
+
+qs = models.Conversation.objects.filter(participants=guest)
+SELECT "conversations_conversation"."id", "conversations_conversation"."created", "conversations_conversation"."updated" 
+FROM "conversations_conversation" 
+INNER JOIN "conversations_conversation_participants" 
+ON ("conversations_conversation"."id" = "conversations_conversation_participants"."conversation_id") 
+WHERE "conversations_conversation_participants"."user_id" = 47
+
+qs = models.Conversation.objects.filter(Q(participants=guest))
+SELECT "conversations_conversation"."id", "conversations_conversation"."created", "conversations_conversation"."updated" 
+FROM "conversations_conversation" 
+INNER JOIN "conversations_conversation_participants" 
+ON ("conversations_conversation"."id" = "conversations_conversation_participants"."conversation_id") 
+WHERE "conversations_conversation_participants"."user_id" = 47
+
+qs = models.Conversation.objects.filter(Q(participants=guest) & Q(participants=host))
+SELECT "conversations_conversation"."id", "conversations_conversation"."created", "conversations_conversation"."updated" 
+FROM "conversations_conversation" 
+INNER JOIN "conversations_conversation_participants" 
+ON ("conversations_conversation"."id" = "conversations_conversation_participants"."conversation_id") 
+WHERE ("conversations_conversation_participants"."user_id" = 47 AND "conversations_conversation_participants"."user_id" = 1)
+
+
+qs = models.Conversation.objects.filter(Q(participants=guest) | Q(participants=host))
+SELECT "conversations_conversation"."id", "conversations_conversation"."created", "conversations_conversation"."updated" 
+FROM "conversations_conversation" 
+INNER JOIN "conversations_conversation_participants" \
+ON ("conversations_conversation"."id" = "conversations_conversation_participants"."conversation_id") 
+WHERE ("conversations_conversation_participants"."user_id" = 47 OR "conversations_conversation_participants"."user_id" = 1)
+
+
+qs = models.Conversation.objects.filter(participants=guest).filter(participants=host)
+SELECT "conversations_conversation"."id", "conversations_conversation"."created", "conversations_conversation"."updated" 
+FROM "conversations_conversation" 
+INNER JOIN "conversations_conversation_participants" 
+ON ("conversations_conversation"."id" = "conversations_conversation_participants"."conversation_id") 
+INNER JOIN "conversations_conversation_participants" T4 
+ON ("conversations_conversation"."id" = T4."conversation_id") 
+WHERE ("conversations_conversation_participants"."user_id" = 47 AND T4."user_id" = 1)
