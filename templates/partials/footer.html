@@ -9,7 +9,7 @@
             <!-- https://docs.djangoproject.com/en/2.2/topics/i18n/translation/#the-set-language-redirect-view -->
             {% get_current_language as LANGUAGE_CODE %}
             <option value="en" 
-            {% if LANGUAGE_CODE == 'en' %}
+            {% if LANGUAGE_CODE is None or LANGUAGE_CODE == 'en' %}
                 selected
             {% endif %}>English</option>
             <option value="ko" 
