@@ -26,6 +26,13 @@ def toggle_room(request, room_pk):
         elif action == "remove":
             wish_list.rooms.remove(room)
 
+    # if request from search view, return to search view with the same place param
+    place = request.GET.get("place", None)
+    if place is not None:
+        response = redirect(reverse("rooms:search2"))
+        response["Location"] += "?place=" + place
+        return response
+    # else move to detail view
     return redirect(reverse("rooms:detail", kwargs={"pk": room_pk}))
 
 

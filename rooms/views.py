@@ -239,7 +239,7 @@ def search2(request):
         "rooms/search2.html",
         # set context by unpacking dictionary
         # {**req, **opt, "rooms": rooms},
-        {"use_paginator": True, "page_obj": rooms, "all_obj": qs_rooms},
+        {"use_paginator": True, "page_obj": rooms, "all_obj": qs_rooms, "user": request.user, "place": place},
     )
 
 

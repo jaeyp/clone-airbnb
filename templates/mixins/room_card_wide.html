@@ -1,0 +1,91 @@
+{% load on_favs %}
+<div class="w-5/12 mb-2 px-2 overflow-hidden">
+        <!-- divider -->
+        {% include 'mixins/divider.html' %}
+
+        <div class="flex flex-wrap py-2">
+            <!-- image -->
+                <div class="w-5/12 h-56 bg-cover rounded bg-center" style="background-image: url({{room.get_first_photo}})">
+                    {% if user.is_authenticated %}
+                    {% on_favs room as on_favs_bool %}
+                    <div id="btnFav" class="w-8 h-8 m-2 ">
+                        <!-- favorit room (save) -->
+                        
+                        {% if on_favs_bool %}
+                            <a class="flex justify-center items-center rounded-full bg-white hover:bg-gray-200" href="{% url 'lists:toggle-room' room.pk %}?action=remove&place={{request.GET.place}}">
+                                <i class="fas fa-heart text-sm text-red-500 m-2"></i>
+                            </a>
+                        {% else %}
+                            <a class="flex justify-center items-center rounded-full bg-white hover:bg-gray-200" href="{% url 'lists:toggle-room' room.pk %}?action=add&place={{request.GET.place}}">
+                                <i class="far fa-heart text-sm text-gray-700 m-2"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+            <!-- info -->
+            <a class="w-7/12 flex flex-wrap px-4 py-2" href="{% url 'rooms:detail' room.pk %}">
+                <div class="w-9/12 flex flex-col">
+                    <div class="text-sm text-gray-600">
+                        {% if room.host.superhost %}
+                            <span class="mr-1 uppercase font-medium text-xs border border-black text-black rounded py-px px-1">Superhost</span>
+                        {% endif %}
+                        {{room.property_type}}
+                    </div>
+                    <div class="font-base text-xl">
+                        {{room.name}}
+                    </div>
+                    <span class="font-normal text-sm text-gray-600">
+                        {{room.guests}} guest{{room.guests|pluralize}} &#8901;
+                        {{room.beds}} bed{{room.beds|pluralize}} &#8901;
+                        {{room.bedrooms}} bedroom{{room.bedrooms|pluralize}} &#8901;
+                        {{room.bathrooms}} bathroom{{room.bathrooms|pluralize}}
+                    </span>
+                </div>
+                <div class="w-3/12 flex flex-col justify-between items-end">
+                    <div class="">
+                        <i class="fas fa-star text-red-500 text-sm mr-1"></i>
+                        {{room.get_total_rating}}
+                    </div>
+                    <div class="">
+                        <span class="font-bold text-xl">${{room.price}}</span> <span class="text-lg">/night</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        
+        {% comment %}
+
+        <!--host & rating-->
+        <div class="flex justify-between">
+            <div class="flex w-4/5">
+                {% if room.host.superhost %}
+                    <span class="mr-1 uppercase font-medium text-xs border border-black text-black rounded py-px px-1">Superhost</span>
+                {% endif %}
+                <!-- <span class="text-sm text-gray-600">{{room.city}} &#183 {{room.country.name}}</span> -->
+                <span class="text-sm text-gray-600 block truncate">{{room.city}} &#183; {{room.country.name}}</span>
+            </div>
+            <span class="flex text-sm items-center">
+                <!-- Tips. html snippet: i tag with class
+                    type "i." and tab 
+                -->
+                <i class="fas fa-star text-red-500 text-sm mr-1"></i>
+                {{room.get_total_rating}}
+            </span>
+        </div>
+        <!--room name-->
+        <!-- Tips. truncate overflowing text with an ellipsis (…)
+            Use .truncate with <p> or 
+                .block & .truncate with <span> -->
+        <span class="text-black w-11/12 block truncate">{{room.name}}</span>
+        <span class="font-bold">${{room.price}}</span>/night
+        <!-- <a href='{% url "rooms:detail" room.pk %}'>
+            <img src="{{room.get_first_photo}}" alt="">
+            {{room.name}} / ${{room.price}}
+        </a> -->
+            
+        {% endcomment %}
+</div>
+<div class="w-7/12"></div>

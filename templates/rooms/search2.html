@@ -2,7 +2,7 @@
 <!-- custom template tags: rooms/templatetags/room_extras.py 
     https://docs.djangoproject.com/en/2.2/howto/custom-template-tags/
 -->
-{% load room_extras i18n %}
+{% load static room_extras i18n on_favs %}
 
 {% block page_title %}
 Search
@@ -14,22 +14,41 @@ Search
 
 {% block content %}
 
-    <div class="container mx-auto">
-        <!-- title -->
-        <div class="flex items-center h-24">
-            <div class="text-2xl font-bold text-gray-700 ml-2">Search Results ({{ all_obj|length }})</div>
+    <div class="container max-w-full mx-5">
+        <div class="flex items-center text-sm h-16 mx-2 mt-4">
+            Enter dates and number of guests to see the total price per night. Tourism taxes may be added.
+        </div>
+
+        <div class="w-5/12">
+
+            <!-- divider -->
+            {% include 'mixins/divider.html' %}
+                
+            <!-- notice -->
+            <div class="flex items-center h-16 mx-2 mt-4">
+                <img class="h-10" src="{% static 'img/trophy.gif' %}" alt="">
+                <span class="font-medium text-xs ml-2">Over 490,000 guest reviews for places to stay in {{place}}, with an average of 4.7 out of 5 stars.</span>
+            </div>
+    
+    
+            <!-- title -->
+            <div class="flex items-center h-16 mt-4">
+                <div class="text-2xl font-bold text-gray-700 ml-2">{{ all_obj|length }} places to stay</div>
+            </div>
+    
         </div>
 
         <div class="flex flex-wrap mb-10">
         {% for room in page_obj %}
             <!-- room list -->
-            {% include 'mixins/room_card.html' with room=room %}
+            {% include 'mixins/room_card_wide.html' with room=room user=user %}
         {% endfor %}
         </div>
     </div>
 
     <!-- Page Navigator -->
-    <div class="flex items-center justify-center mb-10">
+    <div class="flex max-w-full items-center justify-center mb-10">
+        <div class="flex justify-center w-5/12">
         {% if page_obj.has_previous %}
             <a href="?page={{page_obj.number|add:-1}}" class="text-teal-600">
                 <i class="fas fa-chevron-left"></i>
@@ -50,6 +69,8 @@ Search
         {% else %}
             <i class="ml-2 fas fa-chevron-right text-teal-100"></i>
         {% endif %}
+        </div>
+        <div class="w-7/12"></div>
     </div>
 
 {% endblock content %}

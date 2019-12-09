@@ -10,7 +10,7 @@
     {% block search-bar %}
         <!-- Only Search Bar -->
         <form method="get" action="{% url 'rooms:search2' %}" class="w-full">
-            <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-base font-semibold hover:shadow-lg focus:border-black focus:outline-none placeholder-gray-600" type="text" name="place" placeholder="Anywhere" />
+            <input class="search-box border rounded-lg shadow-md w-full px-5 py-2 text-base font-bold hover:shadow-lg focus:border-black focus:outline-none placeholder-gray-500" value="{{place}}{% if place %} &#8901; Stays {% endif %}" type="text" name="place" placeholder='Search - try "Canada"' />
         </form>
         <!-- Dates, Guests, and Search Button -->
         <!-- TODO: Hide button element according to screen size by using media-query
