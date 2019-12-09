@@ -1,4 +1,5 @@
 import string
+from django.db.models import Q
 from django.utils import timezone
 from django.urls import reverse, reverse_lazy
 from django.http import Http404
@@ -197,33 +198,48 @@ def search2(request):
     # =========================================
     # requests
     place = request.GET.get("place", "Anywhere")  # if no city key, set city = Anywhere
-    # place = str.capitalize(place or "Anywhere")  # if city is empty, set city = Anywhere
-    place = string.capwords(place or "Anywhere")
+    place = string.capwords(place or "Anywhere")  # if city is empty, set city = Anywhere
+
+    # place = place.replace(" ⋅ Stays", "")
 
     # =========================================
     # QuerySets Filtering
     # 1. https://docs.djangoproject.com/en/2.2/ref/models/querysets/
     # 2. search "Field lookups"
-    filter_args = {}
+
+    filter_args = {}  # Anywhere
 
     if place != "Anywhere":
-        filter_args["city__startswith"] = place
-        print(f"Filtering Result: {filter_args}")
+        """ Dynamic Q object composition
+        """
+        country_values = []
 
-    qs_rooms = models.Room.objects.filter(**filter_args)
-    print(qs_rooms)
-
-    if place != "Anywhere" and not qs_rooms.exists():
-        del filter_args["city__startswith"]
-        # TODO: optimize below. create a new dictionary in order to convert country name to code.
         for code, name in list(countries):
-            if name == place:
-                filter_args["country__startswith"] = code
-                break
-        if filter_args:
-            print(f"Filtering Result: {filter_args}")
-            qs_rooms = models.Room.objects.filter(**filter_args)
-            print(qs_rooms)
+            # if (place.lower() in name.lower()) or (code == place.upper()):
+            if (name.lower().startswith(place.lower())) or (code == place.upper()):
+                # print(f"country founded: {name}")
+                if code == place.upper():
+                    place = name
+                country_values.append(code)
+        print(country_values)
+
+        # Turn list of values into list of Q objects
+        country_queries = [Q(country=v) for v in country_values]
+        if len(country_queries) > 0:
+            # Take one Q object from the list
+            query = country_queries.pop()
+
+            # Or the Q object with the ones remaining in the list
+            for item in country_queries:
+                query |= item
+
+            # Query the model
+            qs_rooms = models.Room.objects.filter(Q(city__startswith=place) | query)
+        else:
+            qs_rooms = models.Room.objects.filter(Q(city__startswith=place))
+    else:
+        qs_rooms = models.Room.objects.filter(**filter_args)
+        print(qs_rooms)
 
     paginator = Paginator(qs_rooms.order_by("price"), CONST.PAGINATE_BY, orphans=CONST.PAGINATE_ORPHANS)
     print(paginator)

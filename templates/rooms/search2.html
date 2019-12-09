@@ -50,7 +50,7 @@ Search
     <div class="flex max-w-full items-center justify-center mb-10">
         <div class="flex justify-center w-5/12">
         {% if page_obj.has_previous %}
-            <a href="?page={{page_obj.number|add:-1}}" class="text-teal-600">
+            <a href="?place={{place}}&page={{page_obj.number|add:-1}}" class="text-teal-600">
                 <i class="fas fa-chevron-left"></i>
             </a>
         {% else %}
@@ -63,7 +63,7 @@ Search
         </span>
         
         {% if page_obj.has_next %}
-            <a href="?page={{page_obj.number|add:1}}" class="ml-2 text-teal-600">
+            <a href="?place={{place}}&page={{page_obj.number|add:1}}" class="ml-2 text-teal-600">
                 <i class="fas fa-chevron-right"></i>
             </a>
         {% else %}
