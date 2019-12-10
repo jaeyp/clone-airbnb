@@ -40,8 +40,9 @@ def go_conversation(request, host_pk, guest_pk):
         # return redirect(reverse("conversations:detail", kwargs={"pk": conversation.pk}))
 
         # Solution:
-        conversation = models.Conversation.objects.filter(participants=host).filter(participants=guest)[:1].get()
-        if conversation is None:
+        try:
+            conversation = models.Conversation.objects.filter(participants=host).filter(participants=guest)[:1].get()
+        except models.Conversation.DoesNotExist:
             conversation = models.Conversation.objects.create()
             conversation.participants.add(host, guest)
         return redirect(reverse("conversations:detail", kwargs={"pk": conversation.pk}))
