@@ -4,8 +4,7 @@ https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-djan
 1 EB CLI Installation
 - Install the EB CLI
 https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-advanced.html
-~$ pipenv shell
-~$ pipenv install awsebcli --dev
+~$ pipenv install awsebcli --dev  # Not vertual environment!!
 
 - Create an empty (no environments) EB application through CLI
 https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html
@@ -147,6 +146,8 @@ or
 ~$ pipenv-to-requirements -f
 https://pypi.org/project/pipenv-to-requirements/
 
+- deploy EB again
+~$ eb deploy
 
 
 
