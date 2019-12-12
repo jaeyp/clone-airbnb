@@ -1,0 +1,200 @@
+Deploying a Django Application to Elastic Beanstalk
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html
+
+1 EB CLI Installation
+- Install the EB CLI
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-advanced.html
+~$ pipenv shell
+~$ pipenv install awsebcli --dev
+
+- Create an empty (no environments) EB application through CLI
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html
+~$ eb init
+Logs
+    PS C:\Users\jpins\Dev\Dev.projects\django\clone-airbnb> eb --version
+    EB CLI 3.16.0 (Python 3.7.5)
+    PS C:\Users\jpins\Dev\Dev.projects\django\clone-airbnb> eb init
+
+    Select a default region
+    1) us-east-1 : US East (N. Virginia)
+    2) us-west-1 : US West (N. California)
+    3) us-west-2 : US West (Oregon)
+    ...
+    15) ca-central-1 : Canada (Central)
+    ...
+    (default is 3): 15
+    You have not yet set up your credentials or your credentials are incorrect
+    You must provide your credentials.  # check - Create User by using IAM (Identity and Access Management)
+    (aws-access-id): AKIAQ3SCMVHJHFAHVLVC
+    (aws-secret-key): PeBhewpFkJPoesmDY9Snc8jTYHVmZakdL+053CJg
+
+    Select an application to use
+    1) demo-javaweb
+    2) [ Create new Application ]
+    (default is 2): 2
+
+    Enter Application Name
+    (default is "clone-airbnb"): airbnb-clone
+    Application airbnb-clone has been created.
+
+    It appears you are using Python. Is this correct?
+    (Y/n): y
+
+    Select a platform version.
+    1) Python 3.6
+    2) Python 3.4
+    3) Python 3.4 (Preconfigured - Docker)
+    4) Python 2.7
+    5) Python
+    (default is 1): 1
+    Do you wish to continue with CodeCommit? (y/N) (default is n): n
+    Do you want to set up SSH for your instances?
+    (Y/n): n  # You should choose Y here if you want to access EB server through SSH!!!
+
+- Create User by using IAM (Identity and Access Management)
+https://console.aws.amazon.com/iam/home?#/home
+> Users > Add User
+    step-1 
+    > User name
+    > Access type > Choose Programmatic access
+    step-2
+    > Permission > Choose Attach existing policies directly > Choose AdministratorAccess (Provides full access to AWS services and resources.)
+    You don't need to provide full access but we choose this because we are lazy...
+    step-3 Tags 
+    > Next
+    step-4 Review 
+    > Next
+    step-5 Create user
+    Be carefull!! If you close the page, You will never see the secret access key again!
+
+
+2. Environments
+2.1 Create & deploy EB environments
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html
+- Django configuration
+step-1. create .ebextensions folder on the project root
+step-2. create django.config file in .ebextensions
+step-3. add project WSGI path into django.config # We use WSGI instead of "python manage.py runserver" for production.
+option_settings:
+  aws:elasticbeanstalk:container:python:
+    WSGIPath: config/wsgi.py
+
+- Create an environment and deploy your application to it with "eb create"
+~$ eb create airbnb-clone-env
+# creating two environments is recommended (one for testing, another for production)
+log
+    PS C:\Users\jpins\Dev\Dev.projects\django\clone-airbnb> eb create airbnb-clone-env
+    Creating application version archive "app-54c9-191212_160117".
+    Uploading airbnb-clone/app-54c9-191212_160117.zip to S3. This may take a while.
+    Upload Complete.
+    Environment details for: airbnb-clone-env
+    Application name: airbnb-clone
+    Region: ca-central-1
+    Deployed Version: app-54c9-191212_160117
+    Environment ID: e-mhq6eny3zf
+    Platform: arn:aws:elasticbeanstalk:ca-central-1::platform/Python 3.6 running on 64bit Amazon Linux/2.9.4
+    Tier: WebServer-Standard-1.0
+    CNAME: UNKNOWN
+    Updated: 2019-12-12 21:01:20.742000+00:00
+    Printing Status:
+    2019-12-12 21:01:19    INFO    createEnvironment is starting.
+    2019-12-12 21:01:20    INFO    Using elasticbeanstalk-ca-central-1-059195042258 as Amazon S3 storage bucket for environment data.
+    2019-12-12 21:01:40    INFO    Created security group named: sg-013486ae0d79d5a61
+    2019-12-12 21:01:40    INFO    Created load balancer named: awseb-e-m-AWSEBLoa-17QLUIJ0LRJEI
+    2019-12-12 21:01:41    INFO    Created security group named: awseb-e-mhq6eny3zf-stack-AWSEBSecurityGroup-15WI1WK38KDPA        
+    2019-12-12 21:01:56    INFO    Created Auto Scaling launch configuration named: awseb-e-mhq6eny3zf-stack-AWSEBAutoScalingLaunchConfiguration-U8MPCUUSL0O5
+    2019-12-12 21:02:43    INFO    Created Auto Scaling group named: awseb-e-mhq6eny3zf-stack-AWSEBAutoScalingGroup-10D4K7S39P7KZ 
+    2019-12-12 21:02:43    INFO    Waiting for EC2 instances to launch. This may take a few minutes.
+    2019-12-12 21:02:43    INFO    Created Auto Scaling group policy named: arn:aws:autoscaling:ca-central-1:059195042258:scalingPolicy:6cfb0a76-2530-482f-8764-8860cac51f5c:autoScalingGroupName/awseb-e-mhq6eny3zf-stack-AWSEBAutoScalingGroup-10D4K7S39P7KZ:policyName/awseb-e-mhq6eny3zf-stack-AWSEBAutoScalingScaleDownPolicy-1K3P8MBN1LAEL
+    2019-12-12 21:02:43    INFO    Created Auto Scaling group policy named: arn:aws:autoscaling:ca-central-1:059195042258:scalingPolicy:2d3ea56e-5263-479c-8ba4-f99b299cce29:autoScalingGroupName/awseb-e-mhq6eny3zf-stack-AWSEBAutoScalingGroup-10D4K7S39P7KZ:policyName/awseb-e-mhq6eny3zf-stack-AWSEBAutoScalingScaleUpPolicy-EFAY9GCZF6OE
+    2019-12-12 21:02:58    INFO    Created CloudWatch alarm named: awseb-e-mhq6eny3zf-stack-AWSEBCloudwatchAlarmLow-GDBFVLDLS9NP  
+    2019-12-12 21:02:58    INFO    Created CloudWatch alarm named: awseb-e-mhq6eny3zf-stack-AWSEBCloudwatchAlarmHigh-6X5U2N7TAHFF 
+    2019-12-12 21:03:34    ERROR   Your WSGIPath refers to a file that does not exist.
+    2019-12-12 21:03:49    INFO    Application available at airbnb-clone-env.jgm92px4xm.ca-central-1.elasticbeanstalk.com.        
+    2019-12-12 21:03:50    INFO    Successfully launched environment: airbnb-clone-env
+
+ERROR   Your WSGIPath refers to a file that does not exist.
+EB takes files that are committed on its git.
+So, EB failed to find WSGIPath becuase .ebextensions/django.config file wasn't committed yet into git repository.
+
+HTTP 404 error here
+
+SOLUTION
+whenever you make changes and want to deploy it,
+first, git commit 
+then, eb deploy
+
+HTTP 500 here
+
+- check Logs
+~$ eb Logs
+Retrieving logs...
+============= i-08d24f8e8cdc9c57d ==============
+-------------------------------------
+/var/log/httpd/error_log
+...
+[Thu Dec 12 22:14:07.534706 2019] [:error] [pid 4699] [remote 172.31.9.90:2380] ModuleNotFoundError: No module named 'django'
+
+SOLUTION
+This is because we didn't django on EB machine yet.
+
+2.2 Intall PIP packages
+- create requirements.txt
+~$ pipenv shell
+~$ pip freeze > requirements.txt 
+or
+~$ pipenv install pipenv-to-requirements --dev
+~$ pipenv-to-requirements -f
+https://pypi.org/project/pipenv-to-requirements/
+
+
+
+
+
+
+
+
+
+
+
+
+
+==================================================================================================
+
+
+
+
+
+
+2. setup WSGI
+- first, git commit
+- then, eb deploy
+
+3. install Pipfile
+~$ pipenv install pipenv-to-requirements
+~$ pipenv-to-requirements -f
+
+4. move to Postgresql
+https://docs.djangoproject.com/en/2.2/ref/databases/#postgresql-notes
+
+- Install puglins: edit requirements.txt
+psyscopg==2.84
+
+- Postgress connection setting
+config/settings.py
+edit DATABASES by adding ENGINE, USER, NAME, PASSWORD, PORT, HOST 
+# We don't edit DATABASES directly in security reason. we used evironment properties (.env) instead.
+# but AWS EB can't access .env file since it doesn't place in git repository.
+# Instead, we set evironment properties in AWS EB site
+add evironment properties in AWS EB
+
+
+6. store static files into S3 buckets
+
+install django-storeges
+
+
+django imagemagic (transforming image)
+
+
+set S3 CacheControl

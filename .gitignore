@@ -134,3 +134,7 @@ static/
 
 # i18n files
 locale/
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
