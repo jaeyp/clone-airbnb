@@ -157,7 +157,11 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("MAILGUN_USERNAME")
 EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 # with this given domain by mailgun, mail would go to the spam folder
-EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
+# EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
+# TODO: adding evironment properties in AWS EB
+# This occurs error (TypeError: must be str, not NoneType) with "eb deploy"
+# because .env is NOT commited into git repository.
+EMAIL_FROM = "noreply@jaeyp.xyz"
 
 # User Verification Callback URL
 VERIFICATION_CALLBACK_URL = "http://127.0.0.1:8000/users/verify"
