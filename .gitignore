@@ -62,7 +62,8 @@ db.sqlite3
 db.sqlite3-journal
 
 # Django migrations
-**/migrations/
+# Remove this!!!! - we need to push migrations files into git repository for production (AWS EB)
+# **/migrations/
 
 # Flask stuff:
 instance/

@@ -386,6 +386,12 @@ ERROR:
 
     ERROR: ServiceError - Failed to deploy application.
 
+SOLUTION:
+You should makemigrations in your local and then push the migrations to production.
+Remove below line from .gitignore file
+# **/migrations/
+
+
 
 
 
