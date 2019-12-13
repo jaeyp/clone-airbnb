@@ -21,20 +21,26 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "(3up+$)ymc!pjiq1!(4(@xm@jba(v0_ds$8zq+hw3xthg6k%4f"
+# SECRET_KEY = "(3up+$)ymc!pjiq1!(4(@xm@jba(v0_ds$8zq+hw3xthg6k%4f"
+SECRET_KEY = os.environ.get("DJANGO_SECRET")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 # ALLOWED_HOSTS = "*"
 
-DEBUG = bool(os.environ.get("DEBUG"))  # this will be False on AWS EB server since there is no .env file on EB machine
+# DEBUG = bool(os.environ.get("DEBUG"))  # this will be False on AWS EB server since there is no .env file on EB machine
+DEBUG = True  # To debug having more information in yellow page with HTTP error
 # print(type(DEBUG))
 
 # Default Message Level : INFO (20)
 # https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#message-levels
 MESSAGE_LEVEL = message_constants.DEBUG  # 10
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
+if DEBUG is False:  # To debug having more information in yellow page with HTTP error
+    # if DEBUG:
+    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
+else:
+    ALLOWED_HOSTS = [".elasticbeanstalk.com"]  # add DNS later
 
 # Application definition
 
@@ -99,7 +105,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-if DEBUG:  # for Development
+if DEBUG is False:  # To debug having more information in yellow page with HTTP error
+    # if DEBUG:  # for Development
     DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.path.join(BASE_DIR, "db.sqlite3")}}
 else:  # for AWS EB
     DATABASES = {

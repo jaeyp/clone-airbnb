@@ -280,6 +280,53 @@ packages:
         postgresql96-devel: []
 
 
+2.4 Set Security Group for RDS 
+here, you will see no errors with log file.
+but if you try access url (http://airbnb-clone-env.jgm92px4xm.ca-central-1.elasticbeanstalk.com/)
+you will see connection hung up (freezing with loading)
+This is because Django can NOT connect to RDS since it's not in the same Security Group with EC2 and EB.
+
+- Add EB security group into INBOUND list of default RDS security group
+https://ca-central-1.console.aws.amazon.com/rds/home?region=ca-central-1#database:id=airbnb-clone;is-cluster=false
+# check image Set security group 01 - 02
+
+- Debugging HTTP error with yellow page
+then, you will see the page with Bad Request (400) error
+If DEBUG is TRUE, you will see the yellow page with many server infomation.
+So, you can force to set DEBUG TRUE on debugging purpose having more information in yellow page with HTTP error. 
+config/settings.py
+    ...
+    # DEBUG = bool(os.environ.get("DEBUG"))
+    DEBUG = True  # To debug having more information in yellow page with HTTP error
+    ...
+    # if DEBUG:  # for Development
+    if DEBUG is False: # To debug having more information in yellow page with HTTP error
+        DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.path.join(BASE_DIR, "db.sqlite3")}}
+    else:  # for AWS EB
+        DATABASES = {
+            "default": {
+                # RDS info: https://ca-central-1.console.aws.amazon.com/rds/home?region=ca-central-1#database:id=airbnb-clone;is-cluster=false
+                "ENGINE": "django.db.backends.postgresql",
+                "HOST": os.environ.get("RDS_HOST"),  # Endpoint
+                "NAME": os.environ.get("RDS_NAME"),  # DB identifier
+                "USER": os.environ.get("RDS_USER"),  # Master username
+                "PASSWORD": os.environ.get("RDS_PASSWORD"),
+                "PORT": os.environ.get("RDS_PORT"),
+            }
+        }
+
+- Edit config/settings.py
+ALLOWED_HOSTS
+https://docs.djangoproject.com/en/2.2/ref/settings/#allowed-hosts
+# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
+ALLOWED_HOSTS = [".elasticbeanstalk.com"]  # add DNS later
+
+SECRET_KEY
+get strong password or use default SECRET_KEY
+https://www.roboform.com/password-generator
+move Django SECRET_KEY into EB environment property
+
+
 
 
 
