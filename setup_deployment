@@ -343,7 +343,7 @@ https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-djan
 check container_commands: in "Add a Database Migration Configuration File" topic
 container_commands:
   01_migrate:
-    command: "django-admin.py migrate"
+    command: "django-admin migrate"
     leader_only: true  # true in the command ensures that it is run only once when you're deploying to multiple instances.
 
 ~$ eb deploy (after git commit)
@@ -368,7 +368,23 @@ add DJANGO_SETTINGS_MODULE in .ebextentions/02-django.config
   aws:elasticbeanstalk:application:environment:
     DJANGO_SETTINGS_MODULE: config.settings  # Be careful, it not ebdjango.settings but config.settings since our settings.py placed in config directory
 
+ERROR:
+  PS C:\Users\jpins\Dev\Dev.projects\django\clone-airbnb> eb deploy
+    Creating application version archive "app-4634-191213_140624".
+    Uploading airbnb-clone/app-4634-191213_140624.zip to S3. This may take a while.
+    Upload Complete.
+    2019-12-13 19:06:26    INFO    Environment update is starting.
+    2019-12-13 19:07:05    INFO    Deploying new version to instance(s).
+    2019-12-13 19:07:15    ERROR   [Instance: i-08d24f8e8cdc9c57d] Command failed on instance. Return code: 1 Output: (TRUNaceback) from exc_value
+    File "/opt/python/run/venv/local/lib64/python3.6/site-packages/django/db/backends/utils.py", line 84, in _execute
+    return self.cursor.execute(sql, params)
+    django.db.utils.ProgrammingError: relation "users_user" does not exist.
+    container_command 01_migrate in .ebextensions/02-django.config failed. For more detail, check /var/log/eb-activity.log  EB CLI.
+    2019-12-13 19:07:15    INFO    Command execution completed on all instances. Summary: [Successful: 0, Failed: 1].
+    2019-12-13 19:07:15    ERROR   Unsuccessful command execution on instance id(s) 'i-08d24f8e8cdc9c57d'. Aborting the ope
+    2019-12-13 19:07:15    ERROR   Failed to deploy application.
 
+    ERROR: ServiceError - Failed to deploy application.
 
 
 
