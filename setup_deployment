@@ -200,6 +200,9 @@ leave other options as default.
 - install psycopg2 (PostgreSQL adapter for Python)
 http://initd.org/psycopg/
 add psycopg==2.8.4 in requirements.txt
+# It should be added in requirements.txt manually,
+# If you run "pipenv-to-requirements -f", "psycopg==2.8.4" would be removed.
+# So, you should add it manually again after generating requirements.txt
 
 - configure PostgreSQL
 https://docs.djangoproject.com/en/2.2/ref/databases/#postgresql-notes
@@ -232,6 +235,7 @@ https://ca-central-1.console.aws.amazon.com/elasticbeanstalk/home?region=ca-cent
     RDS_USER
     RDS_PASSWORD
     RDS_PORT
+
 
 
 
