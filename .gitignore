@@ -134,7 +134,8 @@ node_modules/
 # static/  # Remove this for production (AWS EB)
 
 # i18n files
-locale/
+# locale/  # Remove this for production (AWS EB)
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
