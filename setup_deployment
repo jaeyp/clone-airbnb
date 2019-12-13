@@ -395,6 +395,26 @@ You should makemigrations in your local and then push the migrations to producti
 Remove below line from .gitignore file
 # **/migrations/
 
+2.6 support multi language
+- add compilemessages
+# this is because django.mo file in locale folder isn't commited into git repository (EB only get django.po)
+# So, we need to compile .po file into .mo
+ERROR:
+    CommandError: Can't find msgfmt. ...
+
+SOLUTION:
+1. add gettext-devel package in .ebextensions/01-packages.config
+packages:
+    yum:
+        ...
+        gettext-devel: []
+
+2. add compilemessages in .ebextensions/02-django.config
+container_commands:
+  ...
+  02_compilemessages:
+    command: "django-admin compilemessages"
+
 
 
 
