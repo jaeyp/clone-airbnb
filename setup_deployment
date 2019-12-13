@@ -345,9 +345,27 @@ container_commands:
     command: "django-admin.py migrate"
     leader_only: true  # true in the command ensures that it is run only once when you're deploying to multiple instances.
 
+~$ eb deploy (after git commit)
+ERROR:
+  PS C:\Users\jpins\Dev\Dev.projects\django\clone-airbnb> eb deploy
+    Creating application version archive "app-e822-191213_125147".
+    Uploading airbnb-clone/app-e822-191213_125147.zip to S3. This may take a while.
+    Upload Complete.
+    2019-12-13 17:51:49    INFO    Environment update is starting.
+    2019-12-13 17:52:11    INFO    Deploying new version to instance(s).
+    2019-12-13 17:52:22    ERROR   [Instance: i-08d24f8e8cdc9c57d] Command failed on instance. Return code: 1 Output: (TRUNCATED)...ENVIRONMENT_VARIABLE))
+    django.core.exceptions.ImproperlyConfigured: Requested setting DATABASES, but settings are not configured. You must either define the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.       
+    container_command 01_migrate in .ebextensions/02-django.config failed. For more detail, check /var/log/eb-activity.log using console or EB CLI.
+    2019-12-13 17:52:22    INFO    Command execution completed on all instances. Summary: [Successful: 0, Failed: 1].       
+    2019-12-13 17:52:22    ERROR   Unsuccessful command execution on instance id(s) 'i-08d24f8e8cdc9c57d'. Aborting the operation.
+    2019-12-13 17:52:22    ERROR   Failed to deploy application.
 
+    ERROR: ServiceError - Failed to deploy application.
 
-
+SOLUTION:
+add DJANGO_SETTINGS_MODULE in .ebextentions/02-django.config
+  aws:elasticbeanstalk:application:environment:
+    DJANGO_SETTINGS_MODULE: ebdjango.settings
 
 
 
