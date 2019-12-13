@@ -80,7 +80,9 @@ option_settings:
 
 - Create an environment and deploy your application to it with "eb create"
 ~$ eb create airbnb-clone-env
-# creating two environments is recommended (one for testing, another for production)
+# creating two environments is recommended ((Blue-Green Deployment: one for testing, another for production)
+https://octopus.com/docs/deployment-patterns/blue-green-deployments
+
 log
     PS C:\Users\jpins\Dev\Dev.projects\django\clone-airbnb> eb create airbnb-clone-env
     Creating application version archive "app-54c9-191212_160117".
@@ -137,7 +139,7 @@ Retrieving logs...
 SOLUTION
 This is because we didn't django on EB machine yet.
 
-2.2 Intall PIP packages
+2.2 Intall PIP packages (requirements.txt)
 - create requirements.txt
 ~$ pipenv shell
 ~$ pip freeze > requirements.txt 
@@ -146,8 +148,99 @@ or
 ~$ pipenv-to-requirements -f
 https://pypi.org/project/pipenv-to-requirements/
 
+Tips. requirements.txt's last line must be an empty line.
+
 - deploy EB again
 ~$ eb deploy
+
+ERROR (~$eb logs)
+-------------------------------------
+/var/log/httpd/error_log
+-------------------------------------
+...
+[Thu Dec 12 23:16:45.648027 2019] [:error] [pid 8759] [remote 127.0.0.1:16536]   File "/opt/python/current/app/config/settings.py", line 160, in <module>
+[Thu Dec 12 23:16:45.648030 2019] [:error] [pid 8759] [remote 127.0.0.1:16536]     EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
+[Thu Dec 12 23:16:45.648045 2019] [:error] [pid 8759] [remote 127.0.0.1:16536] TypeError: must be str, not NoneType
+
+SOLUTION:
+# EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
+# TODO: adding evironment properties in AWS EB
+# This occurs error with "eb deploy". (TypeError: must be str, not NoneType)
+# because .env is NOT commited into git repository.
+EMAIL_FROM = "noreply@jaeyp.xyz"
+
+ERROR (~$eb logs)
+-------------------------------------
+/var/log/httpd/error_log
+-------------------------------------
+...
+[Thu Dec 12 23:22:03.793337 2019] [:error] [pid 9197] [remote 127.0.0.1:0]     check_sqlite_version()
+[Thu Dec 12 23:22:03.793343 2019] [:error] [pid 9197] [remote 127.0.0.1:0]   File "/opt/python/run/venv/local/lib64/python3.6/site-packages/django/db/backends/sqlite3/base.p line 63, in check_sqlite_version
+[Thu Dec 12 23:22:03.793346 2019] [:error] [pid 9197] [remote 127.0.0.1:0]     raise ImproperlyConfigured('SQLite 3.8.3 or later is required (found %s).' % Database.sqlite_vion)
+
+SOLUTION:
+This is because SQLite was installed automatically by "python manage.py runserver"
+So, there is no SQLite installed in EB
+
+2.3 install Database in RDS server (Blue-Green Deployment)
+- create PostgreSQL database in RDS
+Creation method: Standard Create
+Engine options
+    Engine type: Standard CreatePostgreSQL
+    Version: PostgreSQL 9.6.15-R1
+Templates: Free tier
+settings
+    DB instance identifier: airbnb-clone
+Credentials settings
+    Master username: postgres
+    Master password: 
+    Confirm password: 
+leave other options as default.
+
+- install psycopg2 (PostgreSQL adapter for Python)
+http://initd.org/psycopg/
+add psycopg==2.8.4 in requirements.txt
+
+- configure PostgreSQL
+https://docs.djangoproject.com/en/2.2/ref/databases/#postgresql-notes
+https://docs.djangoproject.com/en/2.2/ref/settings/#engine
+config/settings.py
+    DATABASES = {
+        "default": {
+            # RDS info: https://ca-central-1.console.aws.amazon.com/rds/home?region=ca-central-1#database:id=airbnb-clone;is-cluster=false
+            "ENGINE": "django.db.backends.postgresql",
+            "HOST": os.environ.get("RDS_HOST"),  # Endpoint
+            "NAME": os.environ.get("RDS_NAME"),  # DB identifier
+            "USER": os.environ.get("RDS_USER"),  # Master username
+            "PASSWORD": os.environ.get("RDS_PASSWORD"),
+            "PORT": os.environ.get("RDS_PORT"),
+        }
+    }
+
+- set evironment properties for AWS EB
+EB > airbnb-clone_env > Configuration > Software - Modify > Environment properties
+https://ca-central-1.console.aws.amazon.com/elasticbeanstalk/home?region=ca-central-1#/environment/configuration?applicationName=airbnb-clone&environmentId=e-mhq6eny3zf
+    MAILGUN_USERNAME
+    MAILGUN_PASSWORD
+    GITHUB_ID
+    GITHUB_SECRET
+    GOOGLE_ID
+    GOOGLE_SECRET
+    FACEBOOK_ID
+    RDS_HOST
+    RDS_NAME
+    RDS_USER
+    RDS_PASSWORD
+    RDS_PORT
+
+
+
+
+
+
+
+
+
 
 
 

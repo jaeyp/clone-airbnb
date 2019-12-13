@@ -27,7 +27,8 @@ SECRET_KEY = "(3up+$)ymc!pjiq1!(4(@xm@jba(v0_ds$8zq+hw3xthg6k%4f"
 # DEBUG = False
 # ALLOWED_HOSTS = "*"
 
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG"))  # this will be False on AWS EB server since there is no .env file on EB machine
+# print(type(DEBUG))
 
 # Default Message Level : INFO (20)
 # https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#message-levels
@@ -98,7 +99,20 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.path.join(BASE_DIR, "db.sqlite3")}}
+if DEBUG:  # for Development
+    DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.path.join(BASE_DIR, "db.sqlite3")}}
+else:  # for AWS EB
+    DATABASES = {
+        "default": {
+            # RDS info: https://ca-central-1.console.aws.amazon.com/rds/home?region=ca-central-1#database:id=airbnb-clone;is-cluster=false
+            "ENGINE": "django.db.backends.postgresql",
+            "HOST": os.environ.get("RDS_HOST"),  # Endpoint
+            "NAME": os.environ.get("RDS_NAME"),  # DB identifier
+            "USER": os.environ.get("RDS_USER"),  # Master username
+            "PASSWORD": os.environ.get("RDS_PASSWORD"),
+            "PORT": os.environ.get("RDS_PORT"),
+        }
+    }
 
 
 # Password validation
@@ -159,7 +173,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 # with this given domain by mailgun, mail would go to the spam folder
 # EMAIL_FROM = "noreply@" + os.environ.get("MAILGUN_DOMAIN")
 # TODO: adding evironment properties in AWS EB
-# This occurs error (TypeError: must be str, not NoneType) with "eb deploy"
+# This occurs error with "eb deploy". (TypeError: must be str, not NoneType)
 # because .env is NOT commited into git repository.
 EMAIL_FROM = "noreply@jaeyp.xyz"
 
