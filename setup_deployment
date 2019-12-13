@@ -236,6 +236,50 @@ https://ca-central-1.console.aws.amazon.com/elasticbeanstalk/home?region=ca-cent
     RDS_PASSWORD
     RDS_PORT
 
+- deploy again
+~$ git add .; git commit ...
+~# eb deploy
+log
+    Creating application version archive "app-cdc3-191213_020057".
+    Uploading airbnb-clone/app-cdc3-191213_020057.zip to S3. This may take a while.
+    Upload Complete.
+    2019-12-13 07:00:59    INFO    Environment update is starting.
+    2019-12-13 07:01:02    INFO    Deploying new version to instance(s).
+    2019-12-13 07:01:09    ERROR   Your requirements.txt is invalid. Snapshot your logs for details.
+    2019-12-13 07:01:12    ERROR   [Instance: i-08d24f8e8cdc9c57d] Command failed on instance. Return code: 1 Output: (TRUNCATED)...)
+    File "/usr/lib64/python2.7/subprocess.py", line 190, in check_call
+        raise CalledProcessError(retcode, cmd)
+    CalledProcessError: Command '/opt/python/run/venv/bin/pip install -r /opt/python/ondeck/app/requirements.txt' returned non-zero exit status 1.
+    Hook /opt/elasticbeanstalk/hooks/appdeploy/pre/03deploy.py failed. For more detail, check /var/log/eb-activity.log using console or EB CLI.
+    2019-12-13 07:01:12    INFO    Command execution completed on all instances. Summary: [Successful: 0, Failed: 1].
+    2019-12-13 07:01:12    ERROR   Unsuccessful command execution on instance id(s) 'i-08d24f8e8cdc9c57d'. Aborting the operation.
+    2019-12-13 07:01:13    ERROR   Failed to deploy application.
+
+    ERROR: ServiceError - Failed to deploy application.
+
+~$ eb logs
+log
+    ...
+    Collecting psycopg2==2.8.4 (from -r /opt/python/ondeck/app/requirements.txt (line 41))
+    Using cached https://files.pythonhosted.org/packages/84/d7/6a93c99b5ba4d4d22daa3928b983cec66df4536ca50b22ce5dcac65e4e71/psycopg2-2.8.4.tar.gz
+      Complete output from command python setup.py egg_info:
+      running egg_info
+      creating pip-egg-info/psycopg2.egg-info
+      writing pip-egg-info/psycopg2.egg-info/PKG-INFO
+      writing dependency_links to pip-egg-info/psycopg2.egg-info/dependency_links.txt
+      writing top-level names to pip-egg-info/psycopg2.egg-info/top_level.txt
+      writing manifest file 'pip-egg-info/psycopg2.egg-info/SOURCES.txt'
+
+      Error: pg_config executable not found.  # we need to tell EB that we need to download PostgreSQL
+    
+SOLUTION:
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/customize-containers-ec2.html
+create .ebextensions/packages.config
+packages:
+    yum:
+        postgresql96-devel: []
+
+
 
 
 
