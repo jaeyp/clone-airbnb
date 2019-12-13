@@ -326,9 +326,24 @@ get strong password or use default SECRET_KEY
 https://www.roboform.com/password-generator
 move Django SECRET_KEY into EB environment property
 
+- Rename .ebextensions files since it runs in alphabet order
+~$ git mv .\.ebextensions\packages.config .\.ebextensions\01-packages.config
+~$ git mv .\.ebextensions\django.config .\.ebextensions\02-django.config
 
+ERROR (yellow page)
+ProgrammingError at /
+relation "rooms_room" does not exist
+LINE 1: SELECT COUNT(*) AS "__count" FROM "rooms_room"
 
+SOLUTION:
+This is because we didn't migrate models yet with RDS (PostgreSQL)
 
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html
+check container_commands: in "Add a Database Migration Configuration File" topic
+container_commands:
+  01_migrate:
+    command: "django-admin.py migrate"
+    leader_only: true  # true in the command ensures that it is run only once when you're deploying to multiple instances.
 
 
 
