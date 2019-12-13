@@ -329,6 +329,7 @@ move Django SECRET_KEY into EB environment property
 - Rename .ebextensions files since it runs in alphabet order
 ~$ git mv .\.ebextensions\packages.config .\.ebextensions\01-packages.config
 ~$ git mv .\.ebextensions\django.config .\.ebextensions\02-django.config
+Tips. change VSCODE language mode (bottom right side) to YML (or jinja YAML) from Plain Text
 
 ERROR (yellow page)
 ProgrammingError at /
@@ -365,7 +366,7 @@ ERROR:
 SOLUTION:
 add DJANGO_SETTINGS_MODULE in .ebextentions/02-django.config
   aws:elasticbeanstalk:application:environment:
-    DJANGO_SETTINGS_MODULE: ebdjango.settings
+    DJANGO_SETTINGS_MODULE: config.settings  # Be careful, it not ebdjango.settings but config.settings since our settings.py placed in config directory
 
 
 
