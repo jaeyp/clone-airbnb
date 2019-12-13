@@ -200,7 +200,7 @@ leave other options as default.
 - install psycopg2 (PostgreSQL adapter for Python)
 http://initd.org/psycopg/
 add psycopg==2.8.4 in requirements.txt
-# It should be added in requirements.txt manually,
+# It should be added in requirements.txt manually since we didn't use PostgreSQL in development version (we only install psycopg2 in EB server),
 # If you run "pipenv-to-requirements -f", "psycopg==2.8.4" would be removed.
 # So, you should add it manually again after generating requirements.txt
 
