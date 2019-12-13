@@ -339,6 +339,10 @@ LINE 1: SELECT COUNT(*) AS "__count" FROM "rooms_room"
 SOLUTION:
 This is because we didn't migrate models yet with RDS (PostgreSQL)
 
+2.5 Config Database Migration
+Tips.
+    You should makemigrations in your local and then push the migrations to production.!!!
+    EB use migrations files in git repository for migration!!!
 https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-django.html
 check container_commands: in "Add a Database Migration Configuration File" topic
 container_commands:

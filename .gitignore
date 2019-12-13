@@ -131,7 +131,7 @@ dmypy.json
 # media files
 uploads/
 node_modules/
-static/
+# static/  # Remove this for production (AWS EB)
 
 # i18n files
 locale/
