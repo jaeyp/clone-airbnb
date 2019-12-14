@@ -475,12 +475,37 @@ https://sentry.io/organizations/nocompany-1h/issues/?project=1857012
 
 
 2.8 Creating Superuser
-https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#django.contrib.auth.models.CustomUserManager.create_superuser
-
-
 - create user/management/commands/createsu.py
+https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#django.contrib.auth.models.CustomUserManager.create_superuser
+- create EB properties for Superuser
+# EB properties
+SU_USERNAME = "ebadmin"
+SU_EMAIL = "jp.inseoul@gmail.com"
+SU_PASSWORD = "ebsuper1211!"
+- add createsu command in .ebextensions/02-django.config
+container_commands:
+  ...
+  03_createsu:
+    command: "django-admin createsu"
 
+ERROR:
+~$ eb deploy
+2019-12-14 20:07:59    ERROR   [Instance: i-08d24f8e8cdc9c57d] Command failed on instance. Return code: 1 Output: (TRUNCATED)...ate_superuser(settings.SU_USERNAME, settings.SU_EMAIL, settings.SU_PASSWORD)
+AttributeError: 'CustomModelManager' object has no attribute 'create_superuser'
 
+SOLUTION:
+This is because CustomModelManager inherites models.Manager which doesn't have create_superuser()
+Basically, unlike other models, UserManager whiche is a manager for User model inherits BaseUserManager not just models.Manager
+    in order to support create_superuser() and others features for User model
+So, our CustomModelManager for User model also need to inherits UserManager not models.Manager.
+> check class CustomModelManager(models.Manager): in core/managers.py
+
+1. define CustomUserManager in core/managers.py
+class CustomUserManager(CustomModelManager, UserManager):
+    pass
+2. change User manager to CustomUserManager in users/models.py
+#  objects = core_managers.CustomModelManager()
+objects = core_managers.CustomUserManager()  # Support create_superuser() for EB deployment
 
 
 
