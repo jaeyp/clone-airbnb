@@ -474,11 +474,11 @@ http://eb.url.for.airbnb-clone-env/sentry-debug/
 https://sentry.io/organizations/nocompany-1h/issues/?project=1857012
 
 
+2.8 Creating Superuser
+https://docs.djangoproject.com/en/2.2/topics/auth/customizing/#django.contrib.auth.models.CustomUserManager.create_superuser
 
 
-
-
-
+- create user/management/commands/createsu.py
 
 
 

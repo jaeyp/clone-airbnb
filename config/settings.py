@@ -240,6 +240,13 @@ LOGIN_URL = "/users/login"
 # Locale
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
+
 # Sentry
 if not DEBUG:
     sentry_sdk.init(dsn=os.environ.get("SENTRY_URL"), integrations=[DjangoIntegration()], send_default_pii=True)
+
+
+# EB Django Superuser
+SU_USERNAME = os.environ.get("SU_USERNAME")
+SU_EMAIL = os.environ.get("SU_EMAIL")
+SU_PASSWORD = os.environ.get("SU_PASSWORD")

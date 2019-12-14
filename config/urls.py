@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings  # you shouldn't do this in Django: from . import settings
@@ -31,7 +32,10 @@ urlpatterns = [
     # path("", include("core.urls", namespace="core")),
     # path("rooms/", include("rooms.urls", namespace="rooms")),
     path("", include("core.urls", namespace="core")),
-    path("admin/", admin.site.urls),
+    # TODO: "admin/" - this is not secure.
+    #   Use EB evironment property for admin path
+    #   or generate random path whenever it's deployed
+    path(os.environ.get("DJANGO_ADMIN_PATH", "admin/"), admin.site.urls),
     path("rooms/", include("rooms.urls", namespace="rooms")),
     path("users/", include("users.urls", namespace="users")),
     path("reservations/", include("reservations.urls", namespace="reservations")),

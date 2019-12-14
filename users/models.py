@@ -91,6 +91,7 @@ class User(AbstractUser):
     """ TODO: bug-fix: creating a new user occurs error ('CustomModelManager' object has no attribute 'normalize_email')
     objects = core_managers.CustomModelManager()
     """
+    objects = core_managers.CustomModelManager()
 
     def get_absolute_url(self):
         # print(f"users:profile with {self.pk}")
