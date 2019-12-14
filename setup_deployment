@@ -316,15 +316,17 @@ config/settings.py
         }
 
 - Edit config/settings.py
-ALLOWED_HOSTS
+1. ALLOWED_HOSTS
 https://docs.djangoproject.com/en/2.2/ref/settings/#allowed-hosts
 # ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
 ALLOWED_HOSTS = [".elasticbeanstalk.com"]  # add DNS later
 
-SECRET_KEY
+2. SECRET_KEY
 get strong password or use default SECRET_KEY
 https://www.roboform.com/password-generator
 move Django SECRET_KEY into EB environment property
+# DJANGO_SECRET for production and the second key for dev version
+SECRET_KEY = os.environ.get("DJANGO_SECRET", "8^6$fZANh9yX2!tYG27te%DxcQSmXgpJ")
 
 - Rename .ebextensions files since it runs in alphabet order
 ~$ git mv .\.ebextensions\packages.config .\.ebextensions\01-packages.config
