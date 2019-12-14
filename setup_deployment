@@ -457,6 +457,24 @@ run pipenv-to-requirements -f and add psycopg==2.8.4 again in requirements.txt
 or
 add sentry-sdk==0.13.5 in requirements.txt manually (don't forget to leave one empty line at the bottom of requirements.txt!!)
 
+- testing
+# add below testing code and add a path in urlpatterns
+in config/urls.py 
+    def trigger_error(request):
+        division_by_zero = 1 / 0
+
+    urlpatterns = [
+        ...
+        path("sentry-debug/", trigger_error),
+        ...
+    ]
+# access sentry-debug url in order to generate division_by_zero error
+http://eb.url.for.airbnb-clone-env/sentry-debug/
+# Check the issue stream on sentry.io
+https://sentry.io/organizations/nocompany-1h/issues/?project=1857012
+
+
+
 
 
 
