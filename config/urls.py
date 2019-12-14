@@ -20,6 +20,11 @@ from django.conf import settings  # you shouldn't do this in Django: from . impo
 # static.static(): Helper function to return a URL pattern for serving files in debug mode
 from django.conf.urls.static import static
 
+# test Sentry
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 # You shouldn't change this variable name 'urlpatterns'
 # urlpatterns = [path("admin/", admin.site.urls)]
 urlpatterns = [
@@ -33,6 +38,7 @@ urlpatterns = [
     path("reviews/", include("reviews.urls", namespace="reviews")),
     path("lists/", include("lists.urls", namespace="lists")),
     path("conversations/", include("conversations.urls", namespace="conversations")),
+    path("sentry-debug/", trigger_error),  # Sentry
 ]
 
 

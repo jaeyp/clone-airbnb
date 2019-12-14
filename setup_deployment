@@ -418,6 +418,44 @@ container_commands:
     command: "django-admin compilemessages"
 
 
+2.7 Support debugging with Sentry
+- create a new Django project on sentry.io
+https://sentry.io/organizations/nocompany-1h/projects/
+- install Sentry
+~$ pipenv install sentry-sdk==0.13.5
+# ignore pip locking error
+
+- initialize sentry SDK in config/settings.py
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+# Sentry
+if not DEBUG:
+    sentry_sdk.init(
+        dsn="https://e5ed28e0f48249d9b5d2d67890ee3456@sentry.io/1857012",
+        integrations=[DjangoIntegration()]
+    )
+
+- create SENTRY_URL on EB property and replace hard-coded dsn
+(EB > All Applications > airbnb-clone > airbnb-clone-env > Configuration > Software > Modify)
+
+# Sentry
+if not DEBUG:
+    sentry_sdk.init(dsn=os.environ.get("SENTRY_URL"), integrations=[DjangoIntegration()])
+
+- add send_default_pii=True option 
+https://docs.sentry.io/error-reporting/configuration/?platform=python
+If this flag is enabled, certain personally identifiable information is added by active integrations. 
+we can check which user has the issue.
+
+# Sentry
+if not DEBUG:
+    sentry_sdk.init(dsn=os.environ.get("SENTRY_URL"), integrations=[DjangoIntegration()], send_default_pii=True)
+
+- add sentry in requirements.txt
+run pipenv-to-requirements -f and add psycopg==2.8.4 again in requirements.txt
+or
+add sentry-sdk==0.13.5 in requirements.txt manually (don't forget to leave one empty line at the bottom of requirements.txt!!)
 
 
 
