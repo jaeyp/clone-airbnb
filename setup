@@ -33,6 +33,14 @@ X the project-name will be your virtualenv directory name. e.g. C:/Users/jpins/.
 7. Test Django installation
 ~$ pipenv shell # Spawns a shell within the virtualenv
 ~$ django-admin
+
+Tips. Run python code in Django shell
+e.i. deleting all avatars
+~$ python manage.py shell
+>>> from users.models import User
+>>> users = User.objects.all()
+>>> for user in users:
+>>>     user.avatar.delete(save=True)
 --------------------------------------
 [pipenv]
 pipenv --help
