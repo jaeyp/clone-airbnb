@@ -43,7 +43,7 @@ MESSAGE_LEVEL = message_constants.DEBUG  # 10
 if DEBUG:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
 else:
-    ALLOWED_HOSTS = [".elasticbeanstalk.com"]  # add DNS later
+    ALLOWED_HOSTS = [".elasticbeanstalk.com", "airbnb-clone.jaeyp.xyz"]
 
 # Application definition
 
@@ -188,6 +188,7 @@ EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_PASSWORD")
 EMAIL_FROM = "noreply@jaeyp.xyz"
 
 # User Verification Callback URL
+# TODO: support production url from EB property instead of localhost:8000
 VERIFICATION_CALLBACK_URL = "http://127.0.0.1:8000/users/verify"
 
 # Social Login - Github

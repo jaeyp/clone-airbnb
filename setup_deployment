@@ -613,6 +613,15 @@ because this is going to be done by EB instance.
 5. finally, run eb deploy
 ~$ eb deploy
 
+
+2.10 Hosting with Amazon Route 53 - Routing Traffic to an AWS Elastic Beanstalk Environment
+- create Route 53 Record that Routes Traffic to EB Evironment
+https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-beanstalk-environment.html
+- add new Record Set "airbnb-clone.jaeyp.xyz" to ALLOWED_HOSTS
+in config/settings.py
+    ALLOWED_HOSTS = [".elasticbeanstalk.com", "airbnb-clone.jaeyp.xyz"]
+
+
 ==================================================================================================
 
 
