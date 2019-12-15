@@ -622,6 +622,20 @@ in config/settings.py
     ALLOWED_HOSTS = [".elasticbeanstalk.com", "airbnb-clone.jaeyp.xyz"]
 
 
+2.11 change certified site url for social login
+- github
+https://github.com/settings/developers
+- google
+https://console.developers.google.com/apis/credentials?project=airbnb-clone-258505&folder&organizationId
+- facebook
+https://developers.facebook.com/apps/3158824864189974/settings/basic
+
+
+2.12 support https with AWS EB
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/configuring-https.html
+
+TODO: create a new EB instance in other pc, and set up SSH for that while doing eb init!!!
+
 ==================================================================================================
 
 
