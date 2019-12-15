@@ -165,7 +165,7 @@ or if you want to use pipenv
 ~$ pipenv install pipenv-to-requirements --dev
 ~$ pipenv-to-requirements -f
 https://pypi.org/project/pipenv-to-requirements/
-or
+or (this is recommended!!)
 # Check this!! - Elastic Beanstalk doesn't natively support Pipenv or Pipfiles. 
 https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/python-configuration-requirements.html
 ~$ pipenv lock -r > requirements.txt
@@ -606,7 +606,11 @@ if not DEBUG:
 3. delete all files that created by testing command from S3 bucket (https://s3.console.aws.amazon.com/s3/buckets/airbnb-clone-eb/?region=us-east-1&tab=overview#)
 because this is going to be done by EB instance.
 
-4. finally, run eb deploy
+4. recreate requirements.txt
+~$ pipenv lock -r > requirements.txt
+- add psycopg2==2.8.4 in to requirements.txt
+
+5. finally, run eb deploy
 ~$ eb deploy
 
 ==================================================================================================
