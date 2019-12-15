@@ -39,11 +39,15 @@ DEBUG = bool(os.environ.get("DEBUG"))  # this will be False on AWS EB server sin
 # https://docs.djangoproject.com/en/2.2/ref/contrib/messages/#message-levels
 MESSAGE_LEVEL = message_constants.DEBUG  # 10
 
+# Route53 DNS for EB production
+ROUTE53_DNS = os.environ.get("ROUTE53_DNS", "localhost:8000")
+
 # if DEBUG is False:  # To debug having more information in yellow page with HTTP error
 if DEBUG:
     ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "192.168.2.22"]
 else:
-    ALLOWED_HOSTS = [".elasticbeanstalk.com", "airbnb-clone.jaeyp.xyz"]
+    ALLOWED_HOSTS = [".elasticbeanstalk.com", ROUTE53_DNS]
+    # ALLOWED_HOSTS = [".elasticbeanstalk.com", "airbnb-clone.jaeyp.xyz"]
 
 # Application definition
 
@@ -189,13 +193,16 @@ EMAIL_FROM = "noreply@jaeyp.xyz"
 
 # User Verification Callback URL
 # TODO: support production url from EB property instead of localhost:8000
-VERIFICATION_CALLBACK_URL = "http://127.0.0.1:8000/users/verify"
+# VERIFICATION_CALLBACK_URL = "http://127.0.0.1:8000/users/verify"
+VERIFICATION_CALLBACK_URL = f"http://{ROUTE53_DNS}/users/verify"
 
 # Social Login - Github
 GITHUB_ID = os.environ.get("GITHUB_ID")
 GITHUB_SECRET = os.environ.get("GITHUB_SECRET")
 # TODO: support production url from EB property instead of localhost:8000
-GITHUB_CALLBACK_URL = os.environ.get("GITHUB_CALLBACK_URL", "http://localhost:8000/users/auth/github")
+# GITHUB_CALLBACK_URL = os.environ.get("GITHUB_CALLBACK_URL", "http://localhost:8000/users/auth/github")
+GITHUB_CALLBACK_URL = f"http://{ROUTE53_DNS}/users/auth/github"
+# print(f"GITHUB_CALLBACK_URL: {GITHUB_CALLBACK_URL}")
 # Ref. Authorizing OAuth Apps
 # https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
 GITHUB_AUTHORIZATION_ENDPOINT = "https://github.com/login/oauth/authorize"
@@ -206,7 +213,8 @@ GITHUB_USERINFO_ENDPOINT = "https://api.github.com/user"
 GOOGLE_ID = os.environ.get("GOOGLE_ID")
 GOOGLE_SECRET = os.environ.get("GOOGLE_SECRET")
 # TODO: support production url from EB property instead of localhost:8000
-GOOGLE_CALLBACK_URL = os.environ.get("GOOGLE_CALLBACK_URL", "http://localhost:8000/users/auth/google")
+# GOOGLE_CALLBACK_URL = os.environ.get("GOOGLE_CALLBACK_URL", "http://localhost:8000/users/auth/google")
+GOOGLE_CALLBACK_URL = f"http://{ROUTE53_DNS}/users/auth/google"
 # Ref. OpenID Connect
 # https://developers.google.com/identity/protocols/OpenIDConnect
 # Ref. Endpoints for OpenID Connect
@@ -222,7 +230,8 @@ GOOGLE_USERINFO_ENDPOINT = "https://openidconnect.googleapis.com/v1/userinfo"
 FACEBOOK_ID = os.environ.get("FACEBOOK_ID")
 FACEBOOK_SECRET = os.environ.get("FACEBOOK_SECRET")
 # TODO: support production url from EB property instead of localhost:8000
-FACEBOOK_CALLBACK_URL = os.environ.get("FACEBOOK_CALLBACK_URL", "http://localhost:8000/users/auth/facebook")
+# FACEBOOK_CALLBACK_URL = os.environ.get("FACEBOOK_CALLBACK_URL", "http://localhost:8000/users/auth/facebook")
+FACEBOOK_CALLBACK_URL = f"http://{ROUTE53_DNS}/users/auth/facebook"
 # Ref. Manually Build a Login Flow
 # https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/
 FACEBOOK_AUTHORIZATION_ENDPOINT = "https://www.facebook.com/v5.0/dialog/oauth"
