@@ -192,7 +192,7 @@ def github_callback(request):
                             user.verification_code = ""
                             user.save()
                     except models.User.DoesNotExist:
-                        user = models.User.object.create(
+                        user = models.User.objects.create(
                             username=email,
                             first_name=name,
                             bio=bio,
@@ -278,7 +278,7 @@ def google_callback(request):
                             user.verification_code = ""
                             user.save()
                     except models.User.DoesNotExist:
-                        user = models.User.object.create(
+                        user = models.User.objects.create(
                             username=email,
                             first_name=first_name,
                             last_name=last_name,
@@ -360,7 +360,7 @@ def facebook_callback(request):
                             user.verification_code = ""
                             user.save()
                     except models.User.DoesNotExist:
-                        user = models.User.object.create(
+                        user = models.User.objects.create(
                             username=email,
                             first_name=first_name,
                             last_name=last_name,
