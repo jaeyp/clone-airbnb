@@ -1,10 +1,11 @@
 # 1. import python packages
 # e.g. import os
-from django.utils import timezone
+import uuid
 
 # 2. import django packages
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 # 3. import third-party packages
 from django_countries.fields import CountryField
@@ -259,12 +260,18 @@ class Room(AbsctractTimeStampedModel):
     #         return f"{self.bathrooms} bathrooms"
 
 
+# image upload to dynamic path
+def get_upload_to(instance, filename):
+    new_filename = "{}.{}".format(uuid.uuid1(), filename.split(".")[-1])
+    return "room_photos/{}/{}".format(instance.room.pk, new_filename)
+
+
 class Photo(AbsctractTimeStampedModel):
 
     """ Photo Model Definition """
 
     caption = models.CharField(max_length=80)
-    file = models.ImageField(upload_to="room_photos")  # path: /uploads/room_photos
+    file = models.ImageField(upload_to=get_upload_to)  # path: /uploads/room_photos
     room = models.ForeignKey(Room, related_name="photos", on_delete=models.CASCADE)
 
     def __str__(self):
