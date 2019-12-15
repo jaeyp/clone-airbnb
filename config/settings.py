@@ -56,7 +56,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["django_countries", "django_seed", "import_export"]
+THIRD_PARTY_APPS = ["django_countries", "django_seed", "import_export", "storages"]
 
 PROJECT_APPS = [
     "core.apps.CoreConfig",
@@ -244,9 +244,41 @@ LOGIN_URL = "/users/login"
 LOCALE_PATHS = (os.path.join(BASE_DIR, "locale"),)
 
 
-# Sentry
+# for EB deployment
 if not DEBUG:
+    # django-storages
+    # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    # STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    # separating uploads folder from static folder (static/uploads/ -> stitic/ and uploads/)
+    DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
+    STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = (
+        "airbnb-clone-eb"  # TODO: you should set very random difficult bucket name for this for security
+    )
+    AWS_AUTO_CREATE_BUCKET = True
+    AWS_BUCKET_ACL = "public-read"  # allow everybody to read files
+    # https://airbnb-clone-eb.s3.amazonaws.com/img/logo.svg
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+
+    # override static and media file path
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static"
+
+    # Sentry
     sentry_sdk.init(dsn=os.environ.get("SENTRY_URL"), integrations=[DjangoIntegration()], send_default_pii=True)
+else:  # for testing if 'django-admin collectstatic' command works
+    # django-storages
+    """ Enable this only for testing
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = (
+        "airbnb-clone-eb"  # TODO: you should set very random difficult bucket name for this for security
+    )
+    AWS_AUTO_CREATE_BUCKET = True
+    AWS_BUCKET_ACL = "public-read"  # allow everybody to read files """
 
 
 # EB Django Superuser

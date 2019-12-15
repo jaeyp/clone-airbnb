@@ -4,7 +4,25 @@ https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create-deploy-python-djan
 1 EB CLI Installation
 - Install the EB CLI
 https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-advanced.html
+XXX don't do this, it will make some locking problems with your pachages
 ~$ pipenv install awsebcli --dev  # Not vertual environment!!
+Elastic Beanstalk doesn't natively support Pipenv or Pipfiles!!!!!
+
+So, if you install awsebcli by using pipenv,
+1. uninstall awsebcli with pipenv
+~$ pipenv uninstall awsebcli
+2. delete your Pipfile.lock file
+3. install awsebcli by using pip3 globally
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-linux.html
+~$ pip3 uninstall awsebcli
+~$ pip3 install awsebcli
+
+if not,
+~$ pip3 install awsebcli
+
+then, make sure there is no awsebcli in Pipfile
+
+
 
 - Create an empty (no environments) EB application through CLI
 https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-configuration.html
@@ -143,10 +161,14 @@ This is because we didn't django on EB machine yet.
 - create requirements.txt
 ~$ pipenv shell
 ~$ pip freeze > requirements.txt 
-or
+or if you want to use pipenv
 ~$ pipenv install pipenv-to-requirements --dev
 ~$ pipenv-to-requirements -f
 https://pypi.org/project/pipenv-to-requirements/
+or
+# Check this!! - Elastic Beanstalk doesn't natively support Pipenv or Pipfiles. 
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/python-configuration-requirements.html
+~$ pipenv lock -r > requirements.txt
 
 Tips. requirements.txt's last line must be an empty line.
 
@@ -418,12 +440,12 @@ container_commands:
     command: "django-admin compilemessages"
 
 
-2.7 Support debugging with Sentry
+2.7 Support debugging with Sentry (Seeing error page with sentry-debug http://project-url/sentry-debug and Using sentry.io issue tracking)
 - create a new Django project on sentry.io
 https://sentry.io/organizations/nocompany-1h/projects/
 - install Sentry
 ~$ pipenv install sentry-sdk==0.13.5
-# ignore pip locking error
+# ignore pip locking error # this is awsebcli installation problem check section-1 !!!!
 
 - initialize sentry SDK in config/settings.py
 import sentry_sdk
@@ -508,8 +530,84 @@ class CustomUserManager(CustomModelManager, UserManager):
 objects = core_managers.CustomUserManager()  # Support create_superuser() for EB deployment
 
 
+2.9 Supporting static files with AWS S3 (CSS files, upload files and so on...)
+Why do we do this?
+if you create a new instance you will lose all the uploaded files, so we seperates static files from EB instance.
+
+- install django-storages package in order to upload images on AWS S3
+https://django-storages.readthedocs.io/en/latest/
+~$ pipenv install django-storages
+
+- include the "storages" package into INSTALLED_APPS in config/settings.py
+THIRD_PARTY_APPS = ["django_countries", "django_seed", "import_export", "storages"]
+
+- set all storage fields required for AWS S3 in config/settings.py
+https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+# for EB deployment
+if not DEBUG:
+    # django-storages
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_KEY")
+    AWS_STORAGE_BUCKET_NAME = (
+        "airbnb-clone-eb"  # TODO: you should set very random difficult bucket name for this for security
+    )
+    AWS_AUTO_CREATE_BUCKET = True
+    AWS_BUCKET_ACL = "public-read"  # allow everybody to read files
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    ...
+
+- testing if collectstatic command run properly
+1. make storage fields accessible with dev version
+check config/settings.py
+2. run collectstatic command
+https://docs.djangoproject.com/en/3.0/ref/contrib/staticfiles/#collectstatic
+~$ django-admin collectstatic
+or
+~$ python manage.py collectstatic
+
+ERROR:
+  File "C:\Users\jpins\.virtualenvs\clone-airbnb-UmLjylH3\lib\site-packages\storages\backends\s3boto3.py", line 37, in <module>
+    raise ImproperlyConfigured("Could not load Boto3's S3 bindings. %s" % e)
+django.core.exceptions.ImproperlyConfigured: Could not load Boto3's S3 bindings. No module named 'boto3'
+
+SOLUTION:
+- install boto3
+~$ pipenv install boto3
+
+- add collectstatic command in .ebextensions/02-django.config
+container_commands:
+  ...
+  04_collectstatic:
+    command: "django-admin collectstatic --noinput"
+
+- override static and media file path
+# for EB deployment
+if not DEBUG:
+    ...
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static"
 
 
+- separating uploads folder from static folder (static/uploads/ -> stitic/ and uploads/)
+1. create config/custom_storages.py and define storage classes
+from storages.backends.s3boto3 import S3Boto3Storage
+class StaticStorage(S3Boto3Storage):
+    location = "static/"  # default: location = setting('AWS_LOCATION', '')
+    file_overwrite = False  # skip upload if there is same file
+class UploadStorage(S3Boto3Storage):
+    location = "uploads/"
+2. replace DEFAULT_FILE_STORAGE and STATICFILES_STORAGE fields
+# for EB deployment
+if not DEBUG:
+    ...
+    DEFAULT_FILE_STORAGE = "config.custom_storages.UploadStorage"
+    STATICFILES_STORAGE = "config.custom_storages.StaticStorage"
+3. delete all files that created by testing command from S3 bucket (https://s3.console.aws.amazon.com/s3/buckets/airbnb-clone-eb/?region=us-east-1&tab=overview#)
+because this is going to be done by EB instance.
+
+4. finally, run eb deploy
+~$ eb deploy
 
 ==================================================================================================
 

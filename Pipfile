@@ -7,7 +7,6 @@ verify_ssl = true
 flake8 = "*"
 black = "*"
 pipenv-to-requirements = "*"
-awsebcli = "*"
 
 [packages]
 django-countries = "*"
@@ -18,6 +17,8 @@ django-dotenv = "*"
 django-import-export = "*"
 requests = "*"
 sentry-sdk = "==0.13.5"
+django-storages = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.7"
