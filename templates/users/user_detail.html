@@ -1,6 +1,11 @@
 <!-- base template having header & footer -->
 {% extends 'base.html' %}
 
+<!-- custom template tags: users/templatetags/user_filters.py 
+    https://docs.djangoproject.com/en/2.2/howto/custom-template-tags/
+-->
+{% load user_filters %}
+
 <!-- Page Name -->
 {% block page_title %}
     {{user_selected.first_name}}'s Profile
@@ -13,6 +18,96 @@
 <!-- Page Content -->
 {% block content %}
 
+    <!-- Room Detail -->
+    <div class="container mx-auto flex justify-around mb-20 pt-10">
+        <!-- Room Info -->
+        <div class="flex flex-col justify-start items-center w-4/12">
+            <div class="flex flex-col w-10/12 border p-10">
+                <!-- user avatar -->
+                <div class="flex justify-center items-center mb-4">
+                    {% include 'mixins/user_avatar.html' with user=user_selected size=24 text=4 %}
+                </div>
+                
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+                <!-- Superhost -->
+                {% if user_selected.superhost %}
+                <div class="flex items-center my-1">
+                    <i class="fas fa-medal text-red-500 ml-1"></i>
+                    <span class="ml-2">Superhost</span>
+                </div>
+                {% endif %}
+                <!-- Verified -->
+                
+                {% if user_selected.email_verified %}
+                <div class="flex items-center my-1">
+                    <i class="far fa-calendar-check text-teal-500 ml-1"></i>
+                    <span class="ml-2">Verified</span>
+                </div>
+                {% endif %}
+
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+                <span class="font-semibold text-lg mb-4">{{user_selected.first_name}} provied</span>
+                
+                {% if user_selected.bio and user_selected.bio.strip  %}
+                <div class="flex items-center my-1">
+                    <i class="far fa-check-circle text-teal-500 ml-1"></i>
+                    <span class="ml-2">Personal info</span>
+                </div>
+                {% endif %}
+                
+                {% if user_selected.email %}
+                <div class="flex items-center my-1">
+                    <i class="far fa-check-circle text-teal-500 ml-1"></i>
+                    <span class="ml-2">Email address</span>
+                </div>
+                {% endif %}
+                    
+            </div>
+        </div>
+        <div class="w-8/12 ml-20">
+            <div class="flex items-center font-normal text-4xl">
+                Hi, I'm {{user_selected.first_name}}
+            </div>
+            <div class="items-center mb-10">
+                Joined in {{user_selected.date_joined.year}} -
+                <!-- edit profile -->
+                {% if user == user_selected %}
+                    <a href="{% url 'users:update' %}" class="font-medium text-teal-600">Edit Profile</a>
+                {% endif %}
+            </div>
+            <!-- user bio -->
+            <div class="text-base mb-10">{{user_selected.bio}}</div>
+            <!-- user info -->
+            <div class="text-base mb-10">
+                <i class="far fa-comments"></i>
+                <span class="ml-4">Speaks {{user_selected.language | selected_choice}}</span>
+            </div>
+
+            <!-- divider -->
+            {% include 'mixins/divider.html' %}
+
+            <!-- user's room info -->
+            {% if user_selected.rooms.count > 0 %}
+            <div class="container mx-auto">
+                <!-- title -->
+                <div class="flex flex-wrap px-2 mb-4">
+                    <div class="font-bold text-2xl text-gray-700">{{user_selected.first_name}}'s listings</div>
+                </div>
+
+                <!-- room list -->
+                <div class="flex flex-wrap">
+                    {% for room in user_selected.rooms.all %}
+                        {% include 'mixins/room_card_wide.html' with room=room user=user %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% comment %}
+    
     <!-- user info -->
     <div class="container w-full sm:w-6/12 md:w-5/12 lg:w-4/12 xl:w-3/12 mx-auto my-10 flex flex-col items-center border p-6 border-gray-400">
 
@@ -58,4 +153,6 @@
     </div>
     {% endif %}
     
+{% endcomment %}
+
 {% endblock content %}

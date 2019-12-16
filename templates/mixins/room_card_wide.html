@@ -1,9 +1,6 @@
 {% load on_favs %}
-<div class="w-5/12 mb-2 px-2 overflow-hidden">
-        <!-- divider -->
-        {% include 'mixins/divider.html' %}
 
-        <div class="flex flex-wrap py-2">
+        <div class="flex flex-wrap w-full py-2">
             <!-- image -->
                 <div class="w-5/12 h-56 bg-cover rounded bg-center" style="background-image: url({{room.get_first_photo}})">
                     {% if user.is_authenticated %}
@@ -90,5 +87,3 @@
         </a> -->
             
         {% endcomment %}
-</div>
-<div class="w-7/12"></div>

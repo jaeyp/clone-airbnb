@@ -41,7 +41,12 @@ Search
         <div class="flex flex-wrap mb-10">
         {% for room in page_obj %}
             <!-- room list -->
-            {% include 'mixins/room_card_wide.html' with room=room user=user %}
+            <div class="w-5/12 mb-2 px-2 overflow-hidden">
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+                {% include 'mixins/room_card_wide.html' with room=room user=user %}
+            </div>
+            <div class="w-7/12"></div>
         {% endfor %}
         </div>
     </div>
