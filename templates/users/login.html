@@ -19,6 +19,9 @@
         <!-- divider -->
         {% include 'mixins/divider.html' with text="or" %}
 
+        <span class="text-sm">In case you don't want to create a new account, use this.</span>
+        <span class="text-sm">id: guest@test.com</span>
+        <span class="text-sm">password: letmelogin</span>
         <!-- Email Login -->
         {% include 'mixins/auth/form.html' with form=form cta="Log In" %}        
 
