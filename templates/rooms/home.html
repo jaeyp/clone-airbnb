@@ -25,7 +25,7 @@
         <div class="px-2">
             <!-- set "flex items-center justify-center" for button positioning in div-->
             <div class="flex items-center justify-center rounded-lg bg-gray-800 h-25vh -mx-40 mb-16 bg-cover bg-center" style="background-image: url(https://images.unsplash.com/photo-1519974719765-e6559eac2575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80)">
-                <button class="bg-white font-medium text-xs mt-16 px-8 py-3 rounded hover:bg-gray-100 focus:outline-none">ABOUT PROJECT <i class="fas fa-chevron-right"></i></button>
+                <button id="btnAbout" class="bg-white font-medium text-xs mt-16 px-8 py-3 rounded hover:bg-gray-100 focus:outline-none">ABOUT PROJECT <i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
         
@@ -105,5 +105,49 @@
             {% endif %}
         </h5> -->
     </div>
-
+    <!-- Modal -->
+    <div class="modal-about">
+        <!-- Modal content -->
+        <div class="modal-content w-full h-full rounded-lg outline-none">
+            <div class="container mx-auto items-center">
+                <i id="btnClose" class="flex justify-end text-3xl mt-10 text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times"></i>
+                <span class="container mx-auto flex flex-col">
+                    <div class="font-bold text-3xl mb-8">
+                        Airbnb Clone Project
+                    </div>
+                    <span class="font-medium text-xl text-gray-700 mb-2">Jaehyun Park</span>
+                    <span class="">
+                        <i class="fas fa-envelope"></i>
+                        <a class="mx-2 font-normal text-base text-gray-700" href="mailto:jp.inseoul@gmail.com">jp.inseoul@gmail.com</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+
+
+{% block javascript %}
+<script>
+    // Get the modal
+    var about = document.querySelector(".modal-about");
+    // Get the button that opens the modal
+    var btn_about = document.querySelector("#btnAbout");
+    // Get the <i> element that closes the modal
+    var btn_close = document.querySelector("#btnClose");
+    // When the user clicks the button, open the modal 
+    btn_about.onclick = function() {
+        about.style.display = "block";
+    }
+    // When the user clicks on <span> (x), close the modal
+    btn_close.onclick = function() {
+        about.style.display = "none";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == about) {
+            about.style.display = "none";
+        }
+    }
+</script>
+{% endblock javascript %}

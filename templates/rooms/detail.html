@@ -266,7 +266,7 @@
     </div> -->
 
     <!-- Modal -->
-    <div class="modal">
+    <div class="modal-reservation">
 
         <!-- Modal content -->
         <div class="modal-content w-full h-50vh">
@@ -360,7 +360,7 @@
 {% block javascript %}
 <script type="text/javascript">
     // Get the modal
-    var modal = document.querySelector(".modal");
+    var reservation = document.querySelector(".modal-reservation");
 
     // Get the button that opens the modal
     var btn_check = document.querySelector("#btnCheck");
@@ -453,7 +453,7 @@
         checkout.value = "";
         book_checkin.clear();
         book_checkout.clear();
-        modal.style.display = "block";
+        reservation.style.display = "block";
     }
 
     btn_book.onclick = function() {
@@ -488,7 +488,7 @@
 
     // When the user clicks on <span> (x), close the modal
     close.onclick = function() {
-        modal.style.display = "none";
+        reservation.style.display = "none";
     }
 
     clear_checkin.onclick = function() {
@@ -519,8 +519,8 @@
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target == reservation) {
+            reservation.style.display = "none";
         }
     }
 </script>
