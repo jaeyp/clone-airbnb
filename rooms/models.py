@@ -271,8 +271,11 @@ class Photo(AbsctractTimeStampedModel):
     """ Photo Model Definition """
 
     caption = models.CharField(max_length=80)
-    file = models.ImageField(upload_to=get_upload_to)  # path: /uploads/room_photos
+    file = models.ImageField(upload_to=get_upload_to)
     room = models.ForeignKey(Room, related_name="photos", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.caption
+
+
+# TODO: When user delete files, Remove the files from storage not just database!
