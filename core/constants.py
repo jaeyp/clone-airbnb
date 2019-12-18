@@ -18,7 +18,7 @@ class _constant:
         Restart server when it's changed
         """
     PAGINATE_BY = 8
-    PAGINATE_ORPHANS = 3
+    PAGINATE_ORPHANS = 1
 
 
 sys.modules[__name__] = _constant()
