@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load reservation_tags %}
+{% load reservation_tags math_filters date_filters %}
 
 <!-- Page Name -->
 {% block page_title %}
@@ -9,10 +9,125 @@ Reservation Review
 
 <!-- Page Content -->
 {% block content %}
-{{reservation.status}}
-{{reservation.check_in}}
-{{reservation.check_out}}
-<a href="#" class="btn-link bg-red-500 text-white block rounded-lg">Agree and continue</a>
+    <!-- Reservation Review -->
+    <div class="container mx-auto flex justify-around mb-20 pt-10">
+        <!-- Review house rules Info -->
+        <div class="flex flex-col justify-start items-center w-8/12">
+            <div class="flex flex-col w-10/12">
+                <span class="font-bold text-3xl mb-10">Review house rules</span>
+                <span class="font-bold text-lg text-gray-700 mb-6">{{nights}} night{{nights|pluralize}} in {{room.city}}</span>
+                <div class="flex flex-wrap w-full mb-6">
+                    <div class="flex flex-wrap items-center w-1/2">
+                        <div class="flex flex-col justify-center items-center w-12 h-12 bg-gray-200 rounded font-semibold text-sm text-gray-800 mr-4">
+                            <span>{{checkin.month | month_name}}</span>
+                            <span>{{checkin.day}}</span>
+                        </div>
+                        <span>check-in {{room.check_in}}</span>
+                    </div>
+                    <div class="flex flex-wrap items-center w-1/2">
+                        <div class="flex flex-col justify-center items-center w-12 h-12 bg-gray-200 rounded font-semibold text-sm text-gray-800 mr-4">
+                            <span>{{checkout.month | month_name}}</span>
+                            <span>{{checkout.day}}</span>
+                        </div>
+                        <span>check-out {{room.check_out}}</span>
+                    </div>
+                </div>
+
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+                <div class="flex flex-col w-full mb-6">
+                    <span class="font-bold text-xl mb-6">Things to keep in mind</span>
+                    {% for r in room.house_rules.all %}
+                        <li class="mb-2">{{r}}</li>
+                    {% endfor %}
+                </div>
+
+                <div class="flex flex-wrap">
+                    <a href="{% url 'reservations:create' pk %}?year={{year}}&month={{month}}&day={{day}}&nights={{nights}}" class="btn-link w-48 bg-red-500 text-white block rounded-lg mr-4">Agree and continue</a>
+                    <a href="{% url 'rooms:detail' pk %}" class="btn-link w-48 border border-gray-800 bg-white-500 text-gray-800 block rounded-lg">Cancel</a>
+                </div>
+            </div>
+        </div>
+        <!-- Reservation Info -->
+        <div class="flex flex-col justify-start items-center w-4/12">
+            <div class="flex flex-col w-10/12 border p-10">
+
+                <span class="text-base font-bold text-gray-700 mb-2">{{room.name}}</span>
+                <span class="text-sm font-medium text-gray-600">{{room.city}} - {{room.country.name}}</span>
+                <div class="">
+                    <i class="fas fa-star text-red-500 text-sm mr-1"></i>
+                    <span class="text-sm text-gray-600">{{room.get_total_rating}}</span>
+                </div>
+            
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+
+                <div class="mb-2">
+                    <i class="w-4 fas fa-user-friends text-gray-600 text-sm mr-1"></i>
+                    <span class="font-medium text-base text-gray-600">{{guests}} guest{{guests|pluralize}}</span>
+                </div>
+                <div class="">
+                    <i class="w-4 far fa-calendar-alt text-gray-600 text-base mr-1"></i>
+                    <span class="font-medium text-base text-gray-600">{{checkin}} - {{checkout}}</span>
+                </div>
+
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+
+                <div class="flex justify-between mb-2">
+                    <div class="w-9/12">
+                        <span class="text-gray-600">${{room.price}} x {{nights}} night{{nights|pluralize}}</span>
+                    </div>
+                    <div class="flex justify-end w-3/12">
+                        <span class="text-gray-600">${{room.price | multiply:nights}}</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mb-2">
+                    <div class="w-9/12">
+                        <span class="text-gray-600">Cleaning fee</span>
+                    </div>
+                    <div class="flex justify-end w-3/12">
+                        <span class="text-gray-600">$0</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between mb-2">
+                    <div class="w-9/12">
+                        <span class="text-gray-600">Service fee</span>
+                    </div>
+                    <div class="flex justify-end w-3/12">
+                        <span class="text-gray-600">$0</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-between">
+                    <div class="w-9/12">
+                        <span class="font-bold text-gray-800">Total</span>
+                    </div>
+                    <div class="flex justify-end w-3/12">
+                        <span class="font-bold text-gray-800">${{room.price | multiply:nights}}</span>
+                    </div>
+                </div>
+
+                <!-- divider -->
+                {% include 'mixins/divider.html' %}
+
+                <div class="flex justify-between">
+                    <div class="flex flex-col">
+                        <div class="font-semibold text-base text-gray-800">
+                            Free cancellation for 48 hours
+                        </div>
+                        <div class="font-normal text-sm text-gray-600">
+                            Get a full refund if you cancel within 48 hours of booking.
+                        </div>
+                    </div>
+                    <svg viewBox="0 0 48 48" role="presentation" aria-hidden="true" focusable="false" style="height: 64px; width: 64px; display: block; fill: rgb(96, 182, 181);"><path d="m28.196888 10.7247944c-1.1753753 1.0070958-1.8779427 2.461813-1.9377475 4.0122481-.179791 2.7283287 1.2885022 5.0153102 3.2961684 5.1958614 2.0076662.1805511 3.7756111-1.9459404 3.9953557-4.6742691.1598142-2.3772571-.9289202-4.4535955-2.5370509-5.0153102 1.4528928-.42916632 2.9400563-.73121264 4.4448332-.90275584 1.5129526-.24024034 3.0585902-.17201297 4.544717.2006124.2979403.11368368.4934381.40216027.4894311.72220464v8.8971603c.0098733.0597753.0098733.1207758 0 .1805512-.0425586.2003858-.1646653.3746703-.3381049.4825818s-.3832053.1401129-.5808269.0891635c-1.3476213-.2718067-2.7210714-.3929122-4.0952395-.3611023-3.4859478 0-5.6833934 1.3842256-9.7486678 1.3842256-2.0326249.0851514-4.0628804-.2177813-5.9830451-.8927252-.2960651-.1160584-.4905502-.4030407-.489431-.7222047v-8.6965478c-.0097064-.0698761-.0097064-.140767 0-.2106431.0573621-.2067824.1968059-.3808151.3856717-.48133718.1888658-.1005221.4105631-.11870343.6131672-.05028566 1.7755367.45939274 3.5925771.73830994 5.4236953.83254144.8373205.0728904 1.6792038.0762453 2.517074.0100307zm16.803112 17.2752056h-1v-1c0-.5522847-.4477153-1-1-1s-1 .4477153-1 1v1h-1c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h1v1c0 .5522847.4477153 1 1 1s1-.4477153 1-1v-1h1c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1zm-36-16c-.55228475 0-1-.4477153-1-1s.44771525-1 1-1 1 .4477153 1 1-.44771525 1-1 1zm4-8h-1v-1c0-.55228475-.4477153-1-1-1s-1 .44771525-1 1v1h-1c-.55228475 0-1 .44771525-1 1s.44771525 1 1 1h1v1c0 .55228475.4477153 1 1 1s1-.44771525 1-1v-1h1c.5522847 0 1-.44771525 1-1s-.4477153-1-1-1z"></path><path d="m38.173265 40.4c-9.14 2.8-14 4.27-14.63 4.45-.5961839.2221488-1.2241859.3470739-1.86.37-.2226646.0244432-.4473355.0244432-.67 0-4.4095448-.802964-8.6066245-2.5049428-12.33000005-5-4.2-2.8-6.57-4.39-7.14-4.81-.21663638-.1577864-.36087026-.3959283-.40035076-.6610116-.03948049-.2650833.02909694-.5349205.19035076-.7489884.32766599-.4388029.94732896-.532421 1.39-.21.54.39 2.91 2 7.07 4.75 3.49156445 2.3254169 7.42228155 3.9113166 11.55000005 4.66.1031098.0096116.2068901.0096116.31 0 .4602971-.02732.9146026-.1181811 1.35-.27.6133333-.18 5.5-1.6666667 14.66-4.46 1.27-.29 1.66-.75 1.54-1.6s-.6-1.18-1.76-1.13l-11.85 1.67c-.1 0-.84.05-1.13 0-1.37 0-2.95-.72-5.77-2.27-.4832492-.2761424-.6511424-.8917508-.375-1.375.2761423-.4832492.8917508-.6511424 1.375-.375 3 1.66 4.4 2.19 5.34 2 .693815-.1675445 1.2550293-.6760273 1.49-1.35-.8248026-.6766908-1.6860959-1.3076382-2.58-1.89-1.08-.75-1.5-1-2-1.43-2.18-1.83-3.25-2.54-4.37-2.91-.5626747-.1708378-1.1377242-.2978836-1.72-.38l-2.58-.36-2.17-.23c-.3572656-.0321539-.6702388-.2524643-.8210255-.5779423s-.1164788-.7066759.09-1c.2064789-.2933241.5537599-.4542116.9110255-.4220577.42 0 1.15.11 2.24.24l2.63.37c.6776488.0961603 1.3464699.2466451 2 .45 1.42.47 2.67 1.3 5 3.25.44.32.85.61 1.89 1.33 1.0455191.6618169 2.0354523 1.4076111 2.96 2.23.5389884.4060698.7431042 1.1204751.5 1.75-.0494375.1866233-.1095362.3702581-.18.55l.68-.11 8.21-1.15c2.2-.1 3.64.89 3.92 2.84s-.83 3.32-2.96 3.81zm3.8420736-18.33c-.0894339 0-1.4210059-.39-2.0470434-.53-1.3844404-.3264834-2.7939629-.5338974-4.2133322-.62h-.9340878c-1.8279377.0393261-3.6480081.2536255-5.4355959.64-1.8227816.3718751-3.6754103.5760504-5.534967.61-1.5728689.0032171-3.1350181-.2604794-4.6207535-.78-.4239928-.1482172-.8387817-.3218616-1.242138-.52v-7.87c0-.5522847-.4448993-1-.9937104-1s-.9937104.4477153-.9937104 1v8.38c0 1.28 4.203395 2.75 7.8503123 2.75 1.9729724-.0316096 3.9388694-.2458461 5.8728285-.64 1.6765076-.3635669 3.3832542-.5677979 5.0977344-.61h.8247797c1.3115993.0898077 2.6140992.2837443 3.8953448.58.4790343.106218 1.7475038.4794719 2.4774319.656119.4429602.1071991.7704083.083881.9806803.083881.5715957-.0374484 1.0176732-.5238308 1.0004031-1.1v-2c0-.5522847-.4448993-1-.9937104-1s-.9937104.4477153-.9937104 1zm-24.5746087-16.14c-.3372714-.10025622-.7017331-.03567754-.9847038.17447888s-.4517565.54160954-.4560261.89552112v1.91c0 .55228475.4448529 1 .9936069 1 .5487539 0 .9936068-.44771525.9936068-1v-.7c.4073788.11.874374.23 1.3811135.33 1.4551946.30118154 2.9291853.50165111 4.4116144.6 2.2432099.1464253 4.4956616-.03546922 6.6869742-.54l.5961641-.12c1.2662289-.27004099 2.5467576-.46702884 3.8353224-.59 2.3848827-.19282514 4.7850555-.01064179 7.1142251.54v9c0 .5522847.4448529 1 .9936068 1s.9936069-.4477153.9936069-1v-9.36c.010433-.72821386-.4938246-1.36154296-1.2022643-1.51-2.6359943-.65895185-5.3609577-.88186414-8.0680877-.66-1.3628343.12134309-2.7167864.32841456-4.0539159.62l-.5862281.11c-2.0209625.47248539-4.099821.64431141-6.1702985.51-1.3903806-.10389892-2.7737409-.28753049-4.1433406-.55-.7892799-.17866466-1.568681-.39896871-2.3349761-.66zm7.8325351 8.73c-.22 3.22 1.59 6.06 4.22 6.25s4.81-2.38 5-5.59c.0456239-.6147027.0153965-1.2326842-.09-1.84-.0966499-.5522847-.6227153-.9216498-1.175-.825-.5522848.0966498-.9216499.6227153-.825 1.175.0741136.4459263.097596.8987999.07 1.35-.08 2.22-1.47 3.82-2.83 3.74s-2.52-1.92-2.37-4.12c.0235085-1.371968.6900598-2.6532276 1.8-3.46.3478371-.1572029.5758411-.4987108.5876815-.8802382.0118404-.3815275-.1945485-.73651642-.5319683-.91498564-.3374199-.17846921-.7470072-.14928446-1.0557132.07522384-1.6873585 1.1326835-2.7258867 3.0087344-2.79 5.04z" fill="#484848"></path></svg>
+                </div>
+                <!--<div class="w-10 h-10 bg-contain bg-auto bg-center" style="background-image: url(https://a0.muscache.com/airbnb/static/packages/icon-uc-diamond.296a9c25.gif);"></div>-->
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 
 {% block javascript %}

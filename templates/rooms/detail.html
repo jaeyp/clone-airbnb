@@ -298,7 +298,7 @@
                                 <i id="clear-checkout" class="text-base text-gray-500 hover:text-gray-800 cursor-pointer fas fa-times mr-4"></i>
                             </div>
                         </div>
-                        <input type="text" class="items-center border border-gray-600 rounded-lg font-semibold w-9/12 h-12 mb-4 px-4 focus:border-black focus:outline-none placeholder-gray-600" placeholder="Guests"/>
+                        <input type="text" id="guests" class="items-center border border-gray-600 rounded-lg font-semibold w-9/12 h-12 mb-4 px-4 focus:border-black focus:outline-none placeholder-gray-600" placeholder="Guests"/>
                         <!-- Notice -->
                         <div class="flex flex-wrap items-center w-full">
                             <img src="{% static 'img/icon-uc-light-bulb.gif' %}" alt="" class="w-12">
@@ -373,6 +373,7 @@
 
     var checkin = document.querySelector("#checkin");
     var checkout = document.querySelector("#checkout");
+    var guests = document.querySelector("#guests");
 
     //var tmp_checkin = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
     //var tmp_checkout = { year: 0, month: 0, day: 0, num: 0, set: (y, m, d) => {this.year=y;this.month=m;this.day=d;this.num=y*10000+m*100+d}}
@@ -481,7 +482,9 @@
         {% endcomment %}
         // This works with def create(request, room_pk): in reservations/views.py
         // plus, path("create/<int:room_pk>/", views.create, name="create",), in reservations/urls.py
-        let loc = `{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${dateDiffInDays(book_checkin, book_checkout)}`;
+        // let loc = `{% url 'reservations:create' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&days=${dateDiffInDays(book_checkin, book_checkout)}`;
+        let book_guests = (guests.value == "")?1:guests.value;
+        let loc = `{% url 'reservations:review' room.pk %}?year=${book_checkin.year}&month=${book_checkin.month}&day=${book_checkin.day}&nights=${dateDiffInDays(book_checkin, book_checkout)}&guests=${book_guests}`;
         window.location = loc;
         
     }

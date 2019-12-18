@@ -72,7 +72,12 @@ PROJECT_APPS = [
     "conversations.apps.ConversationsConfig",
 ]
 
-CUSTOM_TAGS = ["rooms.templatetags.room_extras", "users.templatetags.user_filters"]  # rooms/templatetags/room_extras.py
+CUSTOM_TAGS = [
+    "rooms.templatetags.room_extras",
+    "users.templatetags.user_filters",
+    "reservations.templatetags.math_filters",
+    "reservations.templatetags.date_filters",
+]  # rooms/templatetags/room_extras.py
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS + CUSTOM_TAGS
 

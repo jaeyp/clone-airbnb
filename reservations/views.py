@@ -41,8 +41,8 @@ def create(request, room_pk):
         year = int(request.GET.get("year", None))
         month = int(request.GET.get("month", None))
         day = int(request.GET.get("day", None))
-        days = int(request.GET.get("days", None))
-        debug.info(f"{room_pk} {year} {month} {day} {days}")
+        nights = int(request.GET.get("nights", None))
+        debug.info(f"{room_pk} {year} {month} {day} {nights}")
 
         date_obj = datetime.datetime(year, month, day)
         room = room_models.Room.objects.get(pk=room_pk)
@@ -53,7 +53,7 @@ def create(request, room_pk):
         return redirect(reverse("core:home"))
     except models.BookedDay.DoesNotExist:
         reservation = models.Reservation.objects.create(
-            guest=request.user, room=room, check_in=date_obj, check_out=date_obj + datetime.timedelta(days=days),
+            guest=request.user, room=room, check_in=date_obj, check_out=date_obj + datetime.timedelta(days=nights),
         )
         debug.info(reservation.pk)
         # return redirect(reverse("core:home"))
@@ -68,8 +68,34 @@ class ReservationReviewView(DetailView):
     model = models.Reservation
     template_name = "reservations/review.html"
 
+    def get(self, request, *args, **kwargs):
+        room_pk = kwargs.get("pk")
+        room = room_models.Room.objects.get(pk=room_pk)
+        year = int(request.GET.get("year", None))
+        month = int(request.GET.get("month", None))
+        day = int(request.GET.get("day", None))
+        nights = int(request.GET.get("nights", None))
+        checkin = datetime.datetime(year, month, day)
+        checkout = datetime.datetime(year, month, day) + datetime.timedelta(days=nights)
+        guests = int(request.GET.get("guests", None))
+        return render(
+            self.request,
+            self.template_name,
+            {
+                **kwargs,
+                "room": room,
+                "year": year,
+                "month": month,
+                "day": day,
+                "nights": nights,
+                "checkin": checkin.date(),
+                "checkout": checkout.date(),
+                "guests": guests,
+            },
+        )
 
-# why not DetailView here?
+
+# why does it inherit View instead of DetailView here?
 # because reservation detail view requires more manual access
 class ReservationDetailView(View):
     """ Reservation Detail View Definition
