@@ -10,7 +10,7 @@ pipenv-to-requirements = "*"
 
 [packages]
 django-countries = "*"
-django = "==2.2.5"
+django = "==2.2.27"
 django-seed = "*"
 pillow = "*"
 django-dotenv = "*"
